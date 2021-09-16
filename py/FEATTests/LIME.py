@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import ClassVar
 
-from FEATTests import FEATTest
+from .FEATTest import FEATTest
 
 @dataclass
-class FEATTestLIME(FEATTest):
+class LIME(FEATTest):
     """ A FEAT test using the LIME method """
     
     # df: DataFrame

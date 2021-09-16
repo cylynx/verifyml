@@ -2,10 +2,10 @@ from dataclasses import dataclass
 from functools import cached_property
 from typing import ClassVar
 
-from FEATTests import FEATTest
+from .FEATTest import FEATTest
 
 @dataclass
-class FEATTestSum(FEATTest):
+class Sum(FEATTest):
     """ A FEAT test to check that the sum of 2 ints is correct """
     int1: int
     int2: int

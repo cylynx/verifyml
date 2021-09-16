@@ -1,3 +1,3 @@
 from .FEATTest import FEATTest
-from .FEATTestSum import FEATTestSum
-from .FEATTestLIME import FEATTestLIME
+from .Sum import Sum
+from .LIME import LIME
