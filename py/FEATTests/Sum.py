@@ -7,6 +7,7 @@ from .FEATTest import FEATTest
 @dataclass
 class Sum(FEATTest):
     """ A FEAT test to check that the sum of 2 ints is correct """
+
     int1: int
     int2: int
 

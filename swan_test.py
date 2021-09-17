@@ -10,6 +10,7 @@ from py.swan.feature_importance_shap import pa_in_top_feature_importance_shap
 from py.swan.data_shift import data_shift_test
 from py.swan.bias_metrics import generate_bias_metrics_charts, bias_metrics_test
 from py.swan.perturbation import perturbation
+from py.FEATTests.DataShift import DataShift
 
 df=pd.read_csv('data/creditcard.csv',nrows=100000).drop('Time',axis=1)
 df=df[['V1','V2','V3','V4','V5','Class']]
@@ -44,11 +45,11 @@ output['prediction']=y_pred
 
 df_importance = pd.DataFrame({'features':x_test.columns,'value':estimator.feature_importances_})
 
-result = pa_in_top_feature_importance(
-    protected_attr=['gender','age'],
-    top_n=6,
-    df_importance=df_importance,
-)
+# result = pa_in_top_feature_importance(
+#     protected_attr=['gender','age'],
+#     top_n=6,
+#     df_importance=df_importance,
+# )
 
 # result = pa_in_top_feature_importance_shap(
 #     protected_attr=['gender','age'],
@@ -59,8 +60,8 @@ result = pa_in_top_feature_importance(
 #     x_test=x_test
 # )
 
-# train=ens.inverse_transform(x_train)
-# test=ens.inverse_transform(x_test)
+train=ens.inverse_transform(x_train)
+test=ens.inverse_transform(x_test)
 
 # result = data_shift_test(
 #     protected_attr = ['gender','age'],
@@ -68,6 +69,17 @@ result = pa_in_top_feature_importance(
 #     df_train = train,
 #     df_eval = test 
 # )
+
+result = DataShift(
+    test_name='my data shift FEAT test',
+    test_desc='',
+    protected_attr = ['gender','age'],
+    threshold = 0.05,
+    df_train = train,
+    df_eval = test 
+)
+
+result.run()
 
 # result=generate_bias_metrics_charts(
 #                 protected_attr = ['gender','age'],

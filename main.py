@@ -30,13 +30,13 @@ report = FEATReport(
 report.run_tests()
 
 # pretty print report as a dict
-# pprint(asdict(report), indent=2)
+pprint(asdict(report), indent=2)
 # print(test1)
 # print(asdict(test1))
 # print(test1.__dict__)
 
-a = report.gen_appendix()
-print(a)
+# a = report.gen_appendix()
+# print(a)
 
 
 # todo: pass report into pdf or html or something

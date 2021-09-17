@@ -27,7 +27,7 @@ def data_shift_test(
         num+=1
     fig.suptitle('Distribution of protected attributes in training set')
     plt.show()
-    
+
     fig, axs = plt.subplots(1, len(protected_attr), figsize=(15, 4),)
     num=0
     for pa in protected_attr:

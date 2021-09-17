@@ -6,8 +6,7 @@ from .FEATTest import FEATTest
 @dataclass
 class LIME(FEATTest):
     """ A FEAT test using the LIME method """
-    
-    # df: DataFrame
+
     col1: str
     col2: str
     technique: ClassVar[str] = 'LIME'
