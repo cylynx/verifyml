@@ -1,5 +1,3 @@
-# error with train_col
-
 import pandas as pd
 import shap
 
@@ -28,17 +26,16 @@ def pa_in_top_feature_importance_shap(
     elif model_type == 'others':
         explainer = shap.PermutationExplainer(model = model.predict_proba, data=x_train)
     shap_values = explainer.shap_values(x_test)
-    # shap.summary_plot(shap_values = shap_values[1], features = x_test, max_display=20, plot_type='dot')
+    shap.summary_plot(shap_values = shap_values[1], features = x_test, max_display=20, plot_type='dot')
     
     # Take the mean of the absolute of the shapely values to get the aggretated importance for each features
-    agg_shap_df=pd.DataFrame(pd.DataFrame(shap_values[1],columns=train_col).abs().mean()).sort_values(0,ascending=False)
+    agg_shap_df=pd.DataFrame(pd.DataFrame(shap_values[1],columns=x_test.columns).abs().mean()).sort_values(0,ascending=False)
     top_feat=list(agg_shap_df.iloc[:top_n].index)
     for i in protected_attr:
-        result=[j for j in top_feat if i in j]
+        result=[j for j in top_feat if i+'_' in j]
     
     # create a SHAP dependence plot to show the significant effect of the flagged protected attributes across the whole dataset
     for i in result:
         shap.dependence_plot(i, shap_values=shap_values[1], features=x_test,interaction_index=None)
         #shap.waterfall_plot(shap_values[:,i])
-    
     return result

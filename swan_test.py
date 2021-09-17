@@ -3,13 +3,14 @@ import numpy as np
 import category_encoders as ce
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix,
 
 from py.swan.feature_importance import pa_in_top_feature_importance
 from py.swan.feature_importance_shap import pa_in_top_feature_importance_shap
 from py.swan.data_shift import data_shift_test
 from py.swan.bias_metrics import generate_bias_metrics_charts, bias_metrics_test
-from py.swan.perturbation import perturbation
+from py.swan.perturbation import bias_metrics_permutation_test
+from py.swan.roc_curves import roc_curve_groups_test
 from py.FEATTests.DataShift import DataShift
 
 df=pd.read_csv('data/creditcard.csv',nrows=100000).drop('Time',axis=1)
@@ -37,11 +38,14 @@ estimator.fit(x_train, y_train)
 
 output=x_test.copy()
 y_pred = estimator.predict(x_test)
+y_probas = estimator.predict_proba(x_test)[::,1]
 print(confusion_matrix(y_test, y_pred))
 
 output=ens.inverse_transform(output)
 output['truth']=y_test
 output['prediction']=y_pred
+output['prediction_probas']=y_probas
+
 
 df_importance = pd.DataFrame({'features':x_test.columns,'value':estimator.feature_importances_})
 
@@ -94,15 +98,23 @@ result.run()
 #     df_test_with_output = output
 # )
 
-# test=ens.inverse_transform(x_test)
 
-# perturbation(
-#     protected_attr=['gender', 'age'],
-#     test=test,
+# bias_metrics_permutation_test(
+#     attr='age',
+#     metric='sr',
+#     method='ratio',
+#     threshold=1.25,
+#     x_test=x_test,
 #     y_test=y_test,
-#     output=output,
-#     ens=ens,
-#     estimator=estimator
+#     encoder=ens,
+# )
+
+# roc_curve_groups_test(
+#     attr = 'age',
+#     df_test_with_output = output,
+#     metric = 'tpr',
+#     metric_threshold = 0.65,
+#     #proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}
 # )
 
 print(result)

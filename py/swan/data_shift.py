@@ -10,7 +10,7 @@ def data_shift_test(
 ):
     '''
     Test if there is any shift (based on specified threshold) in the distribution of the protected feature, 
-    which may impose new unfairness and require a retraining of the model, output the shifted attributes 
+    which may impose new unfairness and require a retraining of the model, output the shifted attributes.
     
     :protected_attr: list of protected attributes
     :threshold: probability distribution threshold of an attribute, where if the difference between training data

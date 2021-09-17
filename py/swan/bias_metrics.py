@@ -12,7 +12,8 @@ def generate_bias_metrics_charts(
     between any 2 groups within a protected attribute
     
     :protected_attr: list of protected attributes
-    :df_test_with_output: dataframe containing protected attributes with "prediction" and "truth" column
+    :df_test_with_output: evaluation set dataframe containing protected attributes with "prediction" and "truth" column,
+                          protected features should not be encoded
     '''
     result={}
     for pa in protected_attr:
@@ -20,17 +21,8 @@ def generate_bias_metrics_charts(
         fpr = {}
         sr={}
         for i in df_test_with_output[pa].unique():
-    #        print(pa+' '+i)
             tmp=df_test_with_output[df_test_with_output[pa] == i]
             cm=confusion_matrix(tmp.truth, tmp.prediction)
-    #         print(cm)
-    #         print('\n')
-    #        precision, recall, fscore, support = score(tmp.truth,tmp.prediction)
-    #         print('precision: {}'.format(precision))
-    #         print('recall: {}'.format(recall))
-    #         print('fscore: {}'.format(fscore))
-    #         print('support: {}'.format(support))
-    #         print('\n')
             fnr[i] = cm[1][0]/cm[1].sum()
             fpr[i] = cm[0][1]/cm[0].sum()
             sr[i]=cm[1].sum()/cm.sum()
@@ -62,16 +54,17 @@ def bias_metrics_test(
 ):
     '''
     Check if the maximum difference/ratio of the specified bias metric of any 2 groups within a specified protected attribute
-    exceeds the threshold specified
+    exceeds the threshold specified. Output false if the test failed.
     
     :attr: protected attribute specified
     :metric: type of bias metric for the test, choose from ('fpr', 'fnr', 'sr'), 
              'fpr' - false positive rate, 'fnr' - false negative rate, 'sr': selection rate
     :method: type of method for the test, choose from ('diff', 'ratio')
     :threshold: threshold which if the max difference of false positive, false negative, negative 
+    :df_test_with_output: dataframe containing protected attributes with "prediction" and "truth" colum.n
     '''
     metric_dict = generate_bias_metrics_charts(
-                      protected_attr = ['gender','age'],
+                      protected_attr = [attr],
                       df_test_with_output = df_test_with_output
                   )
-    return metric_dict[attr+'_'+metric+'_max_'+method] > threshold
+    return metric_dict[attr+'_'+metric+'_max_'+method] <= threshold
