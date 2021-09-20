@@ -10,6 +10,7 @@ def bias_metrics_permutation_test(
     threshold: int,
     x_test: pd.DataFrame,
     y_test: pd.Series,
+    model,
     encoder
 ):
     '''
@@ -27,11 +28,12 @@ def bias_metrics_permutation_test(
     :threshold: threshold for difference/ratio of the metric 
     :x_test: dataframe containing features to be inputted into the model predictions
     :y_test: array/list/series containing the truth of x_test
+    :model: model object
     :encoder: one hot encoder object, to allow for permutation of the protected attribute
     '''
     # Obtain rates for the original data
     rates={}
-    y_pred = estimator.predict(x_test)
+    y_pred = model.predict(x_test)
     df_test_with_output=encoder.inverse_transform(x_test)
     df_test_with_output['prediction'] = y_pred
     df_test_with_output['truth'] = y_test
@@ -51,7 +53,7 @@ def bias_metrics_permutation_test(
     df_perturb=encoder.inverse_transform(x_test)
     df_perturb[attr]=np.random.permutation(df_perturb[attr].values)
     df_perturb=encoder.transform(df_perturb)
-    y_pred = estimator.predict(df_perturb)
+    y_pred = model.predict(df_perturb)
     df_perturb=encoder.inverse_transform(df_perturb)
     df_perturb['prediction']=y_pred
     df_perturb['truth']=y_test

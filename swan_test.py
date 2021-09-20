@@ -112,7 +112,7 @@ result = SubgroupDifference(
 result.run()
 
 
-# bias_metrics_permutation_test(
+# result =bias_metrics_permutation_test(
 #     attr='age',
 #     metric='sr',
 #     method='ratio',
@@ -122,7 +122,7 @@ result.run()
 #     encoder=ens,
 # )
 
-# roc_curve_groups_test(
+# result = roc_curve_groups_test(
 #     attr = 'age',
 #     df_test_with_output = output,
 #     metric = 'tpr',
