@@ -43,11 +43,7 @@ class Permutation(FEATTest):
 
 
     @staticmethod
-    def get_metric_dict(
-        attr: str,
-        metric: str,
-        df: DataFrame
-    ) -> dict[str, float]:
+    def get_metric_dict(attr: str, metric: str, df: DataFrame) -> dict[str, float]:
         ''' Calculate metric differences for a protected attribute on a given df. '''
         metric_dict = {}
 
@@ -66,11 +62,7 @@ class Permutation(FEATTest):
 
 
     @staticmethod
-    def perturb_df(
-        attr: str, 
-        df: DataFrame,
-        encoder
-    ):
+    def perturb_df(attr: str, df: DataFrame, encoder):
         ''' Perturb the protected attribute column values of a given df. '''
         df[attr] = np.random.permutation(df[attr].values)
         df = encoder.transform(df)
@@ -100,13 +92,7 @@ class Permutation(FEATTest):
         return self.metric_dict_perturbed
 
 
-    def get_result(
-        self,
-        x_test: DataFrame,
-        y_test: Series,
-        model,
-        encoder
-    ) -> list:
+    def get_result(self, x_test: DataFrame, y_test: Series, model, encoder) -> list:
         '''
         Calculate test result. Compare the original vs perturbed metric
         dicts and output the attribute groups that failed the test.
@@ -134,13 +120,7 @@ class Permutation(FEATTest):
         return result
 
 
-    def run(
-        self,
-        x_test: DataFrame,
-        y_test: Series,
-        model,
-        encoder,
-    ) -> bool:
+    def run(self, x_test: DataFrame, y_test: Series, model, encoder) -> bool:
         '''
         Runs test by calculating result and evaluating if it passes a defined condition. 
 
