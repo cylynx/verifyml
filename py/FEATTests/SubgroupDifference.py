@@ -18,18 +18,24 @@ class SubgroupDifference(FEATTest):
              'fpr' - false positive rate, 'fnr' - false negative rate, 'sr': selection rate
     :method: type of method for the test, choose from ('diff', 'ratio')
     :threshold: threshold which if the max difference of false positive, false negative, negative 
-    :df_test_with_output: dataframe containing protected attributes with "prediction" and "truth" column
     '''
 
     attr: str
     metric: str
     method: str
     threshold: float
-    df_test_with_output: DataFrame = field(repr=False)
 
     technique: ClassVar[str] = 'Subgroup Difference'
 
-    def get_metric_dict(self, attr: str, df: DataFrame):
+
+    def get_metric_dict(self, attr: str, df: DataFrame) -> dict[str, float]:
+        '''
+        Reads a df and returns a dictionary that shows the metric max 
+        diff / ratio for a specified protected attribute.
+
+        :attr: protected attribute
+        :df: dataframe containing protected attributes with "prediction" and "truth" column
+        '''
         self.fnr = {}
         self.fpr = {}
         self.sr = {}
@@ -53,6 +59,7 @@ class SubgroupDifference(FEATTest):
 
         return metric_dict
 
+
     def plot(self):
         fig, axs = plt.subplots(1, 3, figsize=(18, 4), sharey=False)
         axs[0].bar(list(self.fnr.keys()), list(self.fnr.values()))
@@ -65,22 +72,30 @@ class SubgroupDifference(FEATTest):
 
         plt.show()
 
+
     def get_result_key(self) -> str:
         return f'{self.attr}_{self.metric}_max_{self.method}'
 
-    def get_result(self) -> any:
-        ''' Calculate test result '''
-        self.metric_dict = self.get_metric_dict(self.attr, self.df_test_with_output)
+
+    def get_result(self, df_test_with_output) -> any:
+        '''
+        Calculate test result on a given df.
+
+        :df_test_with_output: dataframe containing protected attributes with "prediction" and "truth" column
+        '''
+        self.metric_dict = self.get_metric_dict(self.attr, df_test_with_output)
         result_key = self.get_result_key()
 
         return { result_key: self.metric_dict[result_key] }
 
-    def run(self) -> bool:
+
+    def run(self, df_test_with_output) -> bool:
         '''
-        Runs test by calculating result / retrieving cached property and evaluating if 
-        it passes a defined condition. 
+        Runs test by calculating result and evaluating if it passes a defined condition. 
+
+        :df_test_with_output: dataframe containing protected attributes with "prediction" and "truth" column
         '''
-        self.result = self.get_result()
+        self.result = self.get_result(df_test_with_output)
         
         result_value = self.result[self.get_result_key()]
         

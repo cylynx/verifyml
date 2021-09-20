@@ -86,10 +86,10 @@ test=ens.inverse_transform(x_test)
 
 # result.run()
 
-# result=generate_bias_metrics_charts(
-#                 protected_attr = ['gender','age'],
-#                 df_test_with_output = output
-#             )
+result=generate_bias_metrics_charts(
+                protected_attr = ['gender','age'],
+                df_test_with_output = output
+            )
 
 # result = bias_metrics_test(
 #     attr='gender',
@@ -99,17 +99,16 @@ test=ens.inverse_transform(x_test)
 #     df_test_with_output = output
 # )
 
-result = SubgroupDifference(
-    test_name='subgroup diff',
-    test_desc='',
-    attr='gender',
-    metric='sr',
-    method='ratio',
-    threshold=1.5,
-    df_test_with_output=output
-)
+# result = SubgroupDifference(
+#     test_name='subgroup diff',
+#     test_desc='',
+#     attr='gender',
+#     metric='sr',
+#     method='ratio',
+#     threshold=1.5,
+# )
 
-result.run()
+# result.run(df_test_with_output=output)
 
 
 # result =bias_metrics_permutation_test(
