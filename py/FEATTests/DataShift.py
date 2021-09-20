@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from functools import cached_property
 from pandas import DataFrame
 from typing import ClassVar
 
@@ -7,10 +6,10 @@ from .FEATTest import FEATTest
 
 @dataclass
 class DataShift(FEATTest):
-    ''' 
+    '''
     Test if there is any shift (based on specified threshold) in the distribution of the protected feature, 
-    which may impose new unfairness and require a retraining of the model, output the shifted attributes 
-
+    which may impose new unfairness and require a retraining of the model, output the shifted attributes.
+    
     :protected_attr: list of protected attributes
     :threshold: probability distribution threshold of an attribute, where if the difference between training data
                      distribution and evalaution distribution exceeds the threhold, the attribute will be flagged
@@ -33,9 +32,8 @@ class DataShift(FEATTest):
 
         return df_dist
 
-    @cached_property
-    def _result(self) -> any:
-        ''' Calculate test result and caches it as a property '''
+    def get_result(self) -> any:
+        ''' Calculate test result '''
         _result = []
 
         for pa in self.protected_attr:
@@ -52,7 +50,7 @@ class DataShift(FEATTest):
         Runs test by calculating result / retrieving cached property and evaluating if 
         it passes a defined condition. 
         '''
-        self.result = self._result
+        self.result = self.get_result()
         self.passed = False if self.result else True
 
         return self.passed

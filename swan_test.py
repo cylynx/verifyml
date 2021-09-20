@@ -3,7 +3,7 @@ import numpy as np
 import category_encoders as ce
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import confusion_matrix,
+from sklearn.metrics import confusion_matrix
 
 from py.swan.feature_importance import pa_in_top_feature_importance
 from py.swan.feature_importance_shap import pa_in_top_feature_importance_shap
@@ -12,6 +12,7 @@ from py.swan.bias_metrics import generate_bias_metrics_charts, bias_metrics_test
 from py.swan.perturbation import bias_metrics_permutation_test
 from py.swan.roc_curves import roc_curve_groups_test
 from py.FEATTests.DataShift import DataShift
+from py.FEATTests.SubgroupDifference import SubgroupDifference
 
 df=pd.read_csv('data/creditcard.csv',nrows=100000).drop('Time',axis=1)
 df=df[['V1','V2','V3','V4','V5','Class']]
@@ -74,16 +75,16 @@ test=ens.inverse_transform(x_test)
 #     df_eval = test 
 # )
 
-result = DataShift(
-    test_name='my data shift FEAT test',
-    test_desc='',
-    protected_attr = ['gender','age'],
-    threshold = 0.05,
-    df_train = train,
-    df_eval = test 
-)
+# result = DataShift(
+#     test_name='my data shift FEAT test',
+#     test_desc='',
+#     protected_attr = ['gender','age'],
+#     threshold = 0.05,
+#     df_train = train,
+#     df_eval = test 
+# )
 
-result.run()
+# result.run()
 
 # result=generate_bias_metrics_charts(
 #                 protected_attr = ['gender','age'],
@@ -97,6 +98,18 @@ result.run()
 #     threshold=1.5,
 #     df_test_with_output = output
 # )
+
+result = SubgroupDifference(
+    test_name='subgroup diff',
+    test_desc='',
+    attr='gender',
+    metric='sr',
+    method='ratio',
+    threshold=1.5,
+    df_test_with_output=output
+)
+
+result.run()
 
 
 # bias_metrics_permutation_test(
