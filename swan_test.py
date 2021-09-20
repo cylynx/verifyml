@@ -17,6 +17,7 @@ from py.FEATTests import (
     Permutation,
     FeatureImportance,
     SHAPFeatureImportance,
+    SubgroupMetricThreshold
 )
 
 df=pd.read_csv('data/creditcard.csv',nrows=100000).drop('Time',axis=1)
@@ -79,19 +80,19 @@ df_importance = pd.DataFrame({'features':x_test.columns,'value':estimator.featur
 #     x_test=x_test
 # )
 
-result = SHAPFeatureImportance(
-    test_name='SHAP',
-    test_desc='',
-    attrs=['gender','age'],
-    top_n=7
-)
+# result = SHAPFeatureImportance(
+#     test_name='SHAP',
+#     test_desc='',
+#     attrs=['gender','age'],
+#     top_n=7
+# )
 
-result.run(
-    model=estimator,
-    model_type='trees',
-    x_train=x_train,
-    x_test=x_test
-)
+# result.run(
+#     model=estimator,
+#     model_type='trees',
+#     x_train=x_train,
+#     x_test=x_test
+# )
 
 # train=ens.inverse_transform(x_train)
 # test=ens.inverse_transform(x_test)
@@ -171,6 +172,17 @@ result.run(
 #     metric_threshold = 0.65,
 #     #proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}
 # )
+
+result = SubgroupMetricThreshold(
+    test_name='subgroup metric threshold',
+    test_desc='',
+    attr = 'age',
+    metric = 'tpr',
+    metric_threshold = 0.65,
+    #proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}
+)
+
+result.run(df_test_with_output = output)
 
 # print(result.__dict__)
 print(result)

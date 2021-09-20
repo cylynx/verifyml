@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import matplotlib.pyplot as plt
 from pandas import DataFrame
 import shap
 from typing import ClassVar
@@ -20,7 +19,7 @@ class SHAPFeatureImportance(FEATTest):
     attrs: list[str]
     top_n: int
 
-    technique: ClassVar[str] = 'Self-declared Feature Importance'
+    technique: ClassVar[str] = 'SHAP Feature Importance'
 
 
     def get_shap_values(self, model, model_type, x_train, x_test):
