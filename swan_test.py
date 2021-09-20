@@ -15,6 +15,7 @@ from py.FEATTests.DataShift import DataShift
 from py.FEATTests.SubgroupDifference import SubgroupDifference
 from py.FEATTests.Permutation import Permutation
 from py.FEATTests.FeatureImportance import FeatureImportance
+from py.FEATTests.SHAPFeatureImportance import SHAPFeatureImportance
 
 df=pd.read_csv('data/creditcard.csv',nrows=100000).drop('Time',axis=1)
 df=df[['V1','V2','V3','V4','V5','Class']]
@@ -58,14 +59,14 @@ df_importance = pd.DataFrame({'features':x_test.columns,'value':estimator.featur
 #     df_importance=df_importance,
 # )
 
-result = FeatureImportance(
-    test_name='my feature importance FEAT test',
-    test_desc='',
-    attrs=['gender','age'],
-    top_n=6
-)
+# result = FeatureImportance(
+#     test_name='my feature importance FEAT test',
+#     test_desc='',
+#     attrs=['gender','age'],
+#     top_n=6
+# )
 
-result.run(df_importance)
+# result.run(df_importance)
 
 # result = pa_in_top_feature_importance_shap(
 #     protected_attr=['gender','age'],
@@ -75,6 +76,20 @@ result.run(df_importance)
 #     x_train=x_train,
 #     x_test=x_test
 # )
+
+result = SHAPFeatureImportance(
+    test_name='SHAP',
+    test_desc='',
+    attrs=['gender','age'],
+    top_n=7
+)
+
+result.run(
+    model=estimator,
+    model_type='trees',
+    x_train=x_train,
+    x_test=x_test
+)
 
 # train=ens.inverse_transform(x_train)
 # test=ens.inverse_transform(x_test)

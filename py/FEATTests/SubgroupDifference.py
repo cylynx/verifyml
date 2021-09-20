@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 import matplotlib.pyplot as plt
 from pandas import DataFrame
 from sklearn.metrics import confusion_matrix
