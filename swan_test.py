@@ -13,6 +13,7 @@ from py.swan.perturbation import bias_metrics_permutation_test
 from py.swan.roc_curves import roc_curve_groups_test
 from py.FEATTests.DataShift import DataShift
 from py.FEATTests.SubgroupDifference import SubgroupDifference
+from py.FEATTests.Permutation import Permutation
 
 df=pd.read_csv('data/creditcard.csv',nrows=100000).drop('Time',axis=1)
 df=df[['V1','V2','V3','V4','V5','Class']]
@@ -65,15 +66,15 @@ df_importance = pd.DataFrame({'features':x_test.columns,'value':estimator.featur
 #     x_test=x_test
 # )
 
-train=ens.inverse_transform(x_train)
-test=ens.inverse_transform(x_test)
+# train=ens.inverse_transform(x_train)
+# test=ens.inverse_transform(x_test)
 
-result = data_shift_test(
-    protected_attr = ['gender','age'],
-    threshold = 0.05,
-    df_train = train,
-    df_eval = test 
-)
+# result = data_shift_test(
+#     protected_attr = ['gender','age'],
+#     threshold = 0.05,
+#     df_train = train,
+#     df_eval = test 
+# )
 
 # result = DataShift(
 #     test_name='my data shift FEAT test',
@@ -117,7 +118,24 @@ result = data_shift_test(
 #     x_test=x_test,
 #     y_test=y_test,
 #     encoder=ens,
+#     model=estimator
 # )
+
+result = Permutation(
+    test_name='permutation',
+    test_desc='',
+    attr='age',
+    metric='sr',
+    method='ratio',
+    threshold=1.25,
+)
+
+result.run(
+    x_test=x_test,
+    y_test=y_test,
+    encoder=ens,
+    model=estimator
+)
 
 # result = roc_curve_groups_test(
 #     attr = 'age',
@@ -127,4 +145,5 @@ result = data_shift_test(
 #     #proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}
 # )
 
-print(result)
+print(result.__dict__)
+# print(result)
