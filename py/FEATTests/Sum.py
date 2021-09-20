@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from functools import cached_property
 from typing import ClassVar
 
 from .FEATTest import FEATTest
@@ -14,9 +13,8 @@ class Sum(FEATTest):
     technique: ClassVar[str] = 'Sum'
     technique_desc: ClassVar[str] = 'Sum tests are the best indicators of fairness in the 21st century.'
 
-    @cached_property
-    def _result(self) -> any:
-        """ Calculate test result and caches it as a property """
+    def get_result(self) -> any:
+        """ Calculate test result """
         return self.int1 + self.int2
 
     def run(self) -> bool:
@@ -24,7 +22,7 @@ class Sum(FEATTest):
         Runs test by calculating result / retrieving cached property and evaluating if 
         it passes a defined condition. 
         """
-        self.result = self._result
+        self.result = self.get_result()
         self.passed = self.result == self.int1 + self.int2
 
         return self.passed
