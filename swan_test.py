@@ -11,11 +11,13 @@ from py.swan.data_shift import data_shift_test
 from py.swan.bias_metrics import generate_bias_metrics_charts, bias_metrics_test
 from py.swan.perturbation import bias_metrics_permutation_test
 from py.swan.roc_curves import roc_curve_groups_test
-from py.FEATTests.DataShift import DataShift
-from py.FEATTests.SubgroupDifference import SubgroupDifference
-from py.FEATTests.Permutation import Permutation
-from py.FEATTests.FeatureImportance import FeatureImportance
-from py.FEATTests.SHAPFeatureImportance import SHAPFeatureImportance
+from py.FEATTests import (
+    DataShift,
+    SubgroupDifference,
+    Permutation,
+    FeatureImportance,
+    SHAPFeatureImportance,
+)
 
 df=pd.read_csv('data/creditcard.csv',nrows=100000).drop('Time',axis=1)
 df=df[['V1','V2','V3','V4','V5','Class']]
