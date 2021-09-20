@@ -14,6 +14,7 @@ from py.swan.roc_curves import roc_curve_groups_test
 from py.FEATTests.DataShift import DataShift
 from py.FEATTests.SubgroupDifference import SubgroupDifference
 from py.FEATTests.Permutation import Permutation
+from py.FEATTests.FeatureImportance import FeatureImportance
 
 df=pd.read_csv('data/creditcard.csv',nrows=100000).drop('Time',axis=1)
 df=df[['V1','V2','V3','V4','V5','Class']]
@@ -56,6 +57,15 @@ df_importance = pd.DataFrame({'features':x_test.columns,'value':estimator.featur
 #     top_n=6,
 #     df_importance=df_importance,
 # )
+
+result = FeatureImportance(
+    test_name='my feature importance FEAT test',
+    test_desc='',
+    attrs=['gender','age'],
+    top_n=6
+)
+
+result.run(df_importance)
 
 # result = pa_in_top_feature_importance_shap(
 #     protected_attr=['gender','age'],
@@ -121,21 +131,21 @@ df_importance = pd.DataFrame({'features':x_test.columns,'value':estimator.featur
 #     model=estimator
 # )
 
-result = Permutation(
-    test_name='permutation',
-    test_desc='',
-    attr='age',
-    metric='sr',
-    method='ratio',
-    threshold=1.25,
-)
+# result = Permutation(
+#     test_name='permutation',
+#     test_desc='',
+#     attr='age',
+#     metric='sr',
+#     method='ratio',
+#     threshold=1.25,
+# )
 
-result.run(
-    x_test=x_test,
-    y_test=y_test,
-    encoder=ens,
-    model=estimator
-)
+# result.run(
+#     x_test=x_test,
+#     y_test=y_test,
+#     encoder=ens,
+#     model=estimator
+# )
 
 # result = roc_curve_groups_test(
 #     attr = 'age',
@@ -145,5 +155,5 @@ result.run(
 #     #proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}
 # )
 
-print(result.__dict__)
-# print(result)
+# print(result.__dict__)
+print(result)

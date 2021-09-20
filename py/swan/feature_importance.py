@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 def pa_in_top_feature_importance(protected_attr:list, top_n:int, df_importance:pd.DataFrame):
     '''
-    Ouput the protected attributes that are listed in the top specified number of the features, 
+    Output the protected attributes that are listed in the top specified number of the features, 
     using feature importance values inputted by the user.
     
     :protected_attr: list of protected attributes
