@@ -13,18 +13,15 @@ class DataShift(FEATTest):
     :protected_attr: list of protected attributes
     :threshold: probability distribution threshold of an attribute, where if the difference between training data
                      distribution and evalaution distribution exceeds the threhold, the attribute will be flagged
-    :df_train: training data features, protected features should not be encoded yet
-    :df_eval: data to be evaluated on, protected features should not be encoded yet
     '''
 
     protected_attr: list[str]
     threshold: float
-    df_train: DataFrame = field(repr=False)
-    df_eval: DataFrame = field(repr=False)
 
     technique: ClassVar[str] = 'Data Shift'
 
-    def get_df_distribution_by_pa(self, df, col):
+
+    def get_df_distribution_by_pa(self, df: DataFrame, col: str):
         '''
         Get the probability distribution of a specified column's values in a given df.
         '''
@@ -32,25 +29,35 @@ class DataShift(FEATTest):
 
         return df_dist
 
-    def get_result(self) -> any:
-        ''' Calculate test result '''
+
+    def get_result(self, df_train: DataFrame, df_eval: DataFrame) -> any:
+        ''' 
+        Calculate test result.
+
+        :df_train: training data features, protected features should not be encoded yet
+        :df_eval: data to be evaluated on, protected features should not be encoded yet
+        '''
         _result = []
 
         for pa in self.protected_attr:
-            train_dist = self.get_df_distribution_by_pa(self.df_train, pa)
-            eval_dist = self.get_df_distribution_by_pa(self.df_eval, pa)
+            train_dist = self.get_df_distribution_by_pa(df_train, pa)
+            eval_dist = self.get_df_distribution_by_pa(df_eval, pa)
             
             if sum(abs(train_dist - eval_dist) > self.threshold):
                 _result.append(pa)
 
         return _result
 
-    def run(self) -> bool:
+
+    def run(self, df_train: DataFrame, df_eval: DataFrame) -> bool:
         '''
         Runs test by calculating result / retrieving cached property and evaluating if 
         it passes a defined condition. 
+
+        :df_train: training data features, protected features should not be encoded yet
+        :df_eval: data to be evaluated on, protected features should not be encoded yet
         '''
-        self.result = self.get_result()
+        self.result = self.get_result(df_train, df_eval)
         self.passed = False if self.result else True
 
         return self.passed

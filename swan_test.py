@@ -68,28 +68,26 @@ df_importance = pd.DataFrame({'features':x_test.columns,'value':estimator.featur
 train=ens.inverse_transform(x_train)
 test=ens.inverse_transform(x_test)
 
-# result = data_shift_test(
-#     protected_attr = ['gender','age'],
-#     threshold = 0.05,
-#     df_train = train,
-#     df_eval = test 
-# )
+result = data_shift_test(
+    protected_attr = ['gender','age'],
+    threshold = 0.05,
+    df_train = train,
+    df_eval = test 
+)
 
 # result = DataShift(
 #     test_name='my data shift FEAT test',
 #     test_desc='',
 #     protected_attr = ['gender','age'],
-#     threshold = 0.05,
-#     df_train = train,
-#     df_eval = test 
+#     threshold = 0.05
 # )
 
-# result.run()
+# result.run(df_train = train, df_eval = test)
 
-result=generate_bias_metrics_charts(
-                protected_attr = ['gender','age'],
-                df_test_with_output = output
-            )
+# result=generate_bias_metrics_charts(
+#                 protected_attr = ['gender','age'],
+#                 df_test_with_output = output
+#             )
 
 # result = bias_metrics_test(
 #     attr='gender',
