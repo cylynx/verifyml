@@ -75,11 +75,11 @@ class SubgroupMetricThreshold(FEATTest):
         
         colors = ['red', 'blue', 'grey', 'green', 'black', 'brown', 'purple', 'orange', 'magenta', 'pink']
         
-        for value in self.results:
+        for value in self.fpr:
             color = colors.pop(0)
+            fpr = self.fpr[value]
             tpr = self.tpr[value]
             idx = self.idx[value]
-            fpr = self.fpr[value]
             thresholds_lst = self.thresholds_lst[value]
             threshold = self.thresholds[value]
 
