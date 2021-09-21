@@ -6,7 +6,6 @@ from typing import ClassVar
 
 from .FEATTest import FEATTest
 
-# TODO: refactor and error handling
 @dataclass
 class SHAPFeatureImportance(FEATTest):
     '''
@@ -28,6 +27,8 @@ class SHAPFeatureImportance(FEATTest):
             explainer = shap.TreeExplainer(model = model, model_output='margin')
         elif model_type == 'others':
             explainer = shap.PermutationExplainer(model = model.predict_proba, data=x_train)
+        else:
+            raise ValueError("model_type should be 'trees' or 'others'")
         
         self.shap_values = explainer.shap_values(x_test)
         
@@ -78,7 +79,7 @@ class SHAPFeatureImportance(FEATTest):
         protected attributes across the whole dataset.
         '''
         if not self.result:
-            raise AttributeError('Cannot create dependence plot before obtaining test results.')
+            raise AttributeError('Cannot create dependence plot before running test.')
 
         for r in self.result:
             shap.dependence_plot(r, shap_values=self.shap_values[1], features=x_test,interaction_index=None)

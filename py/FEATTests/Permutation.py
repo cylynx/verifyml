@@ -7,7 +7,6 @@ from typing import ClassVar
 
 from .FEATTest import FEATTest
 
-# TODO: refactor and error handling
 @dataclass
 class Permutation(FEATTest):
     '''
@@ -53,11 +52,11 @@ class Permutation(FEATTest):
             cm = confusion_matrix(tmp.truth, tmp.prediction)
 
             if metric == 'fpr':
-                metric_dict[i] = cm[0][1]/cm[0].sum()
+                metric_dict[i] = cm[0][1] / cm[0].sum()
             elif metric == 'fnr':
-                metric_dict[i] = cm[1][0]/cm[1].sum()
+                metric_dict[i] = cm[1][0] / cm[1].sum()
             elif metric == 'sr':
-                metric_dict[i]=cm[1].sum()/cm.sum()
+                metric_dict[i] = cm[1].sum() / cm.sum()
         
         return metric_dict
 
