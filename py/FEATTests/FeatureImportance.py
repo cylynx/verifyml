@@ -6,7 +6,6 @@ from typing import ClassVar
 
 from .FEATTest import FEATTest
 
-# TODO: refactor and error handling
 @dataclass
 class FeatureImportance(FEATTest):
     '''
@@ -22,6 +21,7 @@ class FeatureImportance(FEATTest):
 
     technique: ClassVar[str] = 'Self-declared Feature Importance'
 
+
     @staticmethod
     def plot(df: DataFrame, top_n: int):
         # Plot top n important features
@@ -30,6 +30,7 @@ class FeatureImportance(FEATTest):
         plt.title('Feature Importance Plot')
         plt.ylabel('Relative Importance Value')
         plt.tight_layout()
+
 
     def get_result(self, df_importance) -> any:
         '''

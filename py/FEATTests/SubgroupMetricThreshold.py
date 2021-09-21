@@ -1,3 +1,4 @@
+from __future__ import annotations
 from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
@@ -28,11 +29,20 @@ class SubgroupMetricThreshold(FEATTest):
     technique: ClassVar[str] = 'Subgroup Metric Threshold'
 
 
+    def __post_init__(self):
+        metrics = {'fpr', 'tpr'}
+        if self.metric not in metrics:
+            raise AttributeError(f'metric should be one of {metrics}.')
+
+
     def get_result(self, df_test_with_output) -> any:
         '''
         Test if at the current probability thresholds, for a particular attribute, the fpr/tpr of its groups 
         passes the maximum/mininum specified metric thresholds. Output the list of groups which fails the test.
         '''
+        if not self.attr in set(df_test_with_output.columns):
+            raise KeyError(f'{self.attr} column is not in given df.')
+
         result = []
         self.fpr = {}
         self.tpr = {}

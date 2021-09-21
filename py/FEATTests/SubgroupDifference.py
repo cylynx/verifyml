@@ -7,7 +7,6 @@ from typing import ClassVar
 
 from .FEATTest import FEATTest
 
-# TODO: refactor and error handling
 @dataclass
 class SubgroupDifference(FEATTest):
     '''
@@ -29,6 +28,16 @@ class SubgroupDifference(FEATTest):
     technique: ClassVar[str] = 'Subgroup Difference'
 
 
+    def __post_init__(self):
+        metrics = {'fpr', 'fnr', 'sr'}
+        if self.metric not in metrics:
+            raise AttributeError(f'metric should be one of {metrics}.')
+        
+        methods = {'diff', 'ratio'}
+        if self.method not in methods:
+            raise AttributeError(f'method should be one of {methods}.')
+
+
     def get_metric_dict(self, attr: str, df: DataFrame) -> dict[str, float]:
         '''
         Reads a df and returns a dictionary that shows the metric max 
@@ -37,6 +46,9 @@ class SubgroupDifference(FEATTest):
         :attr: protected attribute
         :df: dataframe containing protected attributes with "prediction" and "truth" column
         '''
+        if not attr in set(df.columns):
+            raise KeyError(f'{attr} column is not in given df.')
+
         self.fnr = {}
         self.fpr = {}
         self.sr = {}
@@ -84,6 +96,9 @@ class SubgroupDifference(FEATTest):
 
         :df_test_with_output: dataframe containing protected attributes with "prediction" and "truth" column
         '''
+        if not {'prediction', 'truth'}.issubset(df_test_with_output.columns):
+            raise ValueError("df should have 'prediction' and 'truth' columns.")
+
         self.metric_dict = self.get_metric_dict(self.attr, df_test_with_output)
         result_key = self.get_result_key()
 
