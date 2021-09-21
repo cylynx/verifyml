@@ -80,10 +80,13 @@ class SubgroupMetricThreshold(FEATTest):
 
 
     def plot(self):
-        ''' Plots an ROC curve for every value that crossed the metric threshold. '''
+        ''' Plots ROC curve for every group in the attribute, also mark the points of optimal probability threshold,
+            which maximises tpr-fpr.
+        '''
         if not self.result:
             raise AttributeError('Cannot plot before obtaining results.')
         
+        plt.figure(figsize=(13,6))
         colors = ['red', 'blue', 'grey', 'green', 'black', 'brown', 'purple', 'orange', 'magenta', 'pink']
         
         for value in self.fpr:

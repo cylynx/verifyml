@@ -32,6 +32,7 @@ class FeatureImportance(FEATTest):
         plt.bar(df.iloc[:top_n,0], df.iloc[:top_n,1])
         plt.title(title)
         plt.ylabel('Relative Importance Value')
+        plt.xticks(rotation=45)
         plt.tight_layout()
         
         self.plots[title] = plot_to_str()

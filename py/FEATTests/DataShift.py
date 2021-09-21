@@ -61,11 +61,12 @@ class DataShift(FEATTest):
         :df_train: training data features, protected features should not be encoded yet
         :df_eval: data to be evaluated on, protected features should not be encoded yet
         '''
-        fig, axs = plt.subplots(1, len(self.protected_attr), figsize=(15, 4),)
+        fig, axs = plt.subplots(1, len(self.protected_attr), figsize=(18, 6),)
         num=0
         for pa in self.protected_attr:
             train_dist = self.get_df_distribution_by_pa(df_train, pa).sort_values('index')
             train_dist.plot(kind='bar', color='green', ax=axs[num])
+            axs[num].tick_params(axis='x', labelrotation=0)
             num+=1
 
         training_title = 'Probability Distribution of protected attributes in training set'
@@ -73,11 +74,12 @@ class DataShift(FEATTest):
         plt.show()
         self.plots[training_title] = plot_to_str()
 
-        fig, axs = plt.subplots(1, len(self.protected_attr), figsize=(15, 4),)
+        fig, axs = plt.subplots(1, len(self.protected_attr), figsize=(18, 6),)
         num=0
         for pa in self.protected_attr:
             eval_dist = self.get_df_distribution_by_pa(df_eval, pa).sort_values('index')
             eval_dist.plot(kind='bar', color='red', ax=axs[num])
+            axs[num].tick_params(axis='x', labelrotation=0)
             num+=1
         test_title = 'Probability Distribution of protected attributes in test set'
         fig.suptitle(test_title)

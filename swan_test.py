@@ -20,26 +20,15 @@ from py.FEATTests import (
     SubgroupMetricThreshold
 )
 
-# df=pd.read_csv('data/creditcard.csv',nrows=100000).drop('Time',axis=1)
-# df=df[['V1','V2','V3','V4','V5','Class']]
-# df=pd.concat([df[df.Class==0].sample(2000), df[df.Class==1]]).reset_index(drop=True)
-# # df=pd.read_csv('syn.csv',nrows=100000)
-# # df=df[['amount','oldbalanceOrg','newbalanceOrig','oldbalanceDest','newbalanceDest','isFraud']]
-
-# # Add mocked protected attributes columns
-# df['age']=df.V1.apply(lambda x: np.random.choice(["<=17", "18-25", "26-39", ">=40"], p=[0.1, 0.3,0.3,0.3]))
-# df['gender']=df.V1.apply(lambda x: np.random.choice(["M", "F"], p=[0.5, 0.5]))
-# x=df.drop('Class',axis=1)
-# y=df['Class']
-
 # Fraud dataset
-df=pd.read_csv('data/fraud.csv')
-# df=df[['category','amt','gender','lat','long','city_pop','dob','merch_lat','merch_long','is_fraud']]
-# df=pd.concat([df[df.is_fraud==0].sample(20000), df[df.is_fraud==1]]).reset_index(drop=True)
-# df['age'] = df.dob.apply(lambda x: "<=23" if 2021-x.year<=23 else ("23-35" if 2021-x.year<=35 else ("36-50" if 2021-x.year<=50 else  ">=50" ) ))
-# df.drop('dob',axis=1,inplace=True)
-x=df.drop('is_fraud',axis=1)
-y=df['is_fraud']
+# df=pd.read_csv('data/fraud.csv')
+# x=df.drop('is_fraud',axis=1)
+# y=df['is_fraud']
+
+# Credit dataset
+df=pd.read_csv('data/credit_reject.csv')
+x=df.drop('reject',axis=1)
+y=df['reject']
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.8, random_state=32)
 estimator = RandomForestClassifier(n_estimators=10, max_features='sqrt')
@@ -64,78 +53,52 @@ output['prediction_probas']=y_probas
 
 
 df_importance = pd.DataFrame({'features':x_test.columns,'value':estimator.feature_importances_})
+df_importance = df_importance.sort_values(df_importance.columns[1],ascending=False)
+train=ens.inverse_transform(x_train)
+test=ens.inverse_transform(x_test)
 
-# result = pa_in_top_feature_importance(
-#     protected_attr=['gender','age'],
-#     top_n=6,
-#     df_importance=df_importance,
-# )
-
+## User inputted FeatureImportance Test
 # result = FeatureImportance(
 #     test_name='my feature importance FEAT test',
 #     test_desc='',
 #     attrs=['gender','age'],
-#     top_n=6
+#     top_n=10
 # )
-
 # result.run(df_importance)
+# result.plot(df_importance,top_n=10)
 
-# result = pa_in_top_feature_importance_shap(
-#     protected_attr=['gender','age'],
-#     top_n=7,
-#     model=estimator,
-#     model_type='trees',
-#     x_train=x_train,
-#     x_test=x_test
-# )
 
+## SHAP FeatureImportance Test
 # result = SHAPFeatureImportance(
 #     test_name='SHAP',
 #     test_desc='',
 #     attrs=['gender','age'],
-#     top_n=7
+#     top_n=10
 # )
-
 # result.run(
 #     model=estimator,
 #     model_type='trees',
 #     x_train=x_train,
 #     x_test=x_test
 # )
+# result.shap_summary_plot(x_test)
+# result.shap_dependence_plot(x_test)
 
-train=ens.inverse_transform(x_train)
-test=ens.inverse_transform(x_test)
 
-# result = data_shift_test(
+
+
+## Data Shift Test
+# result = DataShift(
+#     test_name='my data shift FEAT test',
+#     test_desc='',
 #     protected_attr = ['gender','age'],
-#     threshold = 0.05,
-#     df_train = train,
-#     df_eval = test 
+#     threshold = 0.05
 # )
+# result.run(df_train = train, df_eval = test)
+# result.plot(train, test)
 
-result = DataShift(
-    test_name='my data shift FEAT test',
-    test_desc='',
-    protected_attr = ['gender','age'],
-    threshold = 0.05
-)
 
-result.run(df_train = train, df_eval = test)
-result.plot(df_train = train, df_eval = test)
-
-# result=generate_bias_metrics_charts(
-#                 protected_attr = ['gender','age'],
-#                 df_test_with_output = output
-#             )
-
-# result = bias_metrics_test(
-#     attr='gender',
-#     metric='sr',
-#     method='ratio',
-#     threshold=1.5,
-#     df_test_with_output = output
-# )
-
+## SubgroupDifference Test
 # result = SubgroupDifference(
 #     test_name='subgroup diff',
 #     test_desc='',
@@ -144,21 +107,11 @@ result.plot(df_train = train, df_eval = test)
 #     method='ratio',
 #     threshold=1.5,
 # )
+# result.run(output)
+# result.plot()
 
-# result.run(df_test_with_output=output)
 
-
-# result =bias_metrics_permutation_test(
-#     attr='age',
-#     metric='sr',
-#     method='ratio',
-#     threshold=1.25,
-#     x_test=x_test,
-#     y_test=y_test,
-#     encoder=ens,
-#     model=estimator
-# )
-
+## Data Permutation SubgroupDifference Test
 # result = Permutation(
 #     test_name='permutation',
 #     test_desc='',
@@ -175,24 +128,18 @@ result.plot(df_train = train, df_eval = test)
 #     model=estimator
 # )
 
-# result = roc_curve_groups_test(
-#     attr = 'age',
-#     df_test_with_output = output,
-#     metric = 'tpr',
-#     metric_threshold = 0.65,
-#     #proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}
-# )
 
-# result = SubgroupMetricThreshold(
-#     test_name='subgroup metric threshold',
-#     test_desc='',
-#     attr = 'age',
-#     metric = 'tpr',
-#     metric_threshold = 0.65,
-#     #proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}
-# )
-
-# result.run(df_test_with_output = output)
-
+## Threshold/ROC Test
+result = SubgroupMetricThreshold(
+    test_name='subgroup metric threshold',
+    test_desc='',
+    attr = 'age',
+    metric = 'tpr',
+    metric_threshold = 0.70,
+    #proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}
+)
+result.run(df_test_with_output = output)
+result.plot()
 print(result.__dict__)
-# print(result)
+
+print(result)
