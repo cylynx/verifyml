@@ -1,11 +1,12 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import matplotlib.pyplot as plt
 from pandas import DataFrame
 from sklearn.metrics import confusion_matrix
 from typing import ClassVar
 
 from .FEATTest import FEATTest
+from .utils import plot_to_str
 
 @dataclass
 class SubgroupDifference(FEATTest):
@@ -24,6 +25,7 @@ class SubgroupDifference(FEATTest):
     metric: str
     method: str
     threshold: float
+    plots: dict[str, str] = field(repr=False, default_factory=lambda: {})
 
     technique: ClassVar[str] = 'Subgroup Difference'
 
@@ -81,9 +83,12 @@ class SubgroupDifference(FEATTest):
         axs[1].set_title('False Positive Rates')
         axs[2].bar(list(self.sr.keys()), list(self.sr.values()))
         axs[2].set_title('Predicted Positive Rates')
-        fig.suptitle(f'Attribute: {self.attr}')
+
+        title = f'Attribute: {self.attr}'
+        fig.suptitle(title)
 
         plt.show()
+        self.plots[title] = plot_to_str()
 
 
     def get_result_key(self) -> str:

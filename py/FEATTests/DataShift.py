@@ -1,10 +1,11 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pandas import DataFrame
 from typing import ClassVar
 import matplotlib.pyplot as plt
 
 from .FEATTest import FEATTest
+from .utils import plot_to_str
 
 @dataclass
 class DataShift(FEATTest):
@@ -19,6 +20,7 @@ class DataShift(FEATTest):
 
     protected_attr: list[str]
     threshold: float
+    plots: dict[str, str] = field(repr=False, default_factory=lambda: {})
 
     technique: ClassVar[str] = 'Data Shift'
 
@@ -65,18 +67,23 @@ class DataShift(FEATTest):
             train_dist = self.get_df_distribution_by_pa(df_train, pa).sort_values('index')
             train_dist.plot(kind='bar', color='green', ax=axs[num])
             num+=1
-        fig.suptitle('Probability Distribution of protected attributes in training set')
+
+        training_title = 'Probability Distribution of protected attributes in training set'
+        fig.suptitle(training_title)
         plt.show()
-        
+        self.plots[training_title] = plot_to_str()
+
         fig, axs = plt.subplots(1, len(self.protected_attr), figsize=(15, 4),)
         num=0
         for pa in self.protected_attr:
             eval_dist = self.get_df_distribution_by_pa(df_eval, pa).sort_values('index')
             eval_dist.plot(kind='bar', color='red', ax=axs[num])
             num+=1
-        fig.suptitle('Probability Distribution of protected attributes in test set')
-        plt.show()
-        
+        test_title = 'Probability Distribution of protected attributes in test set'
+        fig.suptitle(test_title)
+        plt.show()        
+        self.plots[test_title] = plot_to_str()
+
 
     def run(self, df_train: DataFrame, df_eval: DataFrame) -> bool:
         '''

@@ -1,11 +1,12 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import matplotlib.pyplot as plt
 import numpy as np
 from typing import ClassVar
 from sklearn.metrics import roc_curve
 
 from .FEATTest import FEATTest
+from .utils import plot_to_str
 
 @dataclass
 class SubgroupMetricThreshold(FEATTest):
@@ -24,6 +25,7 @@ class SubgroupMetricThreshold(FEATTest):
     metric: str
     metric_threshold: float
     proba_thresholds: dict = None
+    plots: dict[str, str] = field(repr=False, default_factory=lambda: {})
 
     technique: ClassVar[str] = 'Subgroup Metric Threshold'
 
@@ -135,9 +137,11 @@ class SubgroupMetricThreshold(FEATTest):
                 label=f'Maximum FPR Threshold = {str(self.metric_threshold)}'
             )
 
-        plt.title(f'ROC Curve of {self.attr} groups', fontsize=15)
+        title = f'ROC Curve of {self.attr} groups'
+        plt.title(title, fontsize=15)
         plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
         plt.show()
+        self.plots[title] = plot_to_str()
 
 
     def run(self, df_test_with_output) -> bool:

@@ -1,10 +1,11 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import matplotlib.pyplot as plt
 from pandas import DataFrame
 from typing import ClassVar
 
 from .FEATTest import FEATTest
+from .utils import plot_to_str
 
 @dataclass
 class FeatureImportance(FEATTest):
@@ -18,18 +19,22 @@ class FeatureImportance(FEATTest):
 
     attrs: list[str]
     top_n: int
+    plots: dict[str, str] = field(repr=False, default_factory=lambda: {})
 
     technique: ClassVar[str] = 'Self-declared Feature Importance'
 
 
-    @staticmethod
-    def plot(df: DataFrame, top_n: int):
+    def plot(self, df: DataFrame, top_n: int):
+        title = 'Feature Importance Plot'
+
         # Plot top n important features
         plt.figure(figsize=(15,8))
         plt.bar(df.iloc[:top_n,0], df.iloc[:top_n,1])
-        plt.title('Feature Importance Plot')
+        plt.title(title)
         plt.ylabel('Relative Importance Value')
         plt.tight_layout()
+        
+        self.plots[title] = plot_to_str()
 
 
     def get_result(self, df_importance) -> any:

@@ -1,10 +1,11 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pandas import DataFrame
 import shap
 from typing import ClassVar
 
 from .FEATTest import FEATTest
+from .utils import plot_to_str
 
 @dataclass
 class SHAPFeatureImportance(FEATTest):
@@ -18,6 +19,7 @@ class SHAPFeatureImportance(FEATTest):
 
     attrs: list[str]
     top_n: int
+    plots: dict[str, str] = field(repr=False, default_factory=lambda: {})
 
     technique: ClassVar[str] = 'SHAP Feature Importance'
 
@@ -47,6 +49,8 @@ class SHAPFeatureImportance(FEATTest):
             max_display=20,
             plot_type='dot'
         )
+
+        self.plots['SHAP Summary Plot'] = plot_to_str()
 
 
     def get_result(
@@ -83,6 +87,7 @@ class SHAPFeatureImportance(FEATTest):
 
         for r in self.result:
             shap.dependence_plot(r, shap_values=self.shap_values[1], features=x_test,interaction_index=None)
+            self.plots[f'SHAP Dependence Plot: {r}'] = plot_to_str()
 
 
     def run(

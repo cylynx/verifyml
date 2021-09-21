@@ -103,8 +103,8 @@ df_importance = pd.DataFrame({'features':x_test.columns,'value':estimator.featur
 #     x_test=x_test
 # )
 
-# train=ens.inverse_transform(x_train)
-# test=ens.inverse_transform(x_test)
+train=ens.inverse_transform(x_train)
+test=ens.inverse_transform(x_test)
 
 # result = data_shift_test(
 #     protected_attr = ['gender','age'],
@@ -113,14 +113,15 @@ df_importance = pd.DataFrame({'features':x_test.columns,'value':estimator.featur
 #     df_eval = test 
 # )
 
-# result = DataShift(
-#     test_name='my data shift FEAT test',
-#     test_desc='',
-#     protected_attr = ['gender','age'],
-#     threshold = 0.05
-# )
+result = DataShift(
+    test_name='my data shift FEAT test',
+    test_desc='',
+    protected_attr = ['gender','age'],
+    threshold = 0.05
+)
 
-# result.run(df_train = train, df_eval = test)
+result.run(df_train = train, df_eval = test)
+result.plot(df_train = train, df_eval = test)
 
 # result=generate_bias_metrics_charts(
 #                 protected_attr = ['gender','age'],
@@ -182,16 +183,16 @@ df_importance = pd.DataFrame({'features':x_test.columns,'value':estimator.featur
 #     #proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}
 # )
 
-result = SubgroupMetricThreshold(
-    test_name='subgroup metric threshold',
-    test_desc='',
-    attr = 'age',
-    metric = 'tpr',
-    metric_threshold = 0.65,
-    #proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}
-)
+# result = SubgroupMetricThreshold(
+#     test_name='subgroup metric threshold',
+#     test_desc='',
+#     attr = 'age',
+#     metric = 'tpr',
+#     metric_threshold = 0.65,
+#     #proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}
+# )
 
-result.run(df_test_with_output = output)
+# result.run(df_test_with_output = output)
 
-# print(result.__dict__)
-print(result)
+print(result.__dict__)
+# print(result)
