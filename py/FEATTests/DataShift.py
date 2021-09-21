@@ -23,7 +23,8 @@ class DataShift(FEATTest):
     technique: ClassVar[str] = 'Data Shift'
 
 
-    def get_df_distribution_by_pa(self, df: DataFrame, col: str):
+    @staticmethod
+    def get_df_distribution_by_pa(df: DataFrame, col: str):
         '''
         Get the probability distribution of a specified column's values in a given df.
         '''
@@ -49,7 +50,8 @@ class DataShift(FEATTest):
                 _result.append(pa)
 
         return _result
-    
+
+
     def plot(self, df_train, df_eval):
         '''
         Plot the distribution of the attribute groups for training and evaluation set
