@@ -33,11 +33,11 @@ from py.FEATTests import (
 # y=df['Class']
 
 # Fraud dataset
-df=pd.read_csv('fraud.csv',parse_dates=['dob'],nrows=100000)
-df=df[['category','amt','gender','lat','long','city_pop','dob','merch_lat','merch_long','is_fraud']]
-df=pd.concat([df[df.is_fraud==0].sample(20000), df[df.is_fraud==1]]).reset_index(drop=True)
-df['age'] = df.dob.apply(lambda x: "<=23" if 2021-x.year<=23 else ("23-35" if 2021-x.year<=35 else ("36-50" if 2021-x.year<=50 else  ">=50" ) ))
-df.drop('dob',axis=1,inplace=True)
+df=pd.read_csv('data/fraud.csv')
+# df=df[['category','amt','gender','lat','long','city_pop','dob','merch_lat','merch_long','is_fraud']]
+# df=pd.concat([df[df.is_fraud==0].sample(20000), df[df.is_fraud==1]]).reset_index(drop=True)
+# df['age'] = df.dob.apply(lambda x: "<=23" if 2021-x.year<=23 else ("23-35" if 2021-x.year<=35 else ("36-50" if 2021-x.year<=50 else  ">=50" ) ))
+# df.drop('dob',axis=1,inplace=True)
 x=df.drop('is_fraud',axis=1)
 y=df['is_fraud']
 
