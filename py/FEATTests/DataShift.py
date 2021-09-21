@@ -1,6 +1,8 @@
+from __future__ import annotations
 from dataclasses import dataclass
 from pandas import DataFrame
 from typing import ClassVar
+import matplotlib.pyplot as plt
 
 from .FEATTest import FEATTest
 
@@ -47,7 +49,32 @@ class DataShift(FEATTest):
                 _result.append(pa)
 
         return _result
-
+    
+    def plot(self, df_train, df_eval):
+        '''
+        Plot the distribution of the attribute groups for training and evaluation set
+        
+        :df_train: training data features, protected features should not be encoded yet
+        :df_eval: data to be evaluated on, protected features should not be encoded yet
+        '''
+        fig, axs = plt.subplots(1, len(self.protected_attr), figsize=(15, 4),)
+        num=0
+        for pa in self.protected_attr:
+            train_dist = self.get_df_distribution_by_pa(df_train, pa).sort_values('index')
+            train_dist.plot(kind='bar', color='green', ax=axs[num])
+            num+=1
+        fig.suptitle('Probability Distribution of protected attributes in training set')
+        plt.show()
+        
+        fig, axs = plt.subplots(1, len(self.protected_attr), figsize=(15, 4),)
+        num=0
+        for pa in self.protected_attr:
+            eval_dist = self.get_df_distribution_by_pa(df_eval, pa).sort_values('index')
+            eval_dist.plot(kind='bar', color='red', ax=axs[num])
+            num+=1
+        fig.suptitle('Probability Distribution of protected attributes in test set')
+        plt.show()
+        
 
     def run(self, df_train: DataFrame, df_eval: DataFrame) -> bool:
         '''

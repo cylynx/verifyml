@@ -60,7 +60,7 @@ def bias_metrics_test(
     :metric: type of bias metric for the test, choose from ('fpr', 'fnr', 'sr'), 
              'fpr' - false positive rate, 'fnr' - false negative rate, 'sr': selection rate
     :method: type of method for the test, choose from ('diff', 'ratio')
-    :threshold: threshold which if the max difference of false positive, false negative, negative 
+    :threshold: threshold for difference/ratio of the metric
     :df_test_with_output: dataframe containing protected attributes with "prediction" and "truth" colum.n
     '''
     metric_dict = generate_bias_metrics_charts(

@@ -19,7 +19,7 @@ def pa_in_top_feature_importance(protected_attr:list, top_n:int, df_importance:p
     plt.bar(df_importance.iloc[:10,0], df_importance.iloc[:10,1])
     plt.title('Feature Importance Plot')
     plt.ylabel('Relative Importance Value')
-    plt.show()
+    plt.tight_layout()
     
     top_feats=df_importance.iloc[:top_n,0]
     result=[]

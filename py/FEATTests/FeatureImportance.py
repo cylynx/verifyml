@@ -1,3 +1,4 @@
+from __future__ import annotations
 from dataclasses import dataclass
 import matplotlib.pyplot as plt
 from pandas import DataFrame
@@ -28,7 +29,7 @@ class FeatureImportance(FEATTest):
         plt.bar(df.iloc[:top_n,0], df.iloc[:top_n,1])
         plt.title('Feature Importance Plot')
         plt.ylabel('Relative Importance Value')
-        plt.show()
+        plt.tight_layout()
 
     def get_result(self, df_importance) -> any:
         '''
