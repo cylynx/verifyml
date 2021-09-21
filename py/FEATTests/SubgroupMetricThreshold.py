@@ -7,7 +7,6 @@ from sklearn.metrics import roc_curve
 
 from .FEATTest import FEATTest
 
-# TODO: refactor and error handling
 @dataclass
 class SubgroupMetricThreshold(FEATTest):
     '''

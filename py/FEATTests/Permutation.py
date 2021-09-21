@@ -31,6 +31,15 @@ class Permutation(FEATTest):
 
     technique: ClassVar[str] = 'Permutation'
 
+    def __post_init__(self):
+        metrics = {'fpr', 'fnr', 'sr'}
+        if self.metric not in metrics:
+            raise AttributeError(f'metric should be one of {metrics}.')
+        
+        methods = {'diff', 'ratio'}
+        if self.method not in methods:
+            raise AttributeError(f'method should be one of {methods}.')
+
 
     @staticmethod
     def add_predictions_to_df(df: DataFrame, model, encoder):
