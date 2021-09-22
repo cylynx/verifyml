@@ -194,48 +194,34 @@ message PerformanceMetric {
   optional GraphicsCollection graphics = 5;
 }
 
-// Model explainability analysis.
-// The next tag number is 5.
-message ExplainabilityAnalysis {
-
-  // The type of explainability method.
-  optional string type = 1;
-
-  // The name of the slice the explainability method was computed on.
+// Information about test or check runned against the model.
+// The next tag number is 8.
+message Test {
+  // The name of the test
+  optional string name = 1;
+  
+  // The name of the slice the test was computed on.
   // By default, assume this metric is not sliced.
   optional string slice = 2;
 
-  // User-friendly description of the explainability method.
+  // User-friendly description of the test.
   optional string description = 3;
 
-  // A collection of visualizations related to the explainability method.
-  optional GraphicsCollection graphics = 4;
-}
+  // Threshold to pass the test
+  optional string threshold = 4;
 
-// Model fairness analysis.
-// The next tag number is 5.
-message FairnessAnalysis {
+  // Actual result of the test
+  optional string result = 5;
 
-  // The type of fairness analysis.
-  optional string type = 1;
+  // Whether the model has passed the test?
+  optional bool pass = 6;
 
-  // The name of the slice the fairness analysis was computed on.
-  // By default, assume this metric is not sliced.
-  optional string slice = 2;
-
-  // Segment of dataset which the fairness analysis is meant to assess.
-  // e.g. age, gender, age and gender, etc.
-  optional string segment = 3;
-
-  // User-friendly description of the fairness method.
-  optional string description = 4;
-
-  // A collection of visualizations related to the fairness method.
-  optional GraphicsCollection graphics = 5;
+  // A collection of visualizations related to the test.
+  optional GraphicsCollection graphics = 7;
 }
 
 // The quantitative analysis of a model.
-// The next tag number is 5.
+// The next tag number is 4.
 message QuantitativeAnalysis {
   // The performance metrics being reported.
   repeated PerformanceMetric performance_metrics = 1;
@@ -245,11 +231,69 @@ message QuantitativeAnalysis {
   // Prefer to use GraphicsCollection within PerformanceMetric.
   optional GraphicsCollection graphics = 2;
 
-  // Explainability analysis being reported.
-  repeated ExplainabilityAnalysis explainability_analysis = 3;
+  // Tests related to model's performance
+  repeated Test tests = 3; 
+}
 
-  // Fairness analysis being reported.
-  repeated FairnessAnalysis fairness_analysis = 4;
+// Model explainability report.
+// The next tag number is 5.
+message ExplainabilityReport {
+ // The type of explainability method.
+ optional string type = 1;
+
+ // The name of the slice the explainability method was computed on.
+ // By default, assume this metric is not sliced.
+ optional string slice = 2;
+
+ // User-friendly description of the explainability method.
+ optional string description = 3;
+
+ // A collection of visualizations related to the explainability method.
+ optional GraphicsCollection graphics = 4;
+ 
+}
+
+
+// Model explainability analysis.
+// The next tag number is 3.
+message ExplainabilityAnalysis {
+  // Model explainability report e.g. feature importance, decision trees etc.
+  repeated ExplainabilityReport explainability_report = 1;
+
+  // Tests related to explainability
+  repeated Test tests = 2; 
+}
+
+// Report associated with a model fairness method.
+// The next tag number is 6.
+message FairnessReport {
+  // The type of fairness study conducted.
+  optional string type = 1;
+
+  // The name of the slice the fairness report was computed on.
+  // By default, assume this metric is not sliced.
+  optional string slice = 2;
+
+  // Segment of dataset which the fairness report is meant to assess.
+  // e.g. age, gender, age and gender, etc.
+  optional string segment = 3;
+
+  // User-friendly description of the fairness method.
+  optional string description = 4;
+
+  // A collection of visualizations related to the fairness method.
+  optional GraphicsCollection graphics = 5;
+  
+}
+
+// Model fairness analysis.
+// The next tag number is 3.
+message FairnessAnalysis {
+  // Fairness report to evaluate the model performance on various groups.
+  repeated FairnessReport fairness_report = 1;
+
+  // Tests related to fairness considerations.
+  repeated Test tests = 2;
 }
 
 // A type of user for a model.
@@ -331,41 +375,8 @@ message Considerations {
   repeated FairnessAssessment fairness_assessment = 6;
 }
 
-// Information about test or check runned against the model.
-// The next tag number is 8.
-message Test {
-  // The name of the test
-  optional string name = 1;
-  
-  // The name of the slice the test was computed on.
-  // By default, assume this metric is not sliced.
-  optional string slice = 2;
-
-  // User-friendly description of the test.
-  optional string description = 3;
-
-  // Threshold to pass the test
-  optional string threshold = 4;
-
-  // Actual result of the test
-  optional string result = 5;
-
-  // Whether the model has passed the test?
-  optional bool pass = 6;
-
-  // A collection of visualizations related to the test.
-  optional GraphicsCollection graphics = 7;
-}
-
-// Tests or checks used to verify model's performance / fairness. 
-// The next tag number is 2.
-message ModelTests {
-   // The performance metrics being reported.
-   repeated Test test = 1;
-}
-
 // Fields used to generate the Model Card.
-// The next tag number is 6.
+// The next tag number is 7.
 message ModelCard {
   // Descriptive metadata for the model.
   optional ModelDetails model_details = 1;
@@ -378,7 +389,10 @@ message ModelCard {
 
   // Any considerations related to model construction, training, and application
   optional Considerations considerations = 4;
+  
+  // Explainability analysis being reported.
+  optional ExplainabilityAnalysis explainability_analysis = 5;
 
-  // Tests to verify model's performance / fairness.
-  optional ModelTests tests = 5;
+  // Fairness analysis being reported.
+  optional FairnessAnalysis fairness_analysis = 6;
 }
