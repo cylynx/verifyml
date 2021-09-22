@@ -344,7 +344,7 @@ class PerformanceMetric(BaseModelCardField):
     slice: Optional[str] = None
     description: Optional[str] = None
     graphics: GraphicsCollection = dataclasses.field(default_factory=GraphicsCollection)
-    tests: Test = dataclasses.field(default_factory=Test)
+    tests: List[Test] = dataclasses.field(default_factory=list)
 
     _proto_type: dataclasses.InitVar[
         BaseModelCardField._get_type(model_card_pb2.PerformanceMetric)
@@ -405,10 +405,10 @@ class ExplainabilityReport(BaseModelCardField):
     slice: Optional[str] = None
     description: Optional[str] = None
     graphics: GraphicsCollection = dataclasses.field(default_factory=GraphicsCollection)
-    tests: Test = dataclasses.field(default_factory=Test)
+    tests: List[Test] = dataclasses.field(default_factory=list)
 
     _proto_type: dataclasses.InitVar[
-        type(model_card_pb2.ExplainabilityReport)
+        BaseModelCardField._get_type(model_card_pb2.ExplainabilityReport)
     ] = model_card_pb2.ExplainabilityReport
 
 
@@ -451,10 +451,10 @@ class FairnessReport(BaseModelCardField):
     segment: Optional[str] = None
     description: Optional[str] = None
     graphics: GraphicsCollection = dataclasses.field(default_factory=GraphicsCollection)
-    tests: Test = dataclasses.field(default_factory=Test)
+    tests: List[Test] = dataclasses.field(default_factory=list)
 
     _proto_type: dataclasses.InitVar[
-        type(model_card_pb2.FairnessReport)
+        BaseModelCardField._get_type(model_card_pb2.FairnessReport)
     ] = model_card_pb2.FairnessReport
 
 
@@ -466,7 +466,7 @@ class FairnessAnalysis(BaseModelCardField):
       fairness_reports: The fairness studies undertaken.
     """
 
-    explainability_reports: List[FairnessReport] = dataclasses.field(
+    fairness_reports: List[FairnessReport] = dataclasses.field(
         default_factory=list
     )
 

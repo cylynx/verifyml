@@ -283,7 +283,7 @@ message FairnessReport {
 // The next tag number is 2.
 message FairnessAnalysis {
   // Fairness report to evaluate the model performance on various groups.
-  repeated FairnessReport fairness_report = 1;
+  repeated FairnessReport fairness_reports = 1;
 }
 
 // A type of user for a model.
