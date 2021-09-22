@@ -17,7 +17,7 @@ from py.FEATTests import (
     Permutation,
     FeatureImportance,
     SHAPFeatureImportance,
-    SubgroupMetricThreshold
+    SubgroupMetricThreshold,
 )
 
 # Fraud dataset
@@ -26,36 +26,40 @@ from py.FEATTests import (
 # y=df['is_fraud']
 
 # Credit dataset
-df=pd.read_csv('data/credit_reject.csv')
-x=df.drop('reject',axis=1)
-y=df['reject']
+df = pd.read_csv("data/credit_reject.csv")
+x = df.drop("reject", axis=1)
+y = df["reject"]
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.8, random_state=32)
-estimator = RandomForestClassifier(n_estimators=10, max_features='sqrt')
-#estimator = LogisticRegression()
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, test_size=0.8, random_state=32
+)
+estimator = RandomForestClassifier(n_estimators=10, max_features="sqrt")
+# estimator = LogisticRegression()
 
-#Apply one hot encoding to categorical columns (auto-detect object columns)
-ens=ce.OneHotEncoder(use_cat_names=True)
-x_train=ens.fit_transform(x_train)
-x_test=ens.transform(x_test)
+# Apply one hot encoding to categorical columns (auto-detect object columns)
+ens = ce.OneHotEncoder(use_cat_names=True)
+x_train = ens.fit_transform(x_train)
+x_test = ens.transform(x_test)
 
 estimator.fit(x_train, y_train)
 
-output=x_test.copy()
+output = x_test.copy()
 y_pred = estimator.predict(x_test)
-y_probas = estimator.predict_proba(x_test)[::,1]
+y_probas = estimator.predict_proba(x_test)[::, 1]
 print(confusion_matrix(y_test, y_pred))
 
-output=ens.inverse_transform(output)
-output['truth']=y_test
-output['prediction']=y_pred
-output['prediction_probas']=y_probas
+output = ens.inverse_transform(output)
+output["truth"] = y_test
+output["prediction"] = y_pred
+output["prediction_probas"] = y_probas
 
 
-df_importance = pd.DataFrame({'features':x_test.columns,'value':estimator.feature_importances_})
-df_importance = df_importance.sort_values(df_importance.columns[1],ascending=False)
-train=ens.inverse_transform(x_train)
-test=ens.inverse_transform(x_test)
+df_importance = pd.DataFrame(
+    {"features": x_test.columns, "value": estimator.feature_importances_}
+)
+df_importance = df_importance.sort_values(df_importance.columns[1], ascending=False)
+train = ens.inverse_transform(x_train)
+test = ens.inverse_transform(x_test)
 
 ## User inputted FeatureImportance Test
 # result = FeatureImportance(
@@ -83,8 +87,6 @@ test=ens.inverse_transform(x_test)
 # )
 # result.shap_summary_plot(x_test)
 # result.shap_dependence_plot(x_test)
-
-
 
 
 ## Data Shift Test
@@ -131,14 +133,14 @@ test=ens.inverse_transform(x_test)
 
 ## Threshold/ROC Test
 result = SubgroupMetricThreshold(
-    test_name='subgroup metric threshold',
-    test_desc='',
-    attr = 'age',
-    metric = 'tpr',
-    metric_threshold = 0.70,
-    #proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}
+    test_name="subgroup metric threshold",
+    test_desc="",
+    attr="age",
+    metric="tpr",
+    metric_threshold=0.70,
+    # proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}
 )
-result.run(df_test_with_output = output)
+result.run(df_test_with_output=output)
 result.plot()
 print(result.__dict__)
 
