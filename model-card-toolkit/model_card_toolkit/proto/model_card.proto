@@ -172,29 +172,25 @@ message ModelParameters {
 }
 
 // Information about test or check runned against the model.
-// The next tag number is 8.
+// The next tag number is 7.
 message Test {
   // The name of the test.
   optional string name = 1;
-  
-  // The name of the slice the test was computed on.
-  // By default, assume this metric is not sliced.
-  optional string slice = 2;
 
   // User-friendly description of the test.
-  optional string description = 3;
+  optional string description = 2;
 
   // Threshold to pass the test.
-  optional string threshold = 4;
+  optional string threshold = 3;
 
   // Actual result of the test.
-  optional string result = 5;
+  optional string result = 4;
 
   // Whether the model result satisfies the given threshold.
-  optional bool passed = 6;
+  optional bool passed = 5;
 
   // A collection of visualizations related to the test.
-  optional GraphicsCollection graphics = 7;
+  optional GraphicsCollection graphics = 6;
 }
 
 // The details of the performance metric.
