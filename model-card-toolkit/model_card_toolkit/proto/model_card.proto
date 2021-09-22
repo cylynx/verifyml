@@ -197,7 +197,7 @@ message PerformanceMetric {
 // Information about test or check runned against the model.
 // The next tag number is 8.
 message Test {
-  // The name of the test
+  // The name of the test.
   optional string name = 1;
   
   // The name of the slice the test was computed on.
@@ -207,14 +207,14 @@ message Test {
   // User-friendly description of the test.
   optional string description = 3;
 
-  // Threshold to pass the test
+  // Threshold to pass the test.
   optional string threshold = 4;
 
-  // Actual result of the test
+  // Actual result of the test.
   optional string result = 5;
 
-  // Whether the model has passed the test?
-  optional bool pass = 6;
+  // Whether the model result satisfies the given threshold.
+  optional bool passed = 6;
 
   // A collection of visualizations related to the test.
   optional GraphicsCollection graphics = 7;
