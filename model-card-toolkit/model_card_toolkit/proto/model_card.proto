@@ -171,29 +171,6 @@ message ModelParameters {
   optional string output_format = 4;
 }
 
-// The details of the performance metric.
-message PerformanceMetric {
-  // TODO(b/179415408): revist the design the of message
-  // The following fields are EXPERIMENTAL and introduced for migration purpose.
-  // For proto users, please do not rely on the fields.
-
-  // The type of performance metric.
-  optional string type = 1;
-
-  // The value of the performance metric.
-  optional string value = 2;
-
-  // The name of the slice this metric was computed on.
-  // By default, assume this metric is not sliced.
-  optional string slice = 3;
-
-  // User-friendly description of the performance metric.
-  optional string description = 4;
-
-  // A collection of visualizations related to the metric and slice.
-  optional GraphicsCollection graphics = 5;
-}
-
 // Information about test or check runned against the model.
 // The next tag number is 8.
 message Test {
@@ -220,8 +197,34 @@ message Test {
   optional GraphicsCollection graphics = 7;
 }
 
+// The details of the performance metric.
+message PerformanceMetric {
+  // TODO(b/179415408): revist the design the of message
+  // The following fields are EXPERIMENTAL and introduced for migration purpose.
+  // For proto users, please do not rely on the fields.
+
+  // The type of performance metric.
+  optional string type = 1;
+
+  // The value of the performance metric.
+  optional string value = 2;
+
+  // The name of the slice this metric was computed on.
+  // By default, assume this metric is not sliced.
+  optional string slice = 3;
+
+  // User-friendly description of the performance metric.
+  optional string description = 4;
+
+  // A collection of visualizations related to the metric and slice.
+  optional GraphicsCollection graphics = 5;
+
+  // Tests associated with the metric 
+  repeated Test tests = 6; 
+}
+
 // The quantitative analysis of a model.
-// The next tag number is 4.
+// The next tag number is 3.
 message QuantitativeAnalysis {
   // The performance metrics being reported.
   repeated PerformanceMetric performance_metrics = 1;
@@ -230,42 +233,38 @@ message QuantitativeAnalysis {
   // Retain for backward compatibility with model scorecard.
   // Prefer to use GraphicsCollection within PerformanceMetric.
   optional GraphicsCollection graphics = 2;
-
-  // Tests related to model's performance
-  repeated Test tests = 3; 
 }
 
 // Model explainability report.
-// The next tag number is 5.
+// The next tag number is 6.
 message ExplainabilityReport {
- // The type of explainability method.
- optional string type = 1;
+  // The type of explainability method.
+  optional string type = 1;
 
- // The name of the slice the explainability method was computed on.
- // By default, assume this metric is not sliced.
- optional string slice = 2;
+  // The name of the slice the explainability method was computed on.
+  // By default, assume this metric is not sliced.
+  optional string slice = 2;
 
- // User-friendly description of the explainability method.
- optional string description = 3;
+  // User-friendly description of the explainability method.
+  optional string description = 3;
 
- // A collection of visualizations related to the explainability method.
- optional GraphicsCollection graphics = 4;
- 
+  // A collection of visualizations related to the explainability method.
+  optional GraphicsCollection graphics = 4;
+
+  // Tests related to the explainability report
+  repeated Test tests = 5; 
 }
 
 
 // Model explainability analysis.
-// The next tag number is 3.
+// The next tag number is 2.
 message ExplainabilityAnalysis {
   // Model explainability report e.g. feature importance, decision trees etc.
   repeated ExplainabilityReport explainability_report = 1;
-
-  // Tests related to explainability
-  repeated Test tests = 2; 
 }
 
 // Report associated with a model fairness method.
-// The next tag number is 6.
+// The next tag number is 7.
 message FairnessReport {
   // The type of fairness study conducted.
   optional string type = 1;
@@ -283,17 +282,16 @@ message FairnessReport {
 
   // A collection of visualizations related to the fairness method.
   optional GraphicsCollection graphics = 5;
-  
+
+  // Tests related to fairness considerations.
+  repeated Test tests = 6;
 }
 
 // Model fairness analysis.
-// The next tag number is 3.
+// The next tag number is 2.
 message FairnessAnalysis {
   // Fairness report to evaluate the model performance on various groups.
   repeated FairnessReport fairness_report = 1;
-
-  // Tests related to fairness considerations.
-  repeated Test tests = 2;
 }
 
 // A type of user for a model.
