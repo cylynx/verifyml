@@ -22,7 +22,7 @@ ModelCardsToolkit serves as an API to read and write MC properties by the users.
 
 import dataclasses
 import json as json_lib
-from typing import Any, Dict, List, Optional, Text
+from typing import Any, Dict, List, Optional
 
 from model_card_toolkit.base_model_card_field import BaseModelCardField
 from model_card_toolkit.proto import model_card_pb2
@@ -30,9 +30,6 @@ from model_card_toolkit.utils import validation
 
 _SCHEMA_VERSION_STRING = "schema_version"
 
-
-# TODO(b/181702622): Think about a smart and clean way to control the required
-# field.
 @dataclasses.dataclass
 class Owner(BaseModelCardField):
   """The information about owners of a model.
@@ -42,10 +39,11 @@ class Owner(BaseModelCardField):
     contact: The contact information for the model owner or owners. These could
       be individual email addresses, a team mailing list expressly, or a
       monitored feedback form.
+    role: The role of the person e.g. owner, developer or auditor.
   """
-  name: Optional[Text] = None
-  contact: Optional[Text] = None
-  role: Optional[Text] = None
+  name: Optional[str] = None
+  contact: Optional[str] = None
+  role: Optional[str] = None
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.Owner)] = model_card_pb2.Owner
@@ -67,9 +65,9 @@ class Version(BaseModelCardField):
     date: The date this version was released.
     diff: The changes from the previous version.
   """
-  name: Optional[Text] = None
-  date: Optional[Text] = None
-  diff: Optional[Text] = None
+  name: Optional[str] = None
+  date: Optional[str] = None
+  diff: Optional[str] = None
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.Version)] = model_card_pb2.Version
@@ -84,8 +82,8 @@ class License(BaseModelCardField):
       or "proprietary" for an unlicensed Module.
     custom_text: The text of a custom license.
   """
-  identifier: Optional[Text] = None
-  custom_text: Optional[Text] = None
+  identifier: Optional[str] = None
+  custom_text: Optional[str] = None
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.License)] = model_card_pb2.License
@@ -98,7 +96,7 @@ class Reference(BaseModelCardField):
   Attributes:
     reference: A reference to a resource.
   """
-  reference: Optional[Text] = None
+  reference: Optional[str] = None
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.Reference)] = model_card_pb2.Reference
@@ -112,11 +110,23 @@ class Citation(BaseModelCardField):
     style: The citation style, such as MLA, APA, Chicago, or IEEE.
     citation: the citation.
   """
-  style: Optional[Text] = None
-  citation: Optional[Text] = None
+  style: Optional[str] = None
+  citation: Optional[str] = None
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.Citation)] = model_card_pb2.Citation
+
+@dataclasses.dataclass
+class RegulatoryRequirement(BaseModelCardField):
+  """Regulatory requirements for the model.
+
+  Attributes:
+    regulation: The regulations the model should be compliant with.
+  """
+  regulation: Optional[str] = None
+
+  _proto_type: dataclasses.InitVar[type(
+      model_card_pb2.RegulatoryRequirement)] = model_card_pb2.RegulatoryRequirement
 
 
 @dataclasses.dataclass
@@ -137,15 +147,17 @@ class ModelDetails(BaseModelCardField):
       may be useful to your audience.
     citations: How should the model be cited? If the model is based on published
       academic research, cite the research.
+    regulatory_requirements: Provide any regulatory requirements that the model should comply to.
   """
-  name: Optional[Text] = None
-  overview: Optional[Text] = None
-  documentation: Optional[Text] = None
+  name: Optional[str] = None
+  overview: Optional[str] = None
+  documentation: Optional[str] = None
   owners: List[Owner] = dataclasses.field(default_factory=list)
   version: Optional[Version] = dataclasses.field(default_factory=Version)
   licenses: List[License] = dataclasses.field(default_factory=list)
   references: List[Reference] = dataclasses.field(default_factory=list)
   citations: List[Citation] = dataclasses.field(default_factory=list)
+  regulatory_requirements: List[RegulatoryRequirement] = dataclasses.field(default_factory=list)
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.ModelDetails)] = model_card_pb2.ModelDetails
@@ -159,8 +171,8 @@ class Graphic(BaseModelCardField):
     name: The name of the graphic.
     image: The image string encoded as a base64 string.
   """
-  name: Optional[Text] = None
-  image: Optional[Text] = None
+  name: Optional[str] = None
+  image: Optional[str] = None
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.Graphic)] = model_card_pb2.Graphic
@@ -194,7 +206,7 @@ class GraphicsCollection(BaseModelCardField):
     description: The description of graphics.
     collection: A collection of graphics.
   """
-  description: Optional[Text] = None
+  description: Optional[str] = None
   collection: List[Graphic] = dataclasses.field(default_factory=list)
 
   _proto_type: dataclasses.InitVar[type(
@@ -212,8 +224,12 @@ class SensitiveData(BaseModelCardField):
       possible. Note that even non-identifying information, such as zip code,
       age, race, and gender, can be used to identify individuals when
       aggregated. Please describe any such fields here.
+    sensitive_data_used: A list of sensitive data used in the deployed model.
+    justification: Justification of the need to use the fields in deployment.
   """
-  sensitive_data: List[Text] = dataclasses.field(default_factory=list)
+  sensitive_data: List[str] = dataclasses.field(default_factory=list)
+  sensitive_data_used: List[str] = dataclasses.field(default_factory=list)
+  justification: Optional[str] = None
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.SensitiveData)] = model_card_pb2.SensitiveData
@@ -230,9 +246,9 @@ class Dataset(BaseModelCardField):
     sensitive: Does this dataset contain human or other sensitive data?
     graphics: Visualizations of the dataset.
   """
-  name: Optional[Text] = None
-  description: Optional[Text] = None
-  link: Optional[Text] = None
+  name: Optional[str] = None
+  description: Optional[str] = None
+  link: Optional[str] = None
   sensitive: Optional[SensitiveData] = dataclasses.field(
       default_factory=SensitiveData)
   graphics: GraphicsCollection = dataclasses.field(
@@ -252,13 +268,36 @@ class ModelParameters(BaseModelCardField):
     input_format: describes the data format for inputs to your model.
     output_format: describes the data format for outputs from your model.
   """
-  model_architecture: Optional[Text] = None
+  model_architecture: Optional[str] = None
   data: List[Dataset] = dataclasses.field(default_factory=list)
-  input_format: Optional[Text] = None
-  output_format: Optional[Text] = None
+  input_format: Optional[str] = None
+  output_format: Optional[str] = None
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.ModelParameters)] = model_card_pb2.ModelParameters
+
+@dataclasses.dataclass
+class Test(BaseModelCardField):
+  """Information about test that is runned against the model.
+
+  Attributes:
+    name: The name of the test.
+    description: User-friendly description of the test.
+    threshold: Threshold required to pass the test.
+    result: Result returned by the test.
+    passed: Whether the model result satisfies the given threshold.
+    graphics: A collection of visualizations associated with the test.
+  """
+  name: Optional[str] = None
+  description: Optional[str] = None
+  threshold: Optional[str] = None
+  result: Optional[str] = None
+  passed: Optional[bool] = None
+  graphics: GraphicsCollection = dataclasses.field(
+      default_factory=GraphicsCollection)
+
+  _proto_type: dataclasses.InitVar[type(
+      model_card_pb2.Test)] = model_card_pb2.Test
 
 
 @dataclasses.dataclass
@@ -269,13 +308,17 @@ class PerformanceMetric(BaseModelCardField):
     type: What performance metric are you reporting on?
     value: What is the value of this performance metric?
     slice: What slice of your data was this metric computed on?
+    description: User-friendly description of the performance metric.
+    graphics: A collection of visualizations associated with the metric.
+    tests: A collection of tests associated with the metric.
   """
-  # TODO(b/179415408): add fields (name, value, confidence_interval, threshold,
-  # slice) after gathering requirements (potential clients: Jigsaw)
-  # The following fields are EXPERIMENTAL and introduced for migration purpose.
-  type: Optional[Text] = None
-  value: Optional[Text] = None
-  slice: Optional[Text] = None
+  type: Optional[str] = None
+  value: Optional[str] = None
+  slice: Optional[str] = None
+  description: Optional[str] = None
+  graphics: GraphicsCollection = dataclasses.field(
+      default_factory=GraphicsCollection)
+  tests: Test = dataclasses.field(default_factory=Test)
 
   _proto_type: dataclasses.InitVar[BaseModelCardField._get_type(
       model_card_pb2.PerformanceMetric)] = model_card_pb2.PerformanceMetric
@@ -315,13 +358,93 @@ class QuantitativeAnalysis(BaseModelCardField):
 
 
 @dataclasses.dataclass
+class ExplainabilityReport(BaseModelCardField):
+  """Model explainability report.
+
+  Details of how the model works such as feature importance,
+  decision trees or LIME or shapely analysis.
+
+  Attributes:
+    type: What explainability method are you conducting?
+    slice: What slice of your data was this analysis conducted on?
+    description: User-friendly description of the explainability metric.
+    graphics: A collection of visualizations related to the explainability method.
+    tests: A collection of tests associated with the explainability method.
+  """
+  type: Optional[str] = None
+  slice: Optional[str] = None
+  description: Optional[str] = None
+  graphics: GraphicsCollection = dataclasses.field(
+      default_factory=GraphicsCollection)
+  tests: Test = dataclasses.field(default_factory=Test)
+
+  _proto_type: dataclasses.InitVar[type(model_card_pb2.ExplainabilityReport
+                                       )] = model_card_pb2.ExplainabilityReport
+
+
+@dataclasses.dataclass
+class ExplainabilityAnalysis(BaseModelCardField):
+  """Model explainability.
+
+  Analysis to explain how the model works and operates.
+
+  Attributes:
+    explainability_reports: The explainability studies undertaken.
+  """
+  explainability_reports: List[ExplainabilityReport] = dataclasses.field(
+      default_factory=list)
+
+  _proto_type: dataclasses.InitVar[type(model_card_pb2.ExplainabilityAnalysis
+                                       )] = model_card_pb2.ExplainabilityAnalysis
+
+
+@dataclasses.dataclass
+class FairnessReport(BaseModelCardField):
+  """Model fairness report.
+
+  Details on fairness checks and analysis.
+
+  Attributes:
+    type: What fairness assessment method are you conducting?
+    slice: What slice of your data was this analysis conducted on?
+    segment: What segment of the dataset which the fairness report is assessing?
+    description: User-friendly description of the fairness metric.
+    graphics: A collection of visualizations related to the fairness method.
+    tests: A collection of tests associated with the fairness method.
+  """
+  type: Optional[str] = None
+  slice: Optional[str] = None
+  segment: Optional[str] = None
+  description: Optional[str] = None
+  graphics: GraphicsCollection = dataclasses.field(
+      default_factory=GraphicsCollection)
+  tests: Test = dataclasses.field(default_factory=Test)
+
+  _proto_type: dataclasses.InitVar[type(model_card_pb2.FairnessReport
+                                       )] = model_card_pb2.FairnessReport
+
+
+@dataclasses.dataclass
+class FairnessAnalysis(BaseModelCardField):
+  """Model fairness.
+
+  Attributes:
+    fairness_reports: The fairness studies undertaken.
+  """
+  explainability_reports: List[FairnessReport] = dataclasses.field(
+      default_factory=list)
+
+  _proto_type: dataclasses.InitVar[type(model_card_pb2.FairnessAnalysis
+                                       )] = model_card_pb2.FairnessAnalysis
+
+@dataclasses.dataclass
 class User(BaseModelCardField):
   """A type of user for a model.
 
   Attributes:
     description: A description of a user.
   """
-  description: Optional[Text] = None
+  description: Optional[str] = None
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.User)] = model_card_pb2.User
@@ -334,7 +457,7 @@ class UseCase(BaseModelCardField):
   Attributes:
     description: A description of a use case.
   """
-  description: Optional[Text] = None
+  description: Optional[str] = None
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.UseCase)] = model_card_pb2.UseCase
@@ -347,7 +470,7 @@ class Limitation(BaseModelCardField):
   Attributes:
     description: A description of the limitation.
   """
-  description: Optional[Text] = None
+  description: Optional[str] = None
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.Limitation)] = model_card_pb2.Limitation
@@ -360,7 +483,7 @@ class Tradeoff(BaseModelCardField):
   Attributes:
     description: A description of the tradeoff.
   """
-  description: Optional[Text] = None
+  description: Optional[str] = None
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.Tradeoff)] = model_card_pb2.Tradeoff
@@ -375,11 +498,31 @@ class Risk(BaseModelCardField):
     mitigation_strategy: A mitigation strategy that you've implemented, or one
       that you suggest to users.
   """
-  name: Optional[Text] = None
-  mitigation_strategy: Optional[Text] = None
+  name: Optional[str] = None
+  mitigation_strategy: Optional[str] = None
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.Risk)] = model_card_pb2.Risk
+
+@dataclasses.dataclass
+class FairnessAssessment(BaseModelCardField):
+  """Information about the benefits and harms of the model.
+
+  Attributes:
+    group_at_risk: The groups or individuals at risk of being systematically
+      disadvantaged by the model.
+    benefits: Expected benefits to the identified groups.
+    harms: Expected harms to the identified groups.
+    mitigation_strategy: With respect to the benefits and harms outlined, 
+      please describe any mitigation strategy implemented.
+  """
+  group_at_risk: Optional[str] = None
+  benefits: Optional[str] = None
+  harms: Optional[str] = None
+  mitigation_strategy: Optional[str] = None
+
+  _proto_type: dataclasses.InitVar[type(
+      model_card_pb2.FairnessAssessment)] = model_card_pb2.FairnessAssessment
 
 
 @dataclasses.dataclass
@@ -406,12 +549,16 @@ class Considerations(BaseModelCardField):
     ethical_considerations: What are the ethical risks involved in application
       of this model? For each risk, you may also provide a mitigation strategy
       that you've implemented, or one that you suggest to users.
+    fairness_assessment: How does the model affect groups at risk of being 
+      systematically disadvantaged? What are the harms and benefits to the various
+      affected groups?
   """
   users: List[User] = dataclasses.field(default_factory=list)
   use_cases: List[UseCase] = dataclasses.field(default_factory=list)
   limitations: List[Limitation] = dataclasses.field(default_factory=list)
   tradeoffs: List[Tradeoff] = dataclasses.field(default_factory=list)
   ethical_considerations: List[Risk] = dataclasses.field(default_factory=list)
+  fairness_assessment: FairnessAssessment = dataclasses.field(default_factory=FairnessAssessment)
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.Considerations)] = model_card_pb2.Considerations
@@ -427,6 +574,8 @@ class ModelCard(BaseModelCardField):
     quantitative_analysis: Quantitative analysis of model performance.
     considerations: Any considerations related to model construction, training,
       and application.
+    explainability_analysis: Explainability analysis being reported.
+    fairness_analysis: Fairness analysis being reported.
   """
   model_details: ModelDetails = dataclasses.field(default_factory=ModelDetails)
   model_parameters: ModelParameters = dataclasses.field(
@@ -435,18 +584,22 @@ class ModelCard(BaseModelCardField):
       default_factory=QuantitativeAnalysis)
   considerations: Considerations = dataclasses.field(
       default_factory=Considerations)
+  explainability_analysis: ExplainabilityAnalysis = dataclasses.field(
+      default_factory=ExplainabilityAnalysis)
+  fairness_analysis: FairnessAnalysis = dataclasses.field(
+      default_factory=FairnessAnalysis)
 
   _proto_type: dataclasses.InitVar[type(
       model_card_pb2.ModelCard)] = model_card_pb2.ModelCard
 
-  def to_json(self) -> Text:
+  def to_json(self) -> str:
     """Write ModelCard to JSON."""
     model_card_dict = self.to_dict()
     model_card_dict[
         _SCHEMA_VERSION_STRING] = validation.get_latest_schema_version()
     return json_lib.dumps(model_card_dict, indent=2)
 
-  def _from_json(self, json_dict: Dict[Text, Any]) -> "ModelCard":
+  def _from_json(self, json_dict: Dict[str, Any]) -> "ModelCard":
     """Read ModelCard from JSON.
 
     If ModelCard fields have already been set, this function will overwrite any
@@ -470,7 +623,7 @@ class ModelCard(BaseModelCardField):
         definition.
     """
 
-    def _populate_from_json(json_dict: Dict[Text, Any],
+    def _populate_from_json(json_dict: Dict[str, Any],
                             field: BaseModelCardField) -> BaseModelCardField:
       for subfield_key in json_dict:
         if subfield_key.startswith(_SCHEMA_VERSION_STRING):

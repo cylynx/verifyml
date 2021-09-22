@@ -92,7 +92,7 @@ message ModelDetails {
   // How should the model be cited?
   repeated Citation citations = 8;
 
-  // Provide any regulator requirements that the model should comply to.
+  // Provide any regulatory requirements that the model should comply to.
   repeated RegulatoryRequirement regulatory_requirements = 9; 
 }
 
@@ -131,8 +131,8 @@ message SensitiveData {
   // A list of sensitive data used in the deployed model.
   repeated string sensitive_data_used = 2;
 
-  // Please include a justification of the need to use the fields in deployment
-  repeated string justification = 3;
+  // Please include a justification of the need to use the fields in deployment.
+  optional string justification = 3;
 }
 
 // Provide some information about a dataset used to generate a model.
@@ -171,7 +171,7 @@ message ModelParameters {
   optional string output_format = 4;
 }
 
-// Information about test or check runned against the model.
+// Information about test that is runned against the model.
 // The next tag number is 7.
 message Test {
   // The name of the test.
@@ -180,10 +180,10 @@ message Test {
   // User-friendly description of the test.
   optional string description = 2;
 
-  // Threshold to pass the test.
+  // Threshold required to pass the test.
   optional string threshold = 3;
 
-  // Actual result of the test.
+  // Result returned by the test.
   optional string result = 4;
 
   // Whether the model result satisfies the given threshold.
@@ -195,10 +195,6 @@ message Test {
 
 // The details of the performance metric.
 message PerformanceMetric {
-  // TODO(b/179415408): revist the design the of message
-  // The following fields are EXPERIMENTAL and introduced for migration purpose.
-  // For proto users, please do not rely on the fields.
-
   // The type of performance metric.
   optional string type = 1;
 
@@ -215,7 +211,7 @@ message PerformanceMetric {
   // A collection of visualizations related to the metric and slice.
   optional GraphicsCollection graphics = 5;
 
-  // Tests associated with the metric 
+  // A collection of tests associated with the metric.
   repeated Test tests = 6; 
 }
 
@@ -247,7 +243,7 @@ message ExplainabilityReport {
   // A collection of visualizations related to the explainability method.
   optional GraphicsCollection graphics = 4;
 
-  // Tests related to the explainability report
+  // A collection of tests associated with the explainability method.
   repeated Test tests = 5; 
 }
 
@@ -256,7 +252,7 @@ message ExplainabilityReport {
 // The next tag number is 2.
 message ExplainabilityAnalysis {
   // Model explainability report e.g. feature importance, decision trees etc.
-  repeated ExplainabilityReport explainability_report = 1;
+  repeated ExplainabilityReport explainability_reports = 1;
 }
 
 // Report associated with a model fairness method.
@@ -366,7 +362,7 @@ message Considerations {
 
   // How does the model affect groups at risk of being systematically disadvantaged?
   // What are the harms and benefits to the various affected groups?
-  repeated FairnessAssessment fairness_assessment = 6;
+  optional FairnessAssessment fairness_assessment = 6;
 }
 
 // Fields used to generate the Model Card.
