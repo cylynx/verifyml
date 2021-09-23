@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.0.2",
+  "model_details": {
+    "name": "train-only model",
+    "owners": [
+      {
+        "name": "bar",
+        "contact": "bar@xyz.com"
+      }
+    ],
+    "version": {
+      "name": "0.3",
+      "date": "2020-01-01",
+      "diff": "Updated dataset."
+    },
+    "licenses": [{"identifier": "Apache 2.0"}],
+    "references": [
+      {"reference": "https://my_model.xyz.com"},
+      {"reference": "https://example.com"}
+    ],
+    "citation": {"citation": "https://doi.org/foo/bar"}
+  },
+  "model_parameters": {
+    "model_architecture": "knn",
+    "data": [
+      {
+        "name": "train_split",
+        "link": "path/to/train",
+        "graphics": {}
+      }
+    ],
+    "input_format": "32-char-len-text",
+    "output_format": "64-char-len-text"
+  },
+  "quantitative_analysis": {
+    "graphics": {}
+  },
+  "considerations": {}
+}

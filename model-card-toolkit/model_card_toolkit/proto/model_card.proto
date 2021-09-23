@@ -1,0 +1,388 @@
+syntax = "proto2";
+
+package third_party.py.model_card_toolkit.proto;
+
+// The information about owners of a model.
+// The next tag number is 4.
+message Owner {
+  // The name of the model owner.
+  optional string name = 1;
+
+  // The contact information for the model owner or owners.
+  optional string contact = 2;
+
+  // The role of the person e.g. developer, owner, auditor.
+  optional string role = 3;
+}
+
+// The information about verions of a model.
+// If there are multiple versions of the model, or there may be in the future,
+// it’s useful for your audience to know which version of the model is discussed
+// in the Model Card. If there are previous versions of this model, briefly
+// describe how this version is different. If no more than one version of the
+// model will be released, this field may be omitted.
+// The next tag number is 4.
+message Version {
+  // The name of the version.
+  optional string name = 1;
+
+  // The date this version was released.
+  optional string date = 2;
+
+  // The changes from the previous version.
+  optional string diff = 3;
+}
+
+// The next tag number is 3.
+message License {
+  oneof type {
+    // A standard SPDX license identifier (https://spdx.org/licenses/), or
+    // "proprietary" for an unlicensed module.
+    string identifier = 1;
+
+    // The text of a custom license.
+    string custom_text = 2;
+  }
+}
+
+message Reference {
+  // A reference to a resource.
+  optional string reference = 1;
+}
+
+// A citation for the model.
+// The next tag number is 3.
+message Citation {
+  // The citation style.
+  optional string style = 1;
+
+  // The citation content.
+  optional string citation = 2;
+}
+
+message RegulatoryRequirement {
+  // Name of the regulations
+  optional string regulation = 1;
+}
+
+// This section provides a general, high-level description of the model.
+// The next tag number is 10.
+message ModelDetails {
+  // The name of the model.
+  optional string name = 1;
+
+  // A brief, one-line description of the model.
+  optional string overview = 2;
+
+  // A more thorough description of the model and its usage.
+  optional string documentation = 3;
+
+  // The individuals or teams who own the model.
+  repeated Owner owners = 4;
+
+  // The version of the model.
+  optional Version version = 5;
+
+  // The license information for the model.
+  repeated License licenses = 6;
+
+  // Provide any additional references the reader may need.
+  repeated Reference references = 7;
+
+  // How should the model be cited?
+  repeated Citation citations = 8;
+
+  // Provide any regulatory requirements that the model should comply to.
+  repeated RegulatoryRequirement regulatory_requirements = 9; 
+}
+
+// A named inline plot.
+// The next tag number is 3.
+message Graphic {
+  // The name of the graphic.
+  optional string name = 1;
+
+  // The image, encoded as a base64 string.
+  optional string image = 2;
+}
+
+// A collection of graphics.
+// Each graphic in the collection field has both a name and an image.
+// The next tag number is 3.
+message GraphicsCollection {
+  // A description of the Graphics collection.
+  optional string description = 1;
+
+  // A collection of graphics.
+  repeated Graphic collection = 2;
+}
+
+// Sensitive data, such as PII (personally-identifiable information).
+// The next tag number is 4.
+message SensitiveData {
+  // A description of any sensitive data that may be present in a dataset.
+  // Be sure to note PII information such as names, addresses, phone numbers,
+  // etc. Preferably, such info should be scrubbed from a dataset if possible.
+  // Note that even non-identifying information, such as zip code, age, race,
+  // and gender, can be used to identify individuals when aggregated. Please
+  // describe any such fields here.
+  repeated string sensitive_data = 1;
+
+  // A list of sensitive data used in the deployed model.
+  repeated string sensitive_data_used = 2;
+
+  // Please include a justification of the need to use the fields in deployment.
+  optional string justification = 3;
+}
+
+// Provide some information about a dataset used to generate a model.
+// The next tag number is 6.
+message Dataset {
+  // The name of the dataset.
+  optional string name = 1;
+
+  // A link to the dataset.
+  optional string link = 2;
+
+  // Does this dataset contain any human, PII, or sensitive data?
+  optional SensitiveData sensitive = 3;
+
+  // Visualizations of the dataset.
+  optional GraphicsCollection graphics = 4;
+
+  // A description of the dataset. Can describe size of dataset, whether it's
+  // used for training, testing, or validation, etc.
+  optional string description = 5;
+}
+
+// Parameters for construction of the model.
+// The next tag number is 5.
+message ModelParameters {
+  // Specifies the architecture of your model.
+  optional string model_architecture = 1;
+
+  // Specifies the datasets used to train and evaluate your model.
+  repeated Dataset data = 2;
+
+  // Describes the data format for inputs to your model.
+  optional string input_format = 3;
+
+  // Describes the data format for outputs from your model.
+  optional string output_format = 4;
+}
+
+// Information about test that is runned against the model.
+// The next tag number is 7.
+message Test {
+  // The name of the test.
+  optional string name = 1;
+
+  // User-friendly description of the test.
+  optional string description = 2;
+
+  // Threshold required to pass the test.
+  optional string threshold = 3;
+
+  // Result returned by the test.
+  optional string result = 4;
+
+  // Whether the model result satisfies the given threshold.
+  optional bool passed = 5;
+
+  // A collection of visualizations related to the test.
+  optional GraphicsCollection graphics = 6;
+}
+
+// The details of the performance metric.
+message PerformanceMetric {
+  // The type of performance metric.
+  optional string type = 1;
+
+  // The value of the performance metric.
+  optional string value = 2;
+
+  // The name of the slice this metric was computed on.
+  // By default, assume this metric is not sliced.
+  optional string slice = 3;
+
+  // User-friendly description of the performance metric.
+  optional string description = 4;
+
+  // A collection of visualizations related to the metric and slice.
+  optional GraphicsCollection graphics = 5;
+
+  // A collection of tests associated with the metric.
+  repeated Test tests = 6; 
+}
+
+// The quantitative analysis of a model.
+// The next tag number is 3.
+message QuantitativeAnalysis {
+  // The performance metrics being reported.
+  repeated PerformanceMetric performance_metrics = 1;
+
+  // A collection of visualizations of model performance.
+  // Retain for backward compatibility with model scorecard.
+  // Prefer to use GraphicsCollection within PerformanceMetric.
+  optional GraphicsCollection graphics = 2;
+}
+
+// Model explainability report.
+// The next tag number is 6.
+message ExplainabilityReport {
+  // The type of explainability method.
+  optional string type = 1;
+
+  // The name of the slice the explainability method was computed on.
+  // By default, assume this metric is not sliced.
+  optional string slice = 2;
+
+  // User-friendly description of the explainability method.
+  optional string description = 3;
+
+  // A collection of visualizations related to the explainability method.
+  optional GraphicsCollection graphics = 4;
+
+  // A collection of tests associated with the explainability method.
+  repeated Test tests = 5; 
+}
+
+
+// Model explainability analysis.
+// The next tag number is 2.
+message ExplainabilityAnalysis {
+  // Model explainability report e.g. feature importance, decision trees etc.
+  repeated ExplainabilityReport explainability_reports = 1;
+}
+
+// Report associated with a model fairness method.
+// The next tag number is 7.
+message FairnessReport {
+  // The type of fairness study conducted.
+  optional string type = 1;
+
+  // The name of the slice the fairness report was computed on.
+  // By default, assume this metric is not sliced.
+  optional string slice = 2;
+
+  // Segment of dataset which the fairness report is meant to assess.
+  // e.g. age, gender, age and gender, etc.
+  optional string segment = 3;
+
+  // User-friendly description of the fairness method.
+  optional string description = 4;
+
+  // A collection of visualizations related to the fairness method.
+  optional GraphicsCollection graphics = 5;
+
+  // Tests related to fairness considerations.
+  repeated Test tests = 6;
+}
+
+// Model fairness analysis.
+// The next tag number is 2.
+message FairnessAnalysis {
+  // Fairness report to evaluate the model performance on various groups.
+  repeated FairnessReport fairness_reports = 1;
+}
+
+// A type of user for a model.
+message User {
+  // A description of a user.
+  optional string description = 1;
+}
+
+// A type of use case for a model.
+message UseCase {
+  // A description of a use case.
+  optional string description = 1;
+}
+
+// A limitation a model.
+message Limitation {
+  // A description of the limitation.
+  optional string description = 1;
+}
+
+// A tradeoff for a model.
+message Tradeoff {
+  // A description of the tradeoff.
+  optional string description = 1;
+}
+
+// Information about risks involved when using the model.
+// The next tag number is 3.
+message Risk {
+  // The name of the risk.
+  optional string name = 1;
+
+  // A mitigation strategy that you've implemented, or one you suggest to users.
+  optional string mitigation_strategy = 2;
+}
+
+// Information about the benefits and harms of the model.
+// The next tag number is 5.
+message FairnessAssessment {
+  // The groups or individuals at risk of being systematically disadvantaged by the model.
+  optional string group_at_risk = 1;
+
+  // Expected benefits to the identified groups.
+  optional string benefits = 2;
+
+  // Expected harms to the identified groups.
+  optional string harms = 3;
+
+  // With respect to the benefits and harms outlined, please describe any mitigation strategy implemented.
+  optional string mitigation_strategy = 4;
+}
+
+// Considerations related to model construction, training, and application.
+// The considerations section includes qualitative information about your model,
+// including some analysis of its risks and limitations. As such, this section
+// usually requires careful consideration, and conversations with many relevant
+// stakeholders, including other model developers, dataset producers, and
+// downstream users likely to interact with your model, or be affected by its
+// outputs.
+// The next tag number is 6.
+message Considerations {
+  // Who are the intended users of the model?
+  repeated User users = 1;
+
+  // What are the intended use cases of the model?
+  repeated UseCase use_cases = 2;
+
+  // What are the known limitations of the model?
+  repeated Limitation limitations = 3;
+
+  // What are the known accuracy/performance tradeoffs for the model?
+  repeated Tradeoff tradeoffs = 4;
+
+  // What are the ethical risks involved in application of this model?
+  repeated Risk ethical_considerations = 5;
+
+  // How does the model affect groups at risk of being systematically disadvantaged?
+  // What are the harms and benefits to the various affected groups?
+  optional FairnessAssessment fairness_assessment = 6;
+}
+
+// Fields used to generate the Model Card.
+// The next tag number is 7.
+message ModelCard {
+  // Descriptive metadata for the model.
+  optional ModelDetails model_details = 1;
+
+  // Technical metadata for the model.
+  optional ModelParameters model_parameters = 2;
+
+  // Quantitative analysis of model performance.
+  optional QuantitativeAnalysis quantitative_analysis = 3;
+
+  // Any considerations related to model construction, training, and application
+  optional Considerations considerations = 4;
+  
+  // Explainability analysis being reported.
+  optional ExplainabilityAnalysis explainability_analysis = 5;
+
+  // Fairness analysis being reported.
+  optional FairnessAnalysis fairness_analysis = 6;
+}
