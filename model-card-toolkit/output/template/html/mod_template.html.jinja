@@ -59,6 +59,39 @@
 {% macro metric_value(metric) %}
 {{ metric.value }}{% if metric.confidence_interval %} ({{ metric.confidence_interval.lower_bound }}, {{ metric.confidence_interval.upper_bound }}){% endif %}
 {% endmacro %}
+{% macro render_test(test) %}
+<div class="col card">
+  {% if test.name %}
+  <h4> {{ test.name  }} </h4>
+  {% endif %}
+  {% if test.description %}
+  <div>
+    <b> Description: </b>
+    {{ test.description }} 
+  </div>
+  {% endif %}
+  {% if test.threshold %}
+  <div>
+    <b> Threshold: </b>
+    {{ test.threshold }} 
+  </div>
+  {% endif %}
+  {% if test.threshold %}
+  <div>
+    <b> Result: </b>
+    {{ test.result }} 
+  </div>
+  {% endif %}
+  {% if test.passed == true %} 
+    <div><b style="color:green;"> Passed</b></div> 
+    {% else %}
+    <div><b style="color:red;"> Failed</b></div>
+  {% endif %}
+  {% if test.graphics.collection %}
+    {{ render_metrics_graphics(test.graphics) }}
+  {% endif %}
+</div>
+{% endmacro %}
 {% macro render_report(report) %}
 <div class="col card">
   <h3>{{ report.type }} {% if report.value %}- {{ report.value }}{% endif %}</h3>
@@ -76,6 +109,11 @@
   {% endif %}
   {% if report.graphics.collection %}
     {{ render_metrics_graphics(report.graphics) }}
+  {% endif %}
+  {% if report.tests %}
+    {% for test in report.tests %}
+      {{ render_test(test)}}
+    {% endfor %}
   {% endif %}
 </div>
 {% endmacro %}
