@@ -305,6 +305,8 @@ class ModelCardToolkit:
             model_details=model_card.model_details,
             model_parameters=model_card.model_parameters,
             quantitative_analysis=model_card.quantitative_analysis,
+            explainability_analysis=model_card.explainability_analysis,
+            fairness_analysis=model_card.fairness_analysis,
             considerations=model_card.considerations,
         )
 
