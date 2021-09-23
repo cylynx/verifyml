@@ -77,7 +77,6 @@ class DataShift(FEATTest):
             "Probability Distribution of protected attributes in training set"
         )
         fig.suptitle(training_title)
-        plt.show()
         self.plots[training_title] = plot_to_str()
 
         fig, axs = plt.subplots(
@@ -93,7 +92,6 @@ class DataShift(FEATTest):
             num += 1
         test_title = "Probability Distribution of protected attributes in test set"
         fig.suptitle(test_title)
-        plt.show()
         self.plots[test_title] = plot_to_str()
 
     def run(self, df_train: DataFrame, df_eval: DataFrame) -> bool:
