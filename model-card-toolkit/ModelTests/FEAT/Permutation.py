@@ -1,5 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
+import pandas as pd
 from pandas import DataFrame, Series
 import numpy as np
 from sklearn.metrics import confusion_matrix
@@ -11,16 +12,16 @@ from ..ModelTest import ModelTest
 @dataclass
 class Permutation(ModelTest):
     """
-    Check if the difference/ratio of specified bias metric of any group within a specified protected attribute between
-    the original dataset and the perturb dataset exceeds the threshold. Output list of groups that fails the test.
-    i.e. Flag male gender group if
-    abs(False positive rate of male group in original test data - False positive rate of male group in perturbed gender test data)
-    >threshold
-    For ratio, take the higher value as the numerator.
+    Check if the difference/ratio of specified bias metric of groups within a specified protected attribute of
+    the original dataset and the perturb dataset exceeds the threshold. Output a dataframe showing the test result of each groups.
+    i.e. Flag male gender group if 
+    False positive rate of male group in original test data - False positive rate of male group in perturbed gender test data
+    >threshold.
+    Take the higher value as the numerator or the value to be subtracted from.
 
     :attr: protected attribute specified
-    :metric: type of bias metric for the test, choose from ('fpr', 'fnr', 'sr'),
-             'fpr' - false positive rate, 'fnr' - false negative rate, 'sr': selection rate
+    :metric: type of bias metric for the test, choose from ('fpr', 'fnr', 'pr'),
+             'fpr' - false positive rate, 'fnr' - false negative rate, 'pr': positive rate
     :method: type of method for the test, choose from ('diff', 'ratio')
     :threshold: threshold for difference/ratio of the metric
     """
@@ -33,13 +34,20 @@ class Permutation(ModelTest):
     technique: ClassVar[str] = "Permutation"
 
     def __post_init__(self):
-        metrics = {"fpr", "fnr", "sr"}
+        metrics = {"fpr", "fnr", "pr"}
+        metric_name_dict = {"fpr":"false postive rate", "fnr":"false negative rate", "pr": "positive rate"}
         if self.metric not in metrics:
             raise AttributeError(f"metric should be one of {metrics}.")
 
         methods = {"diff", "ratio"}
         if self.method not in methods:
             raise AttributeError(f"method should be one of {methods}.")
+        
+        metric_name = metric_name_dict[self.metric]
+        if self.test_name is None:
+            self.test_name = "Subgroup Permutation Test"
+        if self.test_desc is None:
+            self.test_desc = f"Test if the {self.method} of the {metric_name} of the groups within {self.attr} attribute of the original dataset and the perturn dataset exceeds the threshold. To pass, this value cannot exceed the threshold"
 
     @staticmethod
     def add_predictions_to_df(df: DataFrame, model, encoder):
@@ -47,7 +55,6 @@ class Permutation(ModelTest):
         y_pred = model.predict(df)
         df = encoder.inverse_transform(df)
         df["prediction"] = y_pred
-
         return df
 
     @staticmethod
@@ -55,16 +62,16 @@ class Permutation(ModelTest):
         """Calculate metric differences for a protected attribute on a given df."""
         metric_dict = {}
 
-        for i in df[attr].unique():
+        for i in sorted(df[attr].unique()):
             tmp = df[df[attr] == i]
             cm = confusion_matrix(tmp.truth, tmp.prediction)
 
             if metric == "fpr":
-                metric_dict[i] = cm[0][1] / cm[0].sum()
+                metric_dict[f"{attr}_{i}"] = cm[0][1] / cm[0].sum()
             elif metric == "fnr":
-                metric_dict[i] = cm[1][0] / cm[1].sum()
-            elif metric == "sr":
-                metric_dict[i] = cm[1].sum() / cm.sum()
+                metric_dict[f"{attr}_{i}"] = cm[1][0] / cm[1].sum()
+            elif metric == "pr":
+                metric_dict[f"{attr}_{i}"] = cm[1].sum() / cm.sum()
 
         return metric_dict
 
@@ -111,24 +118,17 @@ class Permutation(ModelTest):
         """
         md_original = self.get_metric_dict_original(x_test, y_test, model, encoder)
         md_perturbed = self.get_metric_dict_perturbed(x_test, y_test, model, encoder)
-
-        result = []
-
-        for i in md_original.keys():
-            if md_original[i] > md_perturbed[i]:
-                if self.method == "ratio":
-                    val = md_original[i] / md_perturbed[i]
-                elif self.method == "diff":
-                    val = md_original[i] - md_perturbed[i]
-            else:
-                if self.method == "ratio":
-                    val = md_perturbed[i] / md_original[i]
-                elif self.method == "diff":
-                    val = md_perturbed[i] - md_original[i]
-
-            if val > self.threshold:
-                result.append(i)
-
+        
+        result = pd.DataFrame.from_dict(md_original, orient='index', columns=[f"{self.metric} of original data"])
+        result[f"{self.metric} of perturbed data"] = md_perturbed.values()
+        
+        if self.method == "ratio":
+            result['ratio'] = result[f"{self.metric} of original data"] / result[f"{self.metric} of perturbed data"]
+            result['ratio'] = result.ratio.apply(lambda x: 1/x if x<1 else x)
+        elif self.method == "diff":
+            result['difference'] = abs(result[f"{self.metric} of original data"] - result[f"{self.metric} of perturbed data"])
+        result['passed'] = result.iloc[:,-1] < self.threshold
+        result = result.round(3)
         return result
 
     def run(self, x_test: DataFrame, y_test: Series, model, encoder) -> bool:
@@ -141,6 +141,5 @@ class Permutation(ModelTest):
         :encoder: one hot encoder object, to allow for permutation of the protected attribute
         """
         self.result = self.get_result(x_test, y_test, model, encoder)
-        self.passed = False if self.result else True
-
+        self.passed = False if False in list(self.result.passed) else True
         return self.passed
