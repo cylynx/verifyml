@@ -21,6 +21,7 @@ ModelCardsToolkit serves as an API to read and write MC properties by the users.
 """
 
 import dataclasses
+import pandas as pd
 import json as json_lib
 from typing import Any, Dict, List, Optional
 
@@ -327,16 +328,20 @@ class Test(BaseModelCardField):
     _proto_type: dataclasses.InitVar[type(model_card_pb2.Test)] = model_card_pb2.Test
 
     def read_feat_test(self, feat_test: FEATTest) -> None:
-      self.name = feat_test.test_name
-      self.description = feat_test.test_desc
-      self.threshold = str(getattr(feat_test, 'threshold', None))
-      self.result = str(feat_test.result)
-      self.passed = feat_test.passed
-      
-      plots = getattr(feat_test, 'plots', None)
-      if plots:
-        collection = [Graphic(name=n, image=i) for n, i in plots.items()]
-        self.graphics = GraphicsCollection(collection=collection)
+        self.name = feat_test.test_name
+        self.description = feat_test.test_desc
+        self.threshold = str(getattr(feat_test, "threshold", None))
+        self.result = (
+            feat_test.result.to_csv(index=False)
+            if isinstance(feat_test.result, pd.DataFrame)
+            else str(feat_test.result)
+        )
+        self.passed = feat_test.passed
+
+        plots = getattr(feat_test, "plots", None)
+        if plots:
+            collection = [Graphic(name=n, image=i) for n, i in plots.items()]
+            self.graphics = GraphicsCollection(collection=collection)
 
 
 @dataclasses.dataclass
@@ -479,9 +484,7 @@ class FairnessAnalysis(BaseModelCardField):
       fairness_reports: The fairness studies undertaken.
     """
 
-    fairness_reports: List[FairnessReport] = dataclasses.field(
-        default_factory=list
-    )
+    fairness_reports: List[FairnessReport] = dataclasses.field(default_factory=list)
 
     _proto_type: dataclasses.InitVar[
         type(model_card_pb2.FairnessAnalysis)
