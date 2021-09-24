@@ -79,7 +79,7 @@ class SHAPFeatureImportance(FEATTest):
         Create a SHAP dependence plot to show the significant effect of the flagged
         protected attributes across the whole dataset.
         """
-        if not self.result:
+        if self.result is None:
             raise AttributeError("Cannot create dependence plot before running test.")
 
         for r in self.result:

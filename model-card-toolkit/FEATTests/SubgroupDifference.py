@@ -97,7 +97,6 @@ class SubgroupDifference(FEATTest):
         title = f"Attribute: {self.attr}"
         fig.suptitle(title)
 
-        plt.show()
         self.plots[title] = plot_to_str()
 
     def get_result_key(self) -> str:

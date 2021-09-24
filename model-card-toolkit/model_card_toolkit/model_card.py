@@ -27,7 +27,7 @@ from typing import Any, Dict, List, Optional
 from model_card_toolkit.base_model_card_field import BaseModelCardField
 from model_card_toolkit.proto import model_card_pb2
 from model_card_toolkit.utils import validation
-from FEATTests import FEATTest
+from FEATTests.FEATTest import FEATTest
 
 _SCHEMA_VERSION_STRING = "schema_version"
 

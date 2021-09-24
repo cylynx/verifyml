@@ -16,8 +16,8 @@ class SubgroupMetricThreshold(FEATTest):
     passes the maximum/mininum specified metric thresholds. Output the list of groups which fails the test.
 
     :attr: protected attribute
-    :metric: choose from ['fpr','tpr']
-    :metric_threshold: To pass, fpr has to be lower than the threshold or tpr has to be greater than the thresholds specified
+    :metric: choose from ['fpr','tpr', 'fnr', 'tnr']
+    :threshold: To pass, fpr/fnr has to be lower than the threshold or tpr/tnr has to be greater than the thresholds specified
     :proba_thresholds: optional argument. dictionary object with keys as the attribute groups and the values as the thresholds
                        for the output to be classified as 1, default input will set thresholds of each group to be 0.5
     """
@@ -31,7 +31,7 @@ class SubgroupMetricThreshold(FEATTest):
     technique: ClassVar[str] = "Subgroup Metric Threshold"
 
     def __post_init__(self):
-        metrics = {"fpr", "tpr"}
+        metrics = {"fpr", "tpr", "fnr", "tnr"}
         if self.metric not in metrics:
             raise AttributeError(f"metric should be one of {metrics}.")
 
@@ -57,25 +57,27 @@ class SubgroupMetricThreshold(FEATTest):
             )
 
             if self.proba_thresholds and isinstance(self.proba_thresholds, dict):
-                threshold = self.proba_thresholds[value]
+                proba_threshold = self.proba_thresholds[value]
             else:
                 # if threshold dict is not specified, show the markers for default probability threshold = 0.5
-                threshold = 0.5
+                proba_threshold = 0.5
 
-            tmp = [i for i in thresholds_lst - threshold if i > 0]
+            tmp = [i for i in thresholds_lst - proba_threshold if i > 0]
             idx = tmp.index(tmp[-1])
 
             self.fpr[value] = fpr
             self.tpr[value] = tpr
             self.thresholds_lst[value] = thresholds_lst
-            self.thresholds[value] = threshold
+            self.thresholds[value] = proba_threshold
             self.idx[value] = idx
 
             crossed_fpr_threshold = (
-                self.metric == "fpr" and fpr[idx] > self.metric_threshold
+                (self.metric == "fpr" and fpr[idx] > self.threshold) or
+                (self.metric == "tnr" and fpr[idx] > 1-self.threshold) 
             )
             crossed_tpr_threshold = (
-                self.metric == "tpr" and tpr[idx] < self.metric_threshold
+                (self.metric == "tpr" and tpr[idx] < self.threshold) or
+                (self.metric == "fnr" and tpr[idx] < 1-self.threshold)
             )
 
             if crossed_fpr_threshold or crossed_tpr_threshold:
@@ -87,7 +89,7 @@ class SubgroupMetricThreshold(FEATTest):
         """Plots ROC curve for every group in the attribute, also mark the points of optimal probability threshold,
         which maximises tpr-fpr.
         """
-        if not self.result:
+        if self.result is None:
             raise AttributeError("Cannot plot before obtaining results.")
 
         plt.figure(figsize=(13, 6))
@@ -110,7 +112,7 @@ class SubgroupMetricThreshold(FEATTest):
             tpr = self.tpr[value]
             idx = self.idx[value]
             thresholds_lst = self.thresholds_lst[value]
-            threshold = self.thresholds[value]
+            _threshold = self.thresholds[value]
 
             optimal_idx = np.argmax(tpr - fpr)
             optimal_threshold = thresholds_lst[optimal_idx + 1]
@@ -132,7 +134,7 @@ class SubgroupMetricThreshold(FEATTest):
                 color=color,
                 marker="x",
                 s=30,
-                label=f"{txt} = {str(threshold)}, {self.attr}_{value}",
+                label=f"{txt} = {str(_threshold)}, {self.attr}_{value}",
             )
 
             plt.plot(fpr, tpr, label=f"ROC of {self.attr}_{value}", color=color)
@@ -142,23 +144,36 @@ class SubgroupMetricThreshold(FEATTest):
 
         if self.metric == "tpr":
             plt.axhline(
-                y=self.metric_threshold,
+                y=self.threshold,
                 color="black",
                 linestyle="--",
-                label=f"Mininum TPR Threshold = {str(self.metric_threshold)}",
+                label=f"Mininum TPR Threshold = {str(self.threshold)}",
+            )
+        elif self.metric == "fnr":
+            plt.axhline(
+                y=1-self.threshold,
+                color="black",
+                linestyle="--",
+                label=f"Maximum FNR (1-TPR) Threshold = {str(self.threshold)}",
             )
         elif self.metric == "fpr":
             plt.axvline(
-                x=self.metric_threshold,
+                x=self.threshold,
                 color="black",
                 linestyle="--",
-                label=f"Maximum FPR Threshold = {str(self.metric_threshold)}",
+                label=f"Maximum FPR Threshold = {str(self.threshold)}",
+            )
+        elif self.metric == "tnr":
+            plt.axvline(
+                x=1-self.threshold,
+                color="black",
+                linestyle="--",
+                label=f"Mininum TNR (1-FPR) Threshold = {str(self.threshold)}",
             )
 
         title = f"ROC Curve of {self.attr} groups"
         plt.title(title, fontsize=15)
         plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
-        plt.show()
         self.plots[title] = plot_to_str()
 
     def run(self, df_test_with_output) -> bool:

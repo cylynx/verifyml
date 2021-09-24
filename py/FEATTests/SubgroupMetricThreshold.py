@@ -87,7 +87,7 @@ class SubgroupMetricThreshold(FEATTest):
         """Plots ROC curve for every group in the attribute, also mark the points of optimal probability threshold,
         which maximises tpr-fpr.
         """
-        if not self.result:
+        if self.result is None:
             raise AttributeError("Cannot plot before obtaining results.")
 
         plt.figure(figsize=(13, 6))
