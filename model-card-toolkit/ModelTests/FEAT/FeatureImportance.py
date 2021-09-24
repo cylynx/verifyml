@@ -24,7 +24,7 @@ class FeatureImportance(ModelTest):
 
     technique: ClassVar[str] = "Self-declared Feature Importance"
 
-    def plot(self, df: DataFrame, top_n: int):
+    def plot(self, df: DataFrame, top_n: int, save_plots: bool = True):
         title = "Feature Importance Plot"
 
         # Plot top n important features
@@ -35,7 +35,8 @@ class FeatureImportance(ModelTest):
         plt.xticks(rotation=45)
         plt.tight_layout()
 
-        self.plots[title] = plot_to_str()
+        if save_plots:
+            self.plots[title] = plot_to_str()
 
     def get_result(self, df_importance) -> any:
         """

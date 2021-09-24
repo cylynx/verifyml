@@ -25,6 +25,7 @@ class DataShift(ModelTest):
 
     technique: ClassVar[str] = "Data Shift"
 
+
     @staticmethod
     def get_df_distribution_by_pa(df: DataFrame, col: str):
         """
@@ -33,6 +34,7 @@ class DataShift(ModelTest):
         df_dist = df.groupby(col)[col].apply(lambda x: x.count() / len(df))
 
         return df_dist
+
 
     def get_result(self, df_train: DataFrame, df_eval: DataFrame) -> any:
         """
@@ -51,13 +53,15 @@ class DataShift(ModelTest):
                 _result.append(pa)
 
         return _result
-
-    def plot(self, df_train, df_eval):
+    
+    def plot(self, df_train, df_eval, save_plots: bool = True):
         """
         Plot the distribution of the attribute groups for training and evaluation set
+        and optionally save the plots to the class instance.
 
         :df_train: training data features, protected features should not be encoded yet
         :df_eval: data to be evaluated on, protected features should not be encoded yet
+        :save_plots: if True, saves the plots to the class instance
         """
         fig, axs = plt.subplots(
             1,
@@ -77,7 +81,9 @@ class DataShift(ModelTest):
             "Probability Distribution of protected attributes in training set"
         )
         fig.suptitle(training_title)
-        self.plots[training_title] = plot_to_str()
+
+        if save_plots:
+            self.plots[training_title] = plot_to_str()
 
         fig, axs = plt.subplots(
             1,
@@ -92,7 +98,10 @@ class DataShift(ModelTest):
             num += 1
         test_title = "Probability Distribution of protected attributes in test set"
         fig.suptitle(test_title)
-        self.plots[test_title] = plot_to_str()
+
+        if save_plots:
+            self.plots[test_title] = plot_to_str()
+
 
     def run(self, df_train: DataFrame, df_eval: DataFrame) -> bool:
         """

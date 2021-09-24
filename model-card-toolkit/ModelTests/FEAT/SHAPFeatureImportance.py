@@ -38,11 +38,13 @@ class SHAPFeatureImportance(ModelTest):
 
         return self.shap_values
 
-    def shap_summary_plot(self, x_test):
+
+    def shap_summary_plot(self, x_test, save_plots: bool = True):
         """
         Make a shap summary plot.
 
         :x_test: data to be used for shapely explanations, preferably eval set, categorical features have to be already encoded
+        :save_plots: if True, saves the plots to the class instance
         """
         shap.summary_plot(
             shap_values=self.shap_values[1],
@@ -51,7 +53,9 @@ class SHAPFeatureImportance(ModelTest):
             plot_type="dot",
         )
 
-        self.plots["SHAP Summary Plot"] = plot_to_str()
+        if save_plots:
+            self.plots["SHAP Summary Plot"] = plot_to_str()
+
 
     def get_result(
         self, model, model_type: str, x_train: DataFrame, x_test: DataFrame
@@ -74,7 +78,8 @@ class SHAPFeatureImportance(ModelTest):
 
         return result
 
-    def shap_dependence_plot(self, x_test):
+
+    def shap_dependence_plot(self, x_test, save_plots: bool = True):
         """
         Create a SHAP dependence plot to show the significant effect of the flagged
         protected attributes across the whole dataset.
@@ -89,7 +94,9 @@ class SHAPFeatureImportance(ModelTest):
                 features=x_test,
                 interaction_index=None,
             )
-            self.plots[f"SHAP Dependence Plot: {r}"] = plot_to_str()
+
+            if save_plots:
+                self.plots[f"SHAP Dependence Plot: {r}"] = plot_to_str()
 
     def run(
         self, model, model_type: str, x_train: DataFrame, x_test: DataFrame

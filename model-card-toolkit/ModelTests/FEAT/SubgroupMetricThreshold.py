@@ -85,7 +85,7 @@ class SubgroupMetricThreshold(ModelTest):
 
         return result
 
-    def plot(self):
+    def plot(self, save_plots: bool = True):
         """Plots ROC curve for every group in the attribute, also mark the points of optimal probability threshold,
         which maximises tpr-fpr.
         """
@@ -174,7 +174,9 @@ class SubgroupMetricThreshold(ModelTest):
         title = f"ROC Curve of {self.attr} groups"
         plt.title(title, fontsize=15)
         plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
-        self.plots[title] = plot_to_str()
+
+        if save_plots:
+            self.plots[title] = plot_to_str()
 
     def run(self, df_test_with_output) -> bool:
         """
