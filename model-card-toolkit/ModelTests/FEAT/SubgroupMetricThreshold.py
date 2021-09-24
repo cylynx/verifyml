@@ -5,12 +5,12 @@ import numpy as np
 from typing import ClassVar
 from sklearn.metrics import roc_curve
 
-from .FEATTest import FEATTest
-from .utils import plot_to_str
+from ..ModelTest import ModelTest
+from ..utils import plot_to_str
 
 
 @dataclass
-class SubgroupMetricThreshold(FEATTest):
+class SubgroupMetricThreshold(ModelTest):
     """
     Test if at the current probability thresholds, for a particular attribute, the fpr/tpr of its groups
     passes the maximum/mininum specified metric thresholds. Output the list of groups which fails the test.
@@ -85,7 +85,7 @@ class SubgroupMetricThreshold(FEATTest):
 
         return result
 
-    def plot(self):
+    def plot(self, save_plots: bool = True):
         """Plots ROC curve for every group in the attribute, also mark the points of optimal probability threshold,
         which maximises tpr-fpr.
         """
@@ -174,7 +174,9 @@ class SubgroupMetricThreshold(FEATTest):
         title = f"ROC Curve of {self.attr} groups"
         plt.title(title, fontsize=15)
         plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
-        self.plots[title] = plot_to_str()
+
+        if save_plots:
+            self.plots[title] = plot_to_str()
 
     def run(self, df_test_with_output) -> bool:
         """

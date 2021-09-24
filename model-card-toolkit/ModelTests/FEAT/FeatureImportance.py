@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 from pandas import DataFrame
 from typing import ClassVar
 
-from .FEATTest import FEATTest
-from .utils import plot_to_str
+from ..ModelTest import ModelTest
+from ..utils import plot_to_str
 
 
 @dataclass
-class FeatureImportance(FEATTest):
+class FeatureImportance(ModelTest):
     """
     Output the protected attributes that are listed in the top specified number of the features,
     using feature importance values inputted by the user.
@@ -24,7 +24,7 @@ class FeatureImportance(FEATTest):
 
     technique: ClassVar[str] = "Self-declared Feature Importance"
 
-    def plot(self, df: DataFrame, top_n: int):
+    def plot(self, df: DataFrame, top_n: int, save_plots: bool = True):
         title = "Feature Importance Plot"
 
         # Plot top n important features
@@ -35,7 +35,8 @@ class FeatureImportance(FEATTest):
         plt.xticks(rotation=45)
         plt.tight_layout()
 
-        self.plots[title] = plot_to_str()
+        if save_plots:
+            self.plots[title] = plot_to_str()
 
     def get_result(self, df_importance) -> any:
         """

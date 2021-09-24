@@ -5,11 +5,11 @@ import numpy as np
 from sklearn.metrics import confusion_matrix
 from typing import ClassVar
 
-from .FEATTest import FEATTest
+from ..ModelTest import ModelTest
 
 
 @dataclass
-class Permutation(FEATTest):
+class Permutation(ModelTest):
     """
     Check if the difference/ratio of specified bias metric of any group within a specified protected attribute between
     the original dataset and the perturb dataset exceeds the threshold. Output list of groups that fails the test.

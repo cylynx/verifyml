@@ -5,12 +5,12 @@ from pandas import DataFrame
 from sklearn.metrics import confusion_matrix
 from typing import ClassVar
 
-from .FEATTest import FEATTest
-from .utils import plot_to_str
+from ..ModelTest import ModelTest
+from ..utils import plot_to_str
 
 
 @dataclass
-class SubgroupDifference(FEATTest):
+class SubgroupDifference(ModelTest):
     """
     Test if the maximum difference/ratio of a specified metric of any 2 groups within a specified protected attribute
     exceeds the threshold specified.
@@ -85,7 +85,7 @@ class SubgroupDifference(FEATTest):
 
         return metric_dict
 
-    def plot(self):
+    def plot(self, save_plots: bool = True):
         fig, axs = plt.subplots(1, 3, figsize=(18, 4), sharey=False)
         axs[0].bar(list(self.fnr.keys()), list(self.fnr.values()))
         axs[0].set_title("False Negative Rates")
@@ -97,7 +97,8 @@ class SubgroupDifference(FEATTest):
         title = f"Attribute: {self.attr}"
         fig.suptitle(title)
 
-        self.plots[title] = plot_to_str()
+        if save_plots:
+            self.plots[title] = plot_to_str()
 
     def get_result_key(self) -> str:
         return f"{self.attr}_{self.metric}_max_{self.method}"
