@@ -11,18 +11,25 @@ from ..utils import plot_to_str
 @dataclass
 class SHAPFeatureImportance(ModelTest):
     """
-    Ouput the protected attributes that are listed in the top specified % of the features influencing the predictions
-    ,using aggregated shapely values.
+    Ouput a dataframe consisting of protected attributes and its respective ranking based on aggregated shapely value. 
+    To pass, subgroups of protected attributes should not fall in the top n most important variables.
 
     :attrs: list of protected attributes
-    :top_n: the top n features to be specified
+    :threshold: the top n features to be specified
     """
 
     attrs: list[str]
-    top_n: int
+    threshold: int = 10
     plots: dict[str, str] = field(repr=False, default_factory=lambda: {})
 
     technique: ClassVar[str] = "SHAP Feature Importance"
+        
+        
+    def __post_init__(self):
+        if self.test_name is None:
+            self.test_name = "Shapely Feature Importance Test"
+        if self.test_desc is None:
+            self.test_desc = f"Test if the subgroups of the protected attributes are the top ranking influential variables under shapely feature importance value. To pass, subgroups should not be ranked in the top {self.threshold} features"
 
     def get_shap_values(self, model, model_type, x_train, x_test):
         if model_type == "trees":
@@ -35,6 +42,7 @@ class SHAPFeatureImportance(ModelTest):
             raise ValueError("model_type should be 'trees' or 'others'")
 
         self.shap_values = explainer.shap_values(x_test)
+        
 
         return self.shap_values
 
@@ -51,10 +59,13 @@ class SHAPFeatureImportance(ModelTest):
             features=x_test,
             max_display=20,
             plot_type="dot",
+            show=False
         )
 
         if save_plots:
             self.plots["SHAP Summary Plot"] = plot_to_str()
+        else:
+            plot_to_str()
 
 
     def get_result(
@@ -64,18 +75,18 @@ class SHAPFeatureImportance(ModelTest):
         Output the protected attributes that are listed in the top specified % of the features influencing the predictions
         , using aggregated shapely values.
         """
-        result = []
         shap_values = self.get_shap_values(model, model_type, x_train, x_test)
 
         # Take the mean of the absolute of the shapely values to get the aggretated importance for each features
         agg_shap_df = DataFrame(
             DataFrame(shap_values[1], columns=x_test.columns).abs().mean()
         ).sort_values(0, ascending=False)
-        top_feat = list(agg_shap_df.iloc[: self.top_n].index)
-
-        for attr in self.attrs:
-            result += [feat for feat in top_feat if f"{attr}_" in feat]
-
+        agg_shap_df['feature_rank'] = agg_shap_df[0].rank(ascending=False)
+        agg_shap_df.drop(0, axis=1, inplace=True) 
+        attrs_string = '|'.join([str(x) for x in self.attrs])
+        result = agg_shap_df[agg_shap_df.index.to_series().str.contains(attrs_string)]
+        result['passed'] = result.feature_rank.apply(lambda x: True if x > self.threshold else False)
+        
         return result
 
 
@@ -86,17 +97,21 @@ class SHAPFeatureImportance(ModelTest):
         """
         if self.result is None:
             raise AttributeError("Cannot create dependence plot before running test.")
-
-        for r in self.result:
+        
+        failed_attrs = self.result[self.result.passed == False].index
+        for r in failed_attrs:
             shap.dependence_plot(
                 r,
                 shap_values=self.shap_values[1],
                 features=x_test,
                 interaction_index=None,
+                show=False
             )
 
             if save_plots:
                 self.plots[f"SHAP Dependence Plot: {r}"] = plot_to_str()
+            else:
+                plot_to_str()
 
     def run(
         self, model, model_type: str, x_train: DataFrame, x_test: DataFrame
@@ -110,6 +125,6 @@ class SHAPFeatureImportance(ModelTest):
         :x_test: data to be used for shapely explanations, preferably eval set, categorical features have to be already encoded
         """
         self.result = self.get_result(model, model_type, x_train, x_test)
-        self.passed = False if self.result else True
+        self.passed = False if False in list(self.result.passed) else True
 
         return self.passed

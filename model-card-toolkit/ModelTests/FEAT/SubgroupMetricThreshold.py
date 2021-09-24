@@ -2,6 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from typing import ClassVar
 from sklearn.metrics import roc_curve
 
@@ -13,7 +14,7 @@ from ..utils import plot_to_str
 class SubgroupMetricThreshold(ModelTest):
     """
     Test if at the current probability thresholds, for a particular attribute, the fpr/tpr of its groups
-    passes the maximum/mininum specified metric thresholds. Output the list of groups which fails the test.
+    passes the maximum/mininum specified metric thresholds. Output a dataframe showing the test result of each groups.
 
     :attr: protected attribute
     :metric: choose from ['fpr','tpr', 'fnr', 'tnr']
@@ -34,16 +35,20 @@ class SubgroupMetricThreshold(ModelTest):
         metrics = {"fpr", "tpr", "fnr", "tnr"}
         if self.metric not in metrics:
             raise AttributeError(f"metric should be one of {metrics}.")
+        if self.test_name is None:
+            self.test_name = "ROC/Threshold Test"
+        if self.test_desc is None:
+            self.test_desc = f"Test if the groups within {self.attr} attribute passes the {self.metric} threshold. To pass, fpr/fnr has to be lower than the threshold or tpr/tnr has to be greater than the thresholds specified. Also, mark the optimal points that maximises the AUC value for each group"
 
     def get_result(self, df_test_with_output) -> any:
         """
         Test if at the current probability thresholds, for a particular attribute, the fpr/tpr of its groups
-        passes the maximum/mininum specified metric thresholds. Output the list of groups which fails the test.
+        passes the maximum/mininum specified metric thresholds. Output a dataframe showing the test result of each groups.
         """
         if not self.attr in set(df_test_with_output.columns):
             raise KeyError(f"{self.attr} column is not in given df.")
 
-        result = []
+        result = {}
         self.fpr = {}
         self.tpr = {}
         self.thresholds_lst = {}
@@ -70,19 +75,26 @@ class SubgroupMetricThreshold(ModelTest):
             self.thresholds_lst[value] = thresholds_lst
             self.thresholds[value] = proba_threshold
             self.idx[value] = idx
-
-            crossed_fpr_threshold = (
-                (self.metric == "fpr" and fpr[idx] > self.threshold) or
-                (self.metric == "tnr" and fpr[idx] > 1-self.threshold) 
-            )
-            crossed_tpr_threshold = (
-                (self.metric == "tpr" and tpr[idx] < self.threshold) or
-                (self.metric == "fnr" and tpr[idx] < 1-self.threshold)
-            )
-
-            if crossed_fpr_threshold or crossed_tpr_threshold:
-                result.append(value)
-
+            
+            if self.metric in ['fpr', 'tnr']:
+                if self.metric == 'tnr':
+                    result[f"{self.attr}_{value}"] = 1 - self.fpr[value][self.idx[value]]
+                else:
+                    result[f"{self.attr}_{value}"] = self.fpr[value][self.idx[value]]
+            elif self.metric in ['tpr', 'fnr']:
+                if self.metric == 'fnr':
+                    result[f"{self.attr}_{value}"] = 1 - self.tpr[value][self.idx[value]]
+                else:
+                    result[f"{self.attr}_{value}"] = self.tpr[value][self.idx[value]]
+                
+        result = pd.DataFrame.from_dict(result, orient='index', columns=[f"{self.metric} at current probability threshold"])
+        
+        if self.metric in ['tpr', 'tnr']:
+            result['passed'] = result.iloc[:,0].apply(lambda x: x>self.threshold)
+        if self.metric in ['fpr', 'fnr']:
+            result['passed'] = result.iloc[:,0].apply(lambda x: x<self.threshold)
+        result = result.round(3)
+   
         return result
 
     def plot(self, save_plots: bool = True):
@@ -92,7 +104,7 @@ class SubgroupMetricThreshold(ModelTest):
         if self.result is None:
             raise AttributeError("Cannot plot before obtaining results.")
 
-        plt.figure(figsize=(13, 6))
+        plt.figure(figsize=(15, 8))
         colors = [
             "red",
             "blue",
@@ -124,7 +136,7 @@ class SubgroupMetricThreshold(ModelTest):
                 tpr[optimal_idx],
                 color=color,
                 marker=".",
-                s=70,
+                s=90,
                 label=f"{optimal_txt} = {str(optimal_threshold)}, {self.attr}_{value}",
             )
 
@@ -133,7 +145,7 @@ class SubgroupMetricThreshold(ModelTest):
                 tpr[idx],
                 color=color,
                 marker="x",
-                s=30,
+                s=50,
                 label=f"{txt} = {str(_threshold)}, {self.attr}_{value}",
             )
 
@@ -186,6 +198,6 @@ class SubgroupMetricThreshold(ModelTest):
                             protected attribute should not be encoded yet
         """
         self.result = self.get_result(df_test_with_output)
-        self.passed = False if self.result else True
+        self.passed = False if False in list(self.result.passed) else True
 
         return self.passed

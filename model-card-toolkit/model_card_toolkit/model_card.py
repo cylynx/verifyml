@@ -333,7 +333,7 @@ class Test(BaseModelCardField):
         self.description = model_test.test_desc
         self.threshold = str(getattr(model_test, 'threshold', None))
         self.result = (
-            model_test.result.to_csv(index=False)
+            model_test.result.to_csv(index=True)
             if isinstance(model_test.result, pd.DataFrame)
             else str(model_test.result)
         )
