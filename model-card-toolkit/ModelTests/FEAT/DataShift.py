@@ -4,12 +4,12 @@ from pandas import DataFrame
 from typing import ClassVar
 import matplotlib.pyplot as plt
 
-from .FEATTest import FEATTest
-from .utils import plot_to_str
+from ..ModelTest import ModelTest
+from ..utils import plot_to_str
 
 
 @dataclass
-class DataShift(FEATTest):
+class DataShift(ModelTest):
     """
     Test if there is any shift (based on specified threshold) in the distribution of the protected feature,
     which may impose new unfairness and require a retraining of the model, output the shifted attributes.

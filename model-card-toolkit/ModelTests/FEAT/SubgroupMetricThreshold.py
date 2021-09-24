@@ -5,12 +5,12 @@ import numpy as np
 from typing import ClassVar
 from sklearn.metrics import roc_curve
 
-from .FEATTest import FEATTest
-from .utils import plot_to_str
+from ..ModelTest import ModelTest
+from ..utils import plot_to_str
 
 
 @dataclass
-class SubgroupMetricThreshold(FEATTest):
+class SubgroupMetricThreshold(ModelTest):
     """
     Test if at the current probability thresholds, for a particular attribute, the fpr/tpr of its groups
     passes the maximum/mininum specified metric thresholds. Output the list of groups which fails the test.

@@ -4,12 +4,12 @@ from pandas import DataFrame
 import shap
 from typing import ClassVar
 
-from .FEATTest import FEATTest
-from .utils import plot_to_str
+from ..ModelTest import ModelTest
+from ..utils import plot_to_str
 
 
 @dataclass
-class SHAPFeatureImportance(FEATTest):
+class SHAPFeatureImportance(ModelTest):
     """
     Ouput the protected attributes that are listed in the top specified % of the features influencing the predictions
     ,using aggregated shapely values.
