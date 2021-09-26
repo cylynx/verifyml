@@ -30,6 +30,26 @@
         <div class="col card">
           {% if dataset.name %}<h3>{{ dataset.name }}</h3>{% endif %}
             {% if dataset.description %}<p>{{ dataset.description }}</p>{% endif %}
+            {% if dataset.sensitive %}
+              <h4>Sensitive data</h4>
+              <ul>
+              {% for sensitive_data in dataset.sensitive.sensitive_data %}
+                <li>{{ sensitive_data }}</li>
+              {% endfor %}
+              </ul>
+              {% if dataset.sensitive.sensitive_data_used %}
+                <h4>Sensitive data used in model</h4>
+                <ul>
+                {% for sensitive_data_used in dataset.sensitive.sensitive_data_used %}
+                  <li>{{ sensitive_data_used }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+              {% if dataset.sensitive.justification %}
+                <h4>Justification</h4>
+                <p> {{ dataset.sensitive.justification }}</p>
+              {% endif %}
+            {% endif %}
             {% if dataset.link %}<a href="{{ dataset.link }}">{{ dataset.link }}</a>{% endif %}
             {% if dataset.graphics and dataset.graphics.collection %}
               {{ render_graphics(dataset.graphics.collection) }}
@@ -104,6 +124,12 @@
   <div>
     <b> Slice: </b>
     {{ report.slice }} 
+  </div>
+  {% endif %}
+  {% if report.segment %}
+  <div>
+    <b> Segment: </b>
+    {{ report.segment }} 
   </div>
   {% endif %}
   {% if report.description %}
@@ -252,7 +278,7 @@
           {% if model_details.owners %}<h3>Owners</h3>
             {% if model_details.owners|length > 1 %}
               {% for owner in model_details.owners %}
-                <li>{{ owner.name }}, {{ owner.contact }}</li>
+                <li>{{ owner.name }}{% if owner.contact %}, {{ owner.contact }} {% endif %}</li>
               {% endfor %}
             {% else %}
               {{ model_details.owners[0].name }}, {{ model_details.owners[0].contact }}
@@ -276,6 +302,8 @@
                 <li>{{ citation.citation }}</li>
               {% endfor %}
               </ul>{% endif %}
+          {% if model_details.regulatory_requirements %}<h3>Regulatory requirements</h3>
+              {{  model_details.regulatory_requirements }}{% endif %}
         </div>
       {% if model_parameters.model_architecture or model_parameters.input_format or model_parameters.output_format %}
         <div class="col card">
@@ -313,9 +341,20 @@
             <h3>Ethical Considerations</h3>
               <ul>{% for risk in considerations.ethical_considerations %}
                 <li>
-                  <div>Risk: {{ risk.name }}</div>
-                  <div>Mitigation Strategy: {{ risk.mitigation_strategy }}</div>
-                </li>{% endfor %} </ul>{% endif %}
+                  <div><b>Risk:</b> {{ risk.name }}</div>
+                  <div><b>Mitigation Strategy:</b> {{ risk.mitigation_strategy }}</div>
+                </li>{% endfor %} </ul>
+          {% endif %}
+          {% if considerations.fairness_assessment %}
+            <h3>Fairness Considerations</h3>
+              <ul>{% for fairness_assessment in considerations.fairness_assessment %}
+                <li>
+                  <div><b>Group at risk:</b> {{ fairness_assessment.group_at_risk }}</div>
+                  <div><b>Benefits:</b> {{ fairness_assessment.benefits }}</div>
+                  <div><b>Harms:</b> {{ fairness_assessment.harms }}</div>
+                  <div><b>Mitigation Strategy:</b> {{ fairness_assessment.mitigation_strategy }}</div>
+                </li>{% endfor %} </ul>
+          {% endif %}
       </div>
       {% endif %}
     </div>

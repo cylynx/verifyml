@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='third_party.py.model_card_toolkit.proto',
   syntax='proto2',
   serialized_options=None,
-  serialized_pb=_b('\n)model_card_toolkit/proto/model_card.proto\x12\'third_party.py.model_card_toolkit.proto\"4\n\x05Owner\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontact\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t\"3\n\x07Version\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x0c\n\x04\x64iff\x18\x03 \x01(\t\">\n\x07License\x12\x14\n\nidentifier\x18\x01 \x01(\tH\x00\x12\x15\n\x0b\x63ustom_text\x18\x02 \x01(\tH\x00\x42\x06\n\x04type\"\x1e\n\tReference\x12\x11\n\treference\x18\x01 \x01(\t\"+\n\x08\x43itation\x12\r\n\x05style\x18\x01 \x01(\t\x12\x10\n\x08\x63itation\x18\x02 \x01(\t\"+\n\x15RegulatoryRequirement\x12\x12\n\nregulation\x18\x01 \x01(\t\"\xfb\x03\n\x0cModelDetails\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08overview\x18\x02 \x01(\t\x12\x15\n\rdocumentation\x18\x03 \x01(\t\x12>\n\x06owners\x18\x04 \x03(\x0b\x32..third_party.py.model_card_toolkit.proto.Owner\x12\x41\n\x07version\x18\x05 \x01(\x0b\x32\x30.third_party.py.model_card_toolkit.proto.Version\x12\x42\n\x08licenses\x18\x06 \x03(\x0b\x32\x30.third_party.py.model_card_toolkit.proto.License\x12\x46\n\nreferences\x18\x07 \x03(\x0b\x32\x32.third_party.py.model_card_toolkit.proto.Reference\x12\x44\n\tcitations\x18\x08 \x03(\x0b\x32\x31.third_party.py.model_card_toolkit.proto.Citation\x12_\n\x17regulatory_requirements\x18\t \x03(\x0b\x32>.third_party.py.model_card_toolkit.proto.RegulatoryRequirement\"&\n\x07Graphic\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05image\x18\x02 \x01(\t\"o\n\x12GraphicsCollection\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\x12\x44\n\ncollection\x18\x02 \x03(\x0b\x32\x30.third_party.py.model_card_toolkit.proto.Graphic\"[\n\rSensitiveData\x12\x16\n\x0esensitive_data\x18\x01 \x03(\t\x12\x1b\n\x13sensitive_data_used\x18\x02 \x03(\t\x12\x15\n\rjustification\x18\x03 \x01(\t\"\xd4\x01\n\x07\x44\x61taset\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04link\x18\x02 \x01(\t\x12I\n\tsensitive\x18\x03 \x01(\x0b\x32\x36.third_party.py.model_card_toolkit.proto.SensitiveData\x12M\n\x08graphics\x18\x04 \x01(\x0b\x32;.third_party.py.model_card_toolkit.proto.GraphicsCollection\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\"\x9a\x01\n\x0fModelParameters\x12\x1a\n\x12model_architecture\x18\x01 \x01(\t\x12>\n\x04\x64\x61ta\x18\x02 \x03(\x0b\x32\x30.third_party.py.model_card_toolkit.proto.Dataset\x12\x14\n\x0cinput_format\x18\x03 \x01(\t\x12\x15\n\routput_format\x18\x04 \x01(\t\"\xab\x01\n\x04Test\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x11\n\tthreshold\x18\x03 \x01(\t\x12\x0e\n\x06result\x18\x04 \x01(\t\x12\x0e\n\x06passed\x18\x05 \x01(\x08\x12M\n\x08graphics\x18\x06 \x01(\x0b\x32;.third_party.py.model_card_toolkit.proto.GraphicsCollection\"\xe1\x01\n\x11PerformanceMetric\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\x12\r\n\x05slice\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12M\n\x08graphics\x18\x05 \x01(\x0b\x32;.third_party.py.model_card_toolkit.proto.GraphicsCollection\x12<\n\x05tests\x18\x06 \x03(\x0b\x32-.third_party.py.model_card_toolkit.proto.Test\"\xbe\x01\n\x14QuantitativeAnalysis\x12W\n\x13performance_metrics\x18\x01 \x03(\x0b\x32:.third_party.py.model_card_toolkit.proto.PerformanceMetric\x12M\n\x08graphics\x18\x02 \x01(\x0b\x32;.third_party.py.model_card_toolkit.proto.GraphicsCollection\"\xd5\x01\n\x14\x45xplainabilityReport\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\r\n\x05slice\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12M\n\x08graphics\x18\x04 \x01(\x0b\x32;.third_party.py.model_card_toolkit.proto.GraphicsCollection\x12<\n\x05tests\x18\x05 \x03(\x0b\x32-.third_party.py.model_card_toolkit.proto.Test\"w\n\x16\x45xplainabilityAnalysis\x12]\n\x16\x65xplainability_reports\x18\x01 \x03(\x0b\x32=.third_party.py.model_card_toolkit.proto.ExplainabilityReport\"\xe0\x01\n\x0e\x46\x61irnessReport\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\r\n\x05slice\x18\x02 \x01(\t\x12\x0f\n\x07segment\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12M\n\x08graphics\x18\x05 \x01(\x0b\x32;.third_party.py.model_card_toolkit.proto.GraphicsCollection\x12<\n\x05tests\x18\x06 \x03(\x0b\x32-.third_party.py.model_card_toolkit.proto.Test\"e\n\x10\x46\x61irnessAnalysis\x12Q\n\x10\x66\x61irness_reports\x18\x01 \x03(\x0b\x32\x37.third_party.py.model_card_toolkit.proto.FairnessReport\"\x1b\n\x04User\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\"\x1e\n\x07UseCase\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\"!\n\nLimitation\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\"\x1f\n\x08Tradeoff\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\"1\n\x04Risk\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x1b\n\x13mitigation_strategy\x18\x02 \x01(\t\"i\n\x12\x46\x61irnessAssessment\x12\x15\n\rgroup_at_risk\x18\x01 \x01(\t\x12\x10\n\x08\x62\x65nefits\x18\x02 \x01(\t\x12\r\n\x05harms\x18\x03 \x01(\t\x12\x1b\n\x13mitigation_strategy\x18\x04 \x01(\t\"\xcc\x03\n\x0e\x43onsiderations\x12<\n\x05users\x18\x01 \x03(\x0b\x32-.third_party.py.model_card_toolkit.proto.User\x12\x43\n\tuse_cases\x18\x02 \x03(\x0b\x32\x30.third_party.py.model_card_toolkit.proto.UseCase\x12H\n\x0blimitations\x18\x03 \x03(\x0b\x32\x33.third_party.py.model_card_toolkit.proto.Limitation\x12\x44\n\ttradeoffs\x18\x04 \x03(\x0b\x32\x31.third_party.py.model_card_toolkit.proto.Tradeoff\x12M\n\x16\x65thical_considerations\x18\x05 \x03(\x0b\x32-.third_party.py.model_card_toolkit.proto.Risk\x12X\n\x13\x66\x61irness_assessment\x18\x06 \x01(\x0b\x32;.third_party.py.model_card_toolkit.proto.FairnessAssessment\"\x94\x04\n\tModelCard\x12L\n\rmodel_details\x18\x01 \x01(\x0b\x32\x35.third_party.py.model_card_toolkit.proto.ModelDetails\x12R\n\x10model_parameters\x18\x02 \x01(\x0b\x32\x38.third_party.py.model_card_toolkit.proto.ModelParameters\x12\\\n\x15quantitative_analysis\x18\x03 \x01(\x0b\x32=.third_party.py.model_card_toolkit.proto.QuantitativeAnalysis\x12O\n\x0e\x63onsiderations\x18\x04 \x01(\x0b\x32\x37.third_party.py.model_card_toolkit.proto.Considerations\x12`\n\x17\x65xplainability_analysis\x18\x05 \x01(\x0b\x32?.third_party.py.model_card_toolkit.proto.ExplainabilityAnalysis\x12T\n\x11\x66\x61irness_analysis\x18\x06 \x01(\x0b\x32\x39.third_party.py.model_card_toolkit.proto.FairnessAnalysis')
+  serialized_pb=_b('\n)model_card_toolkit/proto/model_card.proto\x12\'third_party.py.model_card_toolkit.proto\"4\n\x05Owner\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontact\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t\"3\n\x07Version\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x0c\n\x04\x64iff\x18\x03 \x01(\t\">\n\x07License\x12\x14\n\nidentifier\x18\x01 \x01(\tH\x00\x12\x15\n\x0b\x63ustom_text\x18\x02 \x01(\tH\x00\x42\x06\n\x04type\"\x1e\n\tReference\x12\x11\n\treference\x18\x01 \x01(\t\"+\n\x08\x43itation\x12\r\n\x05style\x18\x01 \x01(\t\x12\x10\n\x08\x63itation\x18\x02 \x01(\t\"+\n\x15RegulatoryRequirement\x12\x12\n\nregulation\x18\x01 \x01(\t\"\xbb\x03\n\x0cModelDetails\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08overview\x18\x02 \x01(\t\x12\x15\n\rdocumentation\x18\x03 \x01(\t\x12>\n\x06owners\x18\x04 \x03(\x0b\x32..third_party.py.model_card_toolkit.proto.Owner\x12\x41\n\x07version\x18\x05 \x01(\x0b\x32\x30.third_party.py.model_card_toolkit.proto.Version\x12\x42\n\x08licenses\x18\x06 \x03(\x0b\x32\x30.third_party.py.model_card_toolkit.proto.License\x12\x46\n\nreferences\x18\x07 \x03(\x0b\x32\x32.third_party.py.model_card_toolkit.proto.Reference\x12\x44\n\tcitations\x18\x08 \x03(\x0b\x32\x31.third_party.py.model_card_toolkit.proto.Citation\x12\x1f\n\x17regulatory_requirements\x18\t \x01(\t\"&\n\x07Graphic\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05image\x18\x02 \x01(\t\"o\n\x12GraphicsCollection\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\x12\x44\n\ncollection\x18\x02 \x03(\x0b\x32\x30.third_party.py.model_card_toolkit.proto.Graphic\"[\n\rSensitiveData\x12\x16\n\x0esensitive_data\x18\x01 \x03(\t\x12\x1b\n\x13sensitive_data_used\x18\x02 \x03(\t\x12\x15\n\rjustification\x18\x03 \x01(\t\"\xd4\x01\n\x07\x44\x61taset\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04link\x18\x02 \x01(\t\x12I\n\tsensitive\x18\x03 \x01(\x0b\x32\x36.third_party.py.model_card_toolkit.proto.SensitiveData\x12M\n\x08graphics\x18\x04 \x01(\x0b\x32;.third_party.py.model_card_toolkit.proto.GraphicsCollection\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\"\x9a\x01\n\x0fModelParameters\x12\x1a\n\x12model_architecture\x18\x01 \x01(\t\x12>\n\x04\x64\x61ta\x18\x02 \x03(\x0b\x32\x30.third_party.py.model_card_toolkit.proto.Dataset\x12\x14\n\x0cinput_format\x18\x03 \x01(\t\x12\x15\n\routput_format\x18\x04 \x01(\t\"\xab\x01\n\x04Test\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x11\n\tthreshold\x18\x03 \x01(\t\x12\x0e\n\x06result\x18\x04 \x01(\t\x12\x0e\n\x06passed\x18\x05 \x01(\x08\x12M\n\x08graphics\x18\x06 \x01(\x0b\x32;.third_party.py.model_card_toolkit.proto.GraphicsCollection\"\xe1\x01\n\x11PerformanceMetric\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\x12\r\n\x05slice\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12M\n\x08graphics\x18\x05 \x01(\x0b\x32;.third_party.py.model_card_toolkit.proto.GraphicsCollection\x12<\n\x05tests\x18\x06 \x03(\x0b\x32-.third_party.py.model_card_toolkit.proto.Test\"\xbe\x01\n\x14QuantitativeAnalysis\x12W\n\x13performance_metrics\x18\x01 \x03(\x0b\x32:.third_party.py.model_card_toolkit.proto.PerformanceMetric\x12M\n\x08graphics\x18\x02 \x01(\x0b\x32;.third_party.py.model_card_toolkit.proto.GraphicsCollection\"\xd5\x01\n\x14\x45xplainabilityReport\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\r\n\x05slice\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12M\n\x08graphics\x18\x04 \x01(\x0b\x32;.third_party.py.model_card_toolkit.proto.GraphicsCollection\x12<\n\x05tests\x18\x05 \x03(\x0b\x32-.third_party.py.model_card_toolkit.proto.Test\"w\n\x16\x45xplainabilityAnalysis\x12]\n\x16\x65xplainability_reports\x18\x01 \x03(\x0b\x32=.third_party.py.model_card_toolkit.proto.ExplainabilityReport\"\xe0\x01\n\x0e\x46\x61irnessReport\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\r\n\x05slice\x18\x02 \x01(\t\x12\x0f\n\x07segment\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12M\n\x08graphics\x18\x05 \x01(\x0b\x32;.third_party.py.model_card_toolkit.proto.GraphicsCollection\x12<\n\x05tests\x18\x06 \x03(\x0b\x32-.third_party.py.model_card_toolkit.proto.Test\"e\n\x10\x46\x61irnessAnalysis\x12Q\n\x10\x66\x61irness_reports\x18\x01 \x03(\x0b\x32\x37.third_party.py.model_card_toolkit.proto.FairnessReport\"\x1b\n\x04User\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\"\x1e\n\x07UseCase\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\"!\n\nLimitation\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\"\x1f\n\x08Tradeoff\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\"1\n\x04Risk\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x1b\n\x13mitigation_strategy\x18\x02 \x01(\t\"i\n\x12\x46\x61irnessAssessment\x12\x15\n\rgroup_at_risk\x18\x01 \x01(\t\x12\x10\n\x08\x62\x65nefits\x18\x02 \x01(\t\x12\r\n\x05harms\x18\x03 \x01(\t\x12\x1b\n\x13mitigation_strategy\x18\x04 \x01(\t\"\xcc\x03\n\x0e\x43onsiderations\x12<\n\x05users\x18\x01 \x03(\x0b\x32-.third_party.py.model_card_toolkit.proto.User\x12\x43\n\tuse_cases\x18\x02 \x03(\x0b\x32\x30.third_party.py.model_card_toolkit.proto.UseCase\x12H\n\x0blimitations\x18\x03 \x03(\x0b\x32\x33.third_party.py.model_card_toolkit.proto.Limitation\x12\x44\n\ttradeoffs\x18\x04 \x03(\x0b\x32\x31.third_party.py.model_card_toolkit.proto.Tradeoff\x12M\n\x16\x65thical_considerations\x18\x05 \x03(\x0b\x32-.third_party.py.model_card_toolkit.proto.Risk\x12X\n\x13\x66\x61irness_assessment\x18\x06 \x03(\x0b\x32;.third_party.py.model_card_toolkit.proto.FairnessAssessment\"\x94\x04\n\tModelCard\x12L\n\rmodel_details\x18\x01 \x01(\x0b\x32\x35.third_party.py.model_card_toolkit.proto.ModelDetails\x12R\n\x10model_parameters\x18\x02 \x01(\x0b\x32\x38.third_party.py.model_card_toolkit.proto.ModelParameters\x12\\\n\x15quantitative_analysis\x18\x03 \x01(\x0b\x32=.third_party.py.model_card_toolkit.proto.QuantitativeAnalysis\x12O\n\x0e\x63onsiderations\x18\x04 \x01(\x0b\x32\x37.third_party.py.model_card_toolkit.proto.Considerations\x12`\n\x17\x65xplainability_analysis\x18\x05 \x01(\x0b\x32?.third_party.py.model_card_toolkit.proto.ExplainabilityAnalysis\x12T\n\x11\x66\x61irness_analysis\x18\x06 \x01(\x0b\x32\x39.third_party.py.model_card_toolkit.proto.FairnessAnalysis')
 )
 
 
@@ -322,8 +322,8 @@ _MODELDETAILS = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='regulatory_requirements', full_name='third_party.py.model_card_toolkit.proto.ModelDetails.regulatory_requirements', index=8,
-      number=9, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
+      number=9, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -340,7 +340,7 @@ _MODELDETAILS = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=380,
-  serialized_end=887,
+  serialized_end=823,
 )
 
 
@@ -377,8 +377,8 @@ _GRAPHIC = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=889,
-  serialized_end=927,
+  serialized_start=825,
+  serialized_end=863,
 )
 
 
@@ -415,8 +415,8 @@ _GRAPHICSCOLLECTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=929,
-  serialized_end=1040,
+  serialized_start=865,
+  serialized_end=976,
 )
 
 
@@ -460,8 +460,8 @@ _SENSITIVEDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1042,
-  serialized_end=1133,
+  serialized_start=978,
+  serialized_end=1069,
 )
 
 
@@ -519,8 +519,8 @@ _DATASET = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1136,
-  serialized_end=1348,
+  serialized_start=1072,
+  serialized_end=1284,
 )
 
 
@@ -571,8 +571,8 @@ _MODELPARAMETERS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1351,
-  serialized_end=1505,
+  serialized_start=1287,
+  serialized_end=1441,
 )
 
 
@@ -637,8 +637,8 @@ _TEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1508,
-  serialized_end=1679,
+  serialized_start=1444,
+  serialized_end=1615,
 )
 
 
@@ -703,8 +703,8 @@ _PERFORMANCEMETRIC = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1682,
-  serialized_end=1907,
+  serialized_start=1618,
+  serialized_end=1843,
 )
 
 
@@ -741,8 +741,8 @@ _QUANTITATIVEANALYSIS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1910,
-  serialized_end=2100,
+  serialized_start=1846,
+  serialized_end=2036,
 )
 
 
@@ -800,8 +800,8 @@ _EXPLAINABILITYREPORT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2103,
-  serialized_end=2316,
+  serialized_start=2039,
+  serialized_end=2252,
 )
 
 
@@ -831,8 +831,8 @@ _EXPLAINABILITYANALYSIS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2318,
-  serialized_end=2437,
+  serialized_start=2254,
+  serialized_end=2373,
 )
 
 
@@ -897,8 +897,8 @@ _FAIRNESSREPORT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2440,
-  serialized_end=2664,
+  serialized_start=2376,
+  serialized_end=2600,
 )
 
 
@@ -928,8 +928,8 @@ _FAIRNESSANALYSIS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2666,
-  serialized_end=2767,
+  serialized_start=2602,
+  serialized_end=2703,
 )
 
 
@@ -959,8 +959,8 @@ _USER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2769,
-  serialized_end=2796,
+  serialized_start=2705,
+  serialized_end=2732,
 )
 
 
@@ -990,8 +990,8 @@ _USECASE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2798,
-  serialized_end=2828,
+  serialized_start=2734,
+  serialized_end=2764,
 )
 
 
@@ -1021,8 +1021,8 @@ _LIMITATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2830,
-  serialized_end=2863,
+  serialized_start=2766,
+  serialized_end=2799,
 )
 
 
@@ -1052,8 +1052,8 @@ _TRADEOFF = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2865,
-  serialized_end=2896,
+  serialized_start=2801,
+  serialized_end=2832,
 )
 
 
@@ -1090,8 +1090,8 @@ _RISK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2898,
-  serialized_end=2947,
+  serialized_start=2834,
+  serialized_end=2883,
 )
 
 
@@ -1142,8 +1142,8 @@ _FAIRNESSASSESSMENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2949,
-  serialized_end=3054,
+  serialized_start=2885,
+  serialized_end=2990,
 )
 
 
@@ -1191,8 +1191,8 @@ _CONSIDERATIONS = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='fairness_assessment', full_name='third_party.py.model_card_toolkit.proto.Considerations.fairness_assessment', index=5,
-      number=6, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      number=6, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -1208,8 +1208,8 @@ _CONSIDERATIONS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3057,
-  serialized_end=3517,
+  serialized_start=2993,
+  serialized_end=3453,
 )
 
 
@@ -1274,8 +1274,8 @@ _MODELCARD = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3520,
-  serialized_end=4052,
+  serialized_start=3456,
+  serialized_end=3988,
 )
 
 _LICENSE.oneofs_by_name['type'].fields.append(
@@ -1289,7 +1289,6 @@ _MODELDETAILS.fields_by_name['version'].message_type = _VERSION
 _MODELDETAILS.fields_by_name['licenses'].message_type = _LICENSE
 _MODELDETAILS.fields_by_name['references'].message_type = _REFERENCE
 _MODELDETAILS.fields_by_name['citations'].message_type = _CITATION
-_MODELDETAILS.fields_by_name['regulatory_requirements'].message_type = _REGULATORYREQUIREMENT
 _GRAPHICSCOLLECTION.fields_by_name['collection'].message_type = _GRAPHIC
 _DATASET.fields_by_name['sensitive'].message_type = _SENSITIVEDATA
 _DATASET.fields_by_name['graphics'].message_type = _GRAPHICSCOLLECTION
