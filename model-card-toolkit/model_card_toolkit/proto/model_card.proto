@@ -93,7 +93,7 @@ message ModelDetails {
   repeated Citation citations = 8;
 
   // Provide any regulatory requirements that the model should comply to.
-  repeated RegulatoryRequirement regulatory_requirements = 9; 
+  optional string regulatory_requirements = 9; 
 }
 
 // A named inline plot.
@@ -320,7 +320,7 @@ message Risk {
   optional string mitigation_strategy = 2;
 }
 
-// Information about the benefits and harms of the model.
+// Information about the benefits and harms of the model to an identified at risk group.
 // The next tag number is 5.
 message FairnessAssessment {
   // The groups or individuals at risk of being systematically disadvantaged by the model.
@@ -362,7 +362,7 @@ message Considerations {
 
   // How does the model affect groups at risk of being systematically disadvantaged?
   // What are the harms and benefits to the various affected groups?
-  optional FairnessAssessment fairness_assessment = 6;
+  repeated FairnessAssessment fairness_assessment = 6;
 }
 
 // Fields used to generate the Model Card.

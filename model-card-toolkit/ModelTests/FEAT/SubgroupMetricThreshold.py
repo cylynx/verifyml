@@ -163,7 +163,7 @@ class SubgroupMetricThreshold(ModelTest):
             )
         elif self.metric == "fnr":
             plt.axhline(
-                y=1-self.threshold,
+                y=1 - self.threshold,
                 color="black",
                 linestyle="--",
                 label=f"Maximum FNR (1-TPR) Threshold = {str(self.threshold)}",
@@ -177,7 +177,7 @@ class SubgroupMetricThreshold(ModelTest):
             )
         elif self.metric == "tnr":
             plt.axvline(
-                x=1-self.threshold,
+                x=1 - self.threshold,
                 color="black",
                 linestyle="--",
                 label=f"Mininum TNR (1-FPR) Threshold = {str(self.threshold)}",

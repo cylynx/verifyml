@@ -1,0 +1,305 @@
+{
+  "eventId": "4ceb5c3b-2878-4546-ad3e-9dab1147ba06",
+  "eventType": "FORM_RESPONSE",
+  "createdAt": "2021-09-26T07:14:49.410Z",
+  "data": {
+    "responseId": "100e0116-86e9-4625-8f80-dd539392104c",
+    "respondentId": "mZoZ90",
+    "formId": "mR4Nlw",
+    "formName": "Model Ops Card Builder",
+    "createdAt": "2021-09-26T07:14:49.000Z",
+    "fields": [
+      {
+        "key": "question_3yXOqx",
+        "label": "Name",
+        "type": "INPUT_TEXT",
+        "value": "Credit Card Fraud Model"
+      },
+      {
+        "key": "question_waO1Wy",
+        "label": "Overview",
+        "type": "TEXTAREA",
+        "value": "Sample example of a risk assessment of a credit card fraud model. Binary prediction problem (fraud or no fraud). Customers flagged as potentially fraudulent will be passed to internal investigation team for follow-up."
+      },
+      {
+        "key": "question_3X5jBY",
+        "label": "Intended Users",
+        "type": "INPUT_TEXT",
+        "value": "Credit card fraud team and credit card holders"
+      },
+      {
+        "key": "question_w8N9pP",
+        "label": "Intended Use Cases",
+        "type": "TEXTAREA",
+        "value": "Increase accuracy of predicting credit card fraud over the existing rule-based model, saving the bank time and energy for each false positive case and avoiding reputation harm from false negative cases."
+      },
+      {
+        "key": "question_m6DYq5",
+        "label": "Version",
+        "type": "INPUT_TEXT",
+        "value": "v1"
+      },
+      {
+        "key": "question_wbZMaE",
+        "label": "Product Owner(s)",
+        "type": "INPUT_TEXT",
+        "value": "Timothy"
+      },
+      {
+        "key": "question_wArYkN",
+        "label": "Model Developer(s)",
+        "type": "INPUT_TEXT",
+        "value": "Swan"
+      },
+      {
+        "key": "question_mBEYvY",
+        "label": "Reviewer(s)",
+        "type": "INPUT_TEXT",
+        "value": "Jason"
+      },
+      {
+        "key": "question_wzEBxk",
+        "label": "Please select any regulatory guidelines which the model should be in compliance with",
+        "type": "CHECKBOXES",
+        "value": [
+          "1f033a0c-1fa7-44a8-9309-0fe858283844",
+          "0a574b19-1a88-42e6-b4ba-b288b3fec5a4"
+        ],
+        "options": [
+          {
+            "id": "0a574b19-1a88-42e6-b4ba-b288b3fec5a4",
+            "text": "MAS Fairness, Ethics, Accountability and Transparency (FEAT) principles"
+          },
+          {
+            "id": "0e0e9512-6ea8-496e-9ee4-83dc1a23a5a7",
+            "text": "HKMA AI principles"
+          },
+          {
+            "id": "5fcd3e36-042c-4c71-b76a-e9ec325f6205",
+            "text": "Bank of England and FCA's guideline"
+          },
+          {
+            "id": "1f033a0c-1fa7-44a8-9309-0fe858283844",
+            "text": "Not applicable"
+          }
+        ]
+      },
+      {
+        "key": "question_wzEBxk_0a574b19-1a88-42e6-b4ba-b288b3fec5a4",
+        "label": "Please select any regulatory guidelines which the model should be in compliance with (MAS Fairness, Ethics, Accountability and Transparency (FEAT) principles)",
+        "type": "CHECKBOXES",
+        "value": true
+      },
+      {
+        "key": "question_wzEBxk_0e0e9512-6ea8-496e-9ee4-83dc1a23a5a7",
+        "label": "Please select any regulatory guidelines which the model should be in compliance with (HKMA AI principles)",
+        "type": "CHECKBOXES",
+        "value": false
+      },
+      {
+        "key": "question_wzEBxk_5fcd3e36-042c-4c71-b76a-e9ec325f6205",
+        "label": "Please select any regulatory guidelines which the model should be in compliance with (Bank of England and FCA's guideline)",
+        "type": "CHECKBOXES",
+        "value": false
+      },
+      {
+        "key": "question_wzEBxk_1f033a0c-1fa7-44a8-9309-0fe858283844",
+        "label": "Please select any regulatory guidelines which the model should be in compliance with (Not applicable)",
+        "type": "CHECKBOXES",
+        "value": true
+      },
+      {
+        "key": "question_n0V4jj",
+        "label": "Name of dataset",
+        "type": "INPUT_TEXT",
+        "value": "Credit Card Dataset"
+      },
+      {
+        "key": "question_wM10jE",
+        "label": "Description of dataset",
+        "type": "TEXTAREA",
+        "value": "Standard credit card dataset "
+      },
+      {
+        "key": "question_wzEVQ0",
+        "label": "Protected attributes in dataset",
+        "type": "TEXTAREA",
+        "value": "age, gender"
+      },
+      {
+        "key": "question_w5XNqE",
+        "label": "Protected attributes in production",
+        "type": "TEXTAREA",
+        "value": "age, gender"
+      },
+      {
+        "key": "question_3Eqpo2",
+        "label": "Justification of use of protected attributes",
+        "type": "TEXTAREA",
+        "value": "Age and gender is an important predictor of credit card fraud"
+      },
+      {
+        "key": "question_wdb72K",
+        "label": "Name of dataset 2",
+        "type": "INPUT_TEXT",
+        "value": "CRM"
+      },
+      {
+        "key": "question_mJ1yEz",
+        "label": "Description of dataset 2",
+        "type": "TEXTAREA",
+        "value": "Customer information database"
+      },
+      {
+        "key": "question_mYj2zJ",
+        "label": "Protected attributes in dataset 2",
+        "type": "TEXTAREA",
+        "value": "age, gender, race, religion, id"
+      },
+      {
+        "key": "question_mDqLvZ",
+        "label": "Protected attributes in production (dataset 2)",
+        "type": "TEXTAREA",
+        "value": "age, gender"
+      },
+      {
+        "key": "question_3jeK8Y",
+        "label": "Justification of use of protected attributes (dataset 2)",
+        "type": "TEXTAREA",
+        "value": "Age and gender is an important predictor of credit card fraud"
+      },
+      {
+        "key": "question_3laplv",
+        "label": "Name of dataset 3",
+        "type": "INPUT_TEXT",
+        "value": null
+      },
+      {
+        "key": "question_wgbB8M",
+        "label": "Description of dataset 3",
+        "type": "TEXTAREA",
+        "value": null
+      },
+      {
+        "key": "question_mRWOBj",
+        "label": "Protected attributes in dataset 3",
+        "type": "TEXTAREA",
+        "value": null
+      },
+      {
+        "key": "question_wo9JVx",
+        "label": "Protected attributes in production (dataset 3)",
+        "type": "TEXTAREA",
+        "value": null
+      },
+      {
+        "key": "question_3yXO86",
+        "label": "Justification of use of protected attributes (dataset 3)",
+        "type": "TEXTAREA",
+        "value": null
+      },
+      {
+        "key": "question_3je4aQ",
+        "label": "What is the key metric used in evaluating the model's performance?",
+        "type": "INPUT_TEXT",
+        "value": "Recall"
+      },
+      {
+        "key": "question_mOQRBg",
+        "label": "2nd metric (if applicable)",
+        "type": "INPUT_TEXT",
+        "value": "Precision"
+      },
+      {
+        "key": "question_mVpr1y",
+        "label": "3rd metric (if applicable)",
+        "type": "INPUT_TEXT",
+        "value": null
+      },
+      {
+        "key": "question_mKp4dz",
+        "label": "Who are the individuals and groups that are considered to be at-risk of being systematically disadvantaged by the system?",
+        "type": "TEXTAREA",
+        "value": "race, age, gender"
+      },
+      {
+        "key": "question_31WYq4",
+        "label": "Expected Benefits",
+        "type": "TEXTAREA",
+        "value": "A more precise model will reduce the number of customers being mistakenly labelled as fraudulent in the existing rules based model, which takes 7 man-days to resolve before a credit card could be unfrozen."
+      },
+      {
+        "key": "question_nGeMBk",
+        "label": "Expected Harms",
+        "type": "TEXTAREA",
+        "value": "Customers who are in the false-positive category will have their credit card frozen and may be excluded from the financial services of the bank for up to 7 days.  "
+      },
+      {
+        "key": "question_mJ1r5z",
+        "label": "Mitigation strategies",
+        "type": "TEXTAREA",
+        "value": "Because there is less data for certain demographic groups (e.g. the elderly), the model has higher false-positive rates for that segment. We will prioritize such cases after the initial model score to add a 2nd level of check and minimise disruption to the customer."
+      },
+      {
+        "key": "question_nPRoBe",
+        "label": "Type of fairness analysis conducted",
+        "type": "INPUT_TEXT",
+        "value": "Minimum acceptable service"
+      },
+      {
+        "key": "question_3Eqpbr",
+        "label": "Segment of analysis",
+        "type": "INPUT_TEXT",
+        "value": "Age and gender"
+      },
+      {
+        "key": "question_nrDXrR",
+        "label": "Description of fairness analysis",
+        "type": "TEXTAREA",
+        "value": "False positive rate for the credit scoring model should be below 2% which is the existing average false positive rate of the rule based model"
+      },
+      {
+        "key": "question_w4aZNY",
+        "label": "Type of fairness analysis conducted 2",
+        "type": "INPUT_TEXT",
+        "value": "Equal false positive rate "
+      },
+      {
+        "key": "question_3jeK94",
+        "label": "Segment of analysis 2",
+        "type": "INPUT_TEXT",
+        "value": "Age"
+      },
+      {
+        "key": "question_w2j2x9",
+        "label": "Description of fairness analysis 2",
+        "type": "TEXTAREA",
+        "value": "False positive rate across age bins should not differ by more than 20%"
+      },
+      {
+        "key": "question_3xVGN5",
+        "label": "Segment of analysis 3",
+        "type": "INPUT_TEXT",
+        "value": null
+      },
+      {
+        "key": "question_mZ9xRB",
+        "label": "Type of fairness analysis conducted 3",
+        "type": "INPUT_TEXT",
+        "value": null
+      },
+      {
+        "key": "question_3NqzBj",
+        "label": "Description of fairness analysis 3",
+        "type": "TEXTAREA",
+        "value": null
+      },
+      {
+        "key": "question_n0V0Q9",
+        "label": "Please enter your email",
+        "type": "INPUT_EMAIL",
+        "value": "timothy.lin@cylynx.io"
+      }
+    ]
+  }
+}

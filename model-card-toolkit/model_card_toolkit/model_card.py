@@ -128,22 +128,6 @@ class Citation(BaseModelCardField):
         type(model_card_pb2.Citation)
     ] = model_card_pb2.Citation
 
-
-@dataclasses.dataclass
-class RegulatoryRequirement(BaseModelCardField):
-    """Regulatory requirements for the model.
-
-    Attributes:
-      regulation: The regulations the model should be compliant with.
-    """
-
-    regulation: Optional[str] = None
-
-    _proto_type: dataclasses.InitVar[
-        type(model_card_pb2.RegulatoryRequirement)
-    ] = model_card_pb2.RegulatoryRequirement
-
-
 @dataclasses.dataclass
 class ModelDetails(BaseModelCardField):
     """This section provides a general, high-level description of the model.
@@ -173,9 +157,7 @@ class ModelDetails(BaseModelCardField):
     licenses: List[License] = dataclasses.field(default_factory=list)
     references: List[Reference] = dataclasses.field(default_factory=list)
     citations: List[Citation] = dataclasses.field(default_factory=list)
-    regulatory_requirements: List[RegulatoryRequirement] = dataclasses.field(
-        default_factory=list
-    )
+    regulatory_requirements: Optional[str] = None
 
     _proto_type: dataclasses.InitVar[
         type(model_card_pb2.ModelDetails)
@@ -623,8 +605,8 @@ class Considerations(BaseModelCardField):
     limitations: List[Limitation] = dataclasses.field(default_factory=list)
     tradeoffs: List[Tradeoff] = dataclasses.field(default_factory=list)
     ethical_considerations: List[Risk] = dataclasses.field(default_factory=list)
-    fairness_assessment: FairnessAssessment = dataclasses.field(
-        default_factory=FairnessAssessment
+    fairness_assessment: List[FairnessAssessment] = dataclasses.field(
+        default_factory=list
     )
 
     _proto_type: dataclasses.InitVar[
