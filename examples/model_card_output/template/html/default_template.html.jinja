@@ -30,6 +30,26 @@
         <div class="col card">
           {% if dataset.name %}<h3>{{ dataset.name }}</h3>{% endif %}
             {% if dataset.description %}<p>{{ dataset.description }}</p>{% endif %}
+            {% if dataset.sensitive %}
+              <h4>Sensitive data</h4>
+              <ul>
+              {% for sensitive_data in dataset.sensitive.sensitive_data %}
+                <li>{{ sensitive_data }}</li>
+              {% endfor %}
+              </ul>
+              {% if dataset.sensitive.sensitive_data_used %}
+                <h4>Sensitive data used in model</h4>
+                <ul>
+                {% for sensitive_data_used in dataset.sensitive.sensitive_data_used %}
+                  <li>{{ sensitive_data_used }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+              {% if dataset.sensitive.justification %}
+                <h4>Justification</h4>
+                <p> {{ dataset.sensitive.justification }}</p>
+              {% endif %}
+            {% endif %}
             {% if dataset.link %}<a href="{{ dataset.link }}">{{ dataset.link }}</a>{% endif %}
             {% if dataset.graphics and dataset.graphics.collection %}
               {{ render_graphics(dataset.graphics.collection) }}
@@ -59,16 +79,122 @@
 {% macro metric_value(metric) %}
 {{ metric.value }}{% if metric.confidence_interval %} ({{ metric.confidence_interval.lower_bound }}, {{ metric.confidence_interval.upper_bound }}){% endif %}
 {% endmacro %}
+{% macro render_test(test) %}
+<div class="col card">
+  {% if test.name %}
+  <h4> {{ test.name  }} </h4>
+  {% endif %}
+  {% if test.description %}
+  <div>
+    <b> Description: </b>
+    {{ test.description }} 
+  </div>
+  {% endif %}
+  {% if test.threshold %}
+  <div>
+    <b> Threshold: </b>
+    {{ test.threshold }} 
+  </div>
+  {% endif %}
+  {% if test.result %}
+  <div>
+    <b> Result: </b>
+    {# looks like a csv file #}
+    {% if '\n' in test.result and ',' in test.result %}
+      {{ render_results_table(test.result) }}
+    {% else %}
+      {{ test.result }} 
+    {% endif %}
+  </div>
+  {% endif %}
+  {% if test.passed == true %} 
+    <div><b style="color:green;"> Passed</b></div> 
+    {% else %}
+    <div><b style="color:red;"> Failed</b></div>
+  {% endif %}
+  {% if test.graphics.collection %}
+    {{ render_metrics_graphics(test.graphics) }}
+  {% endif %}
+</div>
+{% endmacro %}
+{% macro render_report(report) %}
+<div class="col card">
+  <h3>{{ report.type }} {% if report.value %}- {{ report.value }}{% endif %}</h3>
+  {% if report.slice %}
+  <div>
+    <b> Slice: </b>
+    {{ report.slice }} 
+  </div>
+  {% endif %}
+  {% if report.segment %}
+  <div>
+    <b> Segment: </b>
+    {{ report.segment }} 
+  </div>
+  {% endif %}
+  {% if report.description %}
+  <div>
+    <b> Description: </b>
+    {{ report.description }} 
+  </div>
+  {% endif %}
+  {% if report.graphics.collection %}
+    {{ render_metrics_graphics(report.graphics) }}
+  {% endif %}
+  {% if report.tests %}
+    {% for test in report.tests %}
+      {{ render_test(test)}}
+    {% endfor %}
+  {% endif %}
+</div>
+{% endmacro %}
 {% macro render_quantitative_analysis(quantitative_analysis) %}
 <div class="col card">
   <h2>Quantitative Analysis</h2>
   {% if quantitative_analysis.performance_metrics %}
-    {{ render_metrics_table(quantitative_analysis.performance_metrics )}}
+    {% for metric in quantitative_analysis.performance_metrics %}
+      {{ render_report(metric)}}
+    {% endfor %}
   {% endif %}
   {% if quantitative_analysis.graphics.collection %}
     {{ render_metrics_graphics(quantitative_analysis.graphics) }}
   {% endif %}
 </div>
+{% endmacro %}
+{% macro render_explainability_analysis(explainability_analysis) %}
+<div class="col card">
+  <h2>Explainability Analysis</h2>
+  {% if explainability_analysis.explainability_reports %}
+    {% for report in explainability_analysis.explainability_reports %}
+      {{ render_report(report)}}
+    {% endfor %}
+  {% endif %}
+</div>
+{% endmacro %}
+{% macro render_fairness_analysis(fairness_analysis) %}
+<div class="col card">
+  <h2>Fairness Analysis</h2>
+  {% if fairness_analysis.fairness_reports %}
+    {% for report in fairness_analysis.fairness_reports %}
+      {{ render_report(report)}}
+    {% endfor %}
+  {% endif %}
+</div>
+{% endmacro %}
+{% macro render_results_table(results) %}
+<table>
+{% set results_list = results.split('\n') %}
+  {% for row in results_list %}
+    {% if (row is defined) and row %}
+      <tr>
+      {% set items = row.split(',') %}
+      {% for item in items %}
+      <td>{{ item }}</td>
+      {% endfor %}
+      </tr>
+    {% endif %}
+  {% endfor %}
+</table>
 {% endmacro %}
 {% macro render_metrics_table(metrics) %}
 <table class="center">
@@ -82,8 +208,10 @@
 {% macro render_metrics_graphics(graphics) %}
   <div class="row">
     <div class="col">
-      {{ graphics.description }}
-      {{ render_graphics(graphics.collection) }}
+      {% if graphics.description %}
+        <div class="center"><i>{{ graphics.description }}</i></div>
+      {% endif %}
+      {{ render_graphics(graphics.collection) }}    
     </div>
   </div>
 {% endmacro %}
@@ -96,10 +224,17 @@
   }
   .col {
     flex: 1;
+    align-items: center; 
+    justify-content: center;
   }
   .card {
     padding: 1em;
     border: 1px solid #DADCE0;
+    margin: 10px;
+  }
+  .card .card {
+    padding: 1em;
+    border: none;
     margin: 10px;
   }
   .img-container {
@@ -114,6 +249,7 @@
   .center {
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
   }
   table, th, td { border: 1px solid black; }
   th, td { border: 1px solid #CCC; height: 30px; }
@@ -142,7 +278,7 @@
           {% if model_details.owners %}<h3>Owners</h3>
             {% if model_details.owners|length > 1 %}
               {% for owner in model_details.owners %}
-                <li>{{ owner.name }}, {{ owner.contact }}</li>
+                <li>{{ owner.name }}{% if owner.contact %}, {{ owner.contact }} {% endif %}</li>
               {% endfor %}
             {% else %}
               {{ model_details.owners[0].name }}, {{ model_details.owners[0].contact }}
@@ -166,6 +302,8 @@
                 <li>{{ citation.citation }}</li>
               {% endfor %}
               </ul>{% endif %}
+          {% if model_details.regulatory_requirements %}<h3>Regulatory requirements</h3>
+              {{  model_details.regulatory_requirements }}{% endif %}
         </div>
       {% if model_parameters.model_architecture or model_parameters.input_format or model_parameters.output_format %}
         <div class="col card">
@@ -203,9 +341,20 @@
             <h3>Ethical Considerations</h3>
               <ul>{% for risk in considerations.ethical_considerations %}
                 <li>
-                  <div>Risk: {{ risk.name }}</div>
-                  <div>Mitigation Strategy: {{ risk.mitigation_strategy }}</div>
-                </li>{% endfor %} </ul>{% endif %}
+                  <div><b>Risk:</b> {{ risk.name }}</div>
+                  <div><b>Mitigation Strategy:</b> {{ risk.mitigation_strategy }}</div>
+                </li>{% endfor %} </ul>
+          {% endif %}
+          {% if considerations.fairness_assessment %}
+            <h3>Fairness Considerations</h3>
+              <ul>{% for fairness_assessment in considerations.fairness_assessment %}
+                <li>
+                  <div><b>Group at risk:</b> {{ fairness_assessment.group_at_risk }}</div>
+                  <div><b>Benefits:</b> {{ fairness_assessment.benefits }}</div>
+                  <div><b>Harms:</b> {{ fairness_assessment.harms }}</div>
+                  <div><b>Mitigation Strategy:</b> {{ fairness_assessment.mitigation_strategy }}</div>
+                </li>{% endfor %} </ul>
+          {% endif %}
       </div>
       {% endif %}
     </div>
@@ -214,6 +363,12 @@
     {% endif %}
     {% if quantitative_analysis.performance_metrics or quantitative_analysis.graphics.collection %}
       {{ render_quantitative_analysis(quantitative_analysis) }}
+    {% endif %}
+    {% if explainability_analysis.explainability_reports %}
+      {{ render_explainability_analysis(explainability_analysis) }}
+    {% endif %}
+    {% if fairness_analysis.fairness_reports %}
+      {{ render_fairness_analysis(fairness_analysis) }}
     {% endif %}
 </body>
 </html>
