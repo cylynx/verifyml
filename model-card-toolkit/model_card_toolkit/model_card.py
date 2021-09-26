@@ -21,15 +21,17 @@ ModelCardsToolkit serves as an API to read and write MC properties by the users.
 """
 
 import dataclasses
+import pandas as pd
 import json as json_lib
 from typing import Any, Dict, List, Optional
 
 from model_card_toolkit.base_model_card_field import BaseModelCardField
 from model_card_toolkit.proto import model_card_pb2
 from model_card_toolkit.utils import validation
-from FEATTests.FEATTest import FEATTest
+from ModelTests import ModelTest
 
 _SCHEMA_VERSION_STRING = "schema_version"
+
 
 
 @dataclasses.dataclass
@@ -326,17 +328,21 @@ class Test(BaseModelCardField):
 
     _proto_type: dataclasses.InitVar[type(model_card_pb2.Test)] = model_card_pb2.Test
 
-    def read_feat_test(self, feat_test: FEATTest) -> None:
-      self.name = feat_test.test_name
-      self.description = feat_test.test_desc
-      self.threshold = str(getattr(feat_test, 'threshold', None))
-      self.result = str(feat_test.result)
-      self.passed = feat_test.passed
+    def read_model_test(self, model_test: ModelTest) -> None:
+        self.name = model_test.test_name
+        self.description = model_test.test_desc
+        self.threshold = str(getattr(model_test, 'threshold', None))
+        self.result = (
+            model_test.result.to_csv(index=True)
+            if isinstance(model_test.result, pd.DataFrame)
+            else str(model_test.result)
+        )
+        self.passed = model_test.passed
       
-      plots = getattr(feat_test, 'plots', None)
-      if plots:
-        collection = [Graphic(name=n, image=i) for n, i in plots.items()]
-        self.graphics = GraphicsCollection(collection=collection)
+        plots = getattr(model_test, 'plots', None)
+        if plots:
+            collection = [Graphic(name=n, image=i) for n, i in plots.items()]
+            self.graphics = GraphicsCollection(collection=collection)
 
 
 @dataclasses.dataclass
@@ -479,9 +485,7 @@ class FairnessAnalysis(BaseModelCardField):
       fairness_reports: The fairness studies undertaken.
     """
 
-    fairness_reports: List[FairnessReport] = dataclasses.field(
-        default_factory=list
-    )
+    fairness_reports: List[FairnessReport] = dataclasses.field(default_factory=list)
 
     _proto_type: dataclasses.InitVar[
         type(model_card_pb2.FairnessAnalysis)

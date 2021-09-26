@@ -1,23 +1,24 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 import matplotlib.pyplot as plt
+import pandas as pd
 from pandas import DataFrame
 from sklearn.metrics import confusion_matrix
 from typing import ClassVar
 
-from .FEATTest import FEATTest
-from .utils import plot_to_str
+from ..ModelTest import ModelTest
+from ..utils import plot_to_str
 
 
 @dataclass
-class SubgroupDifference(FEATTest):
+class SubgroupDifference(ModelTest):
     """
     Test if the maximum difference/ratio of a specified metric of any 2 groups within a specified protected attribute
     exceeds the threshold specified.
 
     :attr: protected attribute
-    :metric: type of bias metric for the test, choose from ('fpr', 'fnr', 'sr'),
-             'fpr' - false positive rate, 'fnr' - false negative rate, 'sr': selection rate
+    :metric: type of bias metric for the test, choose from ('fpr', 'fnr', 'pr'),
+             'fpr' - false positive rate, 'fnr' - false negative rate, 'pr': positive rate
     :method: type of method for the test, choose from ('diff', 'ratio')
     :threshold: threshold which if the max difference of false positive, false negative, negative
     """
@@ -31,14 +32,21 @@ class SubgroupDifference(FEATTest):
     technique: ClassVar[str] = "Subgroup Difference"
 
     def __post_init__(self):
-        metrics = {"fpr", "fnr", "sr"}
+        metrics = {"fpr", "fnr", "pr"}
+        metric_name_dict = {"fpr":"false postive rate", "fnr":"false negative rate", "pr": "positive rate"}
         if self.metric not in metrics:
             raise AttributeError(f"metric should be one of {metrics}.")
 
         methods = {"diff", "ratio"}
         if self.method not in methods:
             raise AttributeError(f"method should be one of {methods}.")
-
+        
+        metric_name = metric_name_dict[self.metric]
+        if self.test_name is None:
+            self.test_name = "Subgroup Disparity Test"
+        if self.test_desc is None:
+            self.test_desc = f"Test if the maximum {self.method} of the {metric_name} of any 2 groups within {self.attr} attribute exceeds the threshold. To pass, this value cannot exceed the threshold."
+    
     def get_metric_dict(self, attr: str, df: DataFrame) -> dict[str, float]:
         """
         Reads a df and returns a dictionary that shows the metric max
@@ -52,7 +60,7 @@ class SubgroupDifference(FEATTest):
 
         self.fnr = {}
         self.fpr = {}
-        self.sr = {}
+        self.pr = {}
 
         metric_dict = {}
 
@@ -62,7 +70,7 @@ class SubgroupDifference(FEATTest):
 
             self.fnr[value] = cm[1][0] / cm[1].sum()
             self.fpr[value] = cm[0][1] / cm[0].sum()
-            self.sr[value] = cm[1].sum() / cm.sum()
+            self.pr[value] = cm[1].sum() / cm.sum()
 
             metric_dict[f"{attr}_fnr_max_diff"] = max(self.fnr.values()) - min(
                 self.fnr.values()
@@ -76,26 +84,29 @@ class SubgroupDifference(FEATTest):
             metric_dict[f"{attr}_fpr_max_ratio"] = max(self.fpr.values()) / min(
                 self.fpr.values()
             )
-            metric_dict[f"{attr}_sr_max_diff"] = max(self.sr.values()) - min(
-                self.sr.values()
+            metric_dict[f"{attr}_pr_max_diff"] = max(self.pr.values()) - min(
+                self.pr.values()
             )
-            metric_dict[f"{attr}_sr_max_ratio"] = max(self.sr.values()) / min(
-                self.sr.values()
+            metric_dict[f"{attr}_pr_max_ratio"] = max(self.pr.values()) / min(
+                self.pr.values()
             )
 
         return metric_dict
 
     def plot(self):
-        fig, axs = plt.subplots(1, 3, figsize=(18, 4), sharey=False)
-        axs[0].bar(list(self.fnr.keys()), list(self.fnr.values()))
-        axs[0].set_title("False Negative Rates")
-        axs[1].bar(list(self.fpr.keys()), list(self.fpr.values()))
-        axs[1].set_title("False Positive Rates")
-        axs[2].bar(list(self.sr.keys()), list(self.sr.values()))
-        axs[2].set_title("Predicted Positive Rates")
-
+        plt.figure(figsize=(12, 6))
+        if self.metric == 'fnr':
+            plt.bar(list(self.fnr.keys()), list(self.fnr.values()))
+            plt.title("False Negative Rates")
+        elif self.metric == 'fpr':
+            plt.bar(list(self.fpr.keys()), list(self.fpr.values()))
+            plt.title("False Positive Rates")
+        elif self.metric == 'pr':
+            plt.bar(list(self.pr.keys()), list(self.pr.values()))
+            plt.title("Predicted Positive Rates")
+            
         title = f"Attribute: {self.attr}"
-        fig.suptitle(title)
+        plt.suptitle(title)
 
         self.plots[title] = plot_to_str()
 
@@ -127,5 +138,9 @@ class SubgroupDifference(FEATTest):
         result_value = self.result[self.get_result_key()]
 
         self.passed = True if result_value <= self.threshold else False
+        
+        # Convert result object into DataFrame
+        self.result = pd.DataFrame(self.result.values(), columns=self.result.keys())
+        self.result = self.result.round(3)
 
         return self.passed
