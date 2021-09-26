@@ -64,4 +64,4 @@ env.bak/
 venv.bak/
 
 # Bazel
-model-card-toolkit/bazel-*
+bazel-*
