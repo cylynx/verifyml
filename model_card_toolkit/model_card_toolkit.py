@@ -27,10 +27,6 @@ import jinja2
 
 from model_card_toolkit.model_card import ModelCard
 from model_card_toolkit.proto import model_card_pb2
-from model_card_toolkit.utils import graphics
-from model_card_toolkit.utils import tfx_util
-
-import ml_metadata as mlmd
 
 # Constants about provided UI templates.
 _UI_TEMPLATES = (
@@ -57,9 +53,7 @@ class ModelCardToolkit:
     output formats including HTML, Markdown, etc.
 
     The ModelCardToolkit includes an API designed for a human-in-the-loop process
-    to elaborate the ModelCard. If model training is integrated with ML Metadata
-    (e.g., TFX pipelines), the ModelCardToolkit can further populate ModelCard
-    fields by extract metadata and lineage from the model's MLMD instance.
+    to elaborate the ModelCard.
 
     The ModelCardToolkit organizes the ModelCard assets (e.g., structured data,
     plots, and UI templates) in a user-specified directory, and updates them
@@ -87,50 +81,18 @@ class ModelCardToolkit:
     ```
     """
 
-    # TODO(b/188707257): combine mlmd_store and model_uri args
-    def __init__(
-        self,
-        output_dir: Optional[Text] = None,
-        mlmd_store: Optional[mlmd.MetadataStore] = None,
-        model_uri: Optional[Text] = None,
-    ):
+    def __init__(self, output_dir: Optional[Text] = None):
         """Initializes the ModelCardToolkit.
 
         Args:
           output_dir: The MCT assets path where the data files and templates are
             written to. If not given, a temp directory is used.
-          mlmd_store: A ml-metadata MetadataStore to retrieve metadata and lineage
-            information about the model stored at `model_uri`. If given, a set of
-            model card properties can be auto-populated from the `mlmd_store`.
-          model_uri: The path to the trained model to generate model cards. Ignored
-            if mlmd_store is not used.
-
-        Raises:
-          ValueError: If `mlmd_store` is given and the `model_uri` cannot be
-            resolved as a model artifact in the metadata store.
         """
         self.output_dir = output_dir or tempfile.mkdtemp()
         self._mcta_proto_file = os.path.join(self.output_dir, _MCTA_PROTO_FILE)
         self._mcta_template_dir = os.path.join(self.output_dir, _MCTA_TEMPLATE_DIR)
         self._model_cards_dir = os.path.join(self.output_dir, _MODEL_CARDS_DIR)
 
-        self._store = mlmd_store
-        if self._store:
-            if not model_uri:
-                raise ValueError("If `mlmd_store` is set, `model_uri` should be set.")
-            models = self._store.get_artifacts_by_uri(model_uri)
-            if not models:
-                raise ValueError(f'"{model_uri}" cannot be found in the `mlmd_store`.')
-            if len(models) > 1:
-                logging.info(
-                    '%d artifacts are found with the `model_uri`="%s". '
-                    "The last one is used.",
-                    len(models),
-                    model_uri,
-                )
-            self._artifact_with_model_uri = models[-1]
-        elif model_uri:
-            logging.info("model_uri ignored when mlmd_store is not present.")
 
     def _jinja_loader(self, template_dir: Text):
         return jinja2.FileSystemLoader(template_dir)
@@ -154,41 +116,6 @@ class ModelCardToolkit:
             model_card_proto.ParseFromString(f.read())
         return ModelCard().copy_from_proto(model_card_proto)
 
-    def _scaffold_model_card(self) -> ModelCard:
-        """Generates the model card during scaffold_assets phase.
-
-        It includes the implementation details for auto-populated ModelCard fields
-        given the specialization of the ModelCardToolkit.
-
-        Returns:
-          A ModelCard representing the given model.
-        """
-        model_card = ModelCard()
-        if self._store:
-            model_card = tfx_util.generate_model_card_for_model(
-                self._store, self._artifact_with_model_uri.id
-            )
-            metrics_artifacts = tfx_util.get_metrics_artifacts_for_model(
-                self._store, self._artifact_with_model_uri.id
-            )
-            stats_artifacts = tfx_util.get_stats_artifacts_for_model(
-                self._store, self._artifact_with_model_uri.id
-            )
-
-            for metrics_artifact in metrics_artifacts:
-                eval_result = tfx_util.read_metrics_eval_result(metrics_artifact.uri)
-                if eval_result is not None:
-                    graphics.annotate_eval_result_plots(model_card, eval_result)
-
-            for stats_artifact in stats_artifacts:
-                train_stats = tfx_util.read_stats_proto(
-                    stats_artifact.uri, "Split-train"
-                )
-                eval_stats = tfx_util.read_stats_proto(stats_artifact.uri, "Split-eval")
-                graphics.annotate_dataset_feature_statistics_plots(
-                    model_card, [train_stats, eval_stats]
-                )
-        return model_card
 
     def scaffold_assets(self) -> ModelCard:
         """Generates the model cards tookit assets.
@@ -198,17 +125,13 @@ class ModelCardToolkit:
 
         An assets directory is created if one does not already exist.
 
-        If the MCT is initialized with a `mlmd_store`, it further auto-populates
-        the model cards properties as well as generating related plots such as model
-        performance and data distributions.
-
         Returns:
           A ModelCard representing the given model.
 
         Raises:
           FileNotFoundError: if it failed to copy the UI template files.
         """
-        model_card = self._scaffold_model_card()
+        model_card = ModelCard()
 
         # Write Proto file.
         self._write_proto_file(self._mcta_proto_file, model_card)
@@ -316,6 +239,3 @@ class ModelCardToolkit:
 
         return model_card_file_content
 
-    def save_mlmd(self) -> None:
-        """Saves the model card of the model artifact with `model_uri` to MLMD."""
-        pass
