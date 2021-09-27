@@ -11,20 +11,28 @@ from ..utils import plot_to_str
 @dataclass
 class DataShift(ModelTest):
     """
-    Test if there is any shift (based on specified threshold) in the distribution of the protected feature,
-    which may impose new unfairness and require a retraining of the model, output the shifted attributes.
+    Test if there is any shift (based on specified threshold and method) in the distribution of the protected feature,
+    which may impose new unfairness and require a retraining of the model, output the dataframe detailing whether the attribute
+    passed. Take the higher value as the numerator or the value to be subtracted from.
 
     :protected_attr: list of protected attributes
+    :method: type of method for the test, choose from ('diff', 'ratio')
     :threshold: probability distribution threshold of an attribute, where if the difference between training data
-                     distribution and evalaution distribution exceeds the threhold, the attribute will be flagged
+                distribution and evalaution distribution exceeds the threhold, the attribute will be flagged
     """
 
     protected_attr: list[str]
-    threshold: float
+    method: str = 'ratio'
+    threshold: float = 1.25
     plots: dict[str, str] = field(repr=False, default_factory=lambda: {})
 
     technique: ClassVar[str] = "Data Shift"
-
+    
+    def __post_init__(self):
+        if self.test_name is None:
+            self.test_name = "Data Shift Test"
+        if self.test_desc is None:
+            self.test_desc = f"Test if there is any shift in the distribution in the subgroups of the protected features. To pass, the {self.method} of the distribution for a group in the training data and evaluation data should not exceed the threshold."
 
     @staticmethod
     def get_df_distribution_by_pa(df: DataFrame, col: str):
@@ -43,16 +51,29 @@ class DataShift(ModelTest):
         :df_train: training data features, protected features should not be encoded yet
         :df_eval: data to be evaluated on, protected features should not be encoded yet
         """
-        _result = []
+        result = DataFrame()
 
         for pa in self.protected_attr:
             train_dist = self.get_df_distribution_by_pa(df_train, pa)
             eval_dist = self.get_df_distribution_by_pa(df_eval, pa)
-
-            if sum(abs(train_dist - eval_dist) > self.threshold):
-                _result.append(pa)
-
-        return _result
+            
+            result_tmp = DataFrame(train_dist)
+            result_tmp.index.name = None
+            result_tmp.index=result_tmp.index.to_series().apply(lambda x: f"{pa}_{x}")
+            result_tmp.columns=['training_distribution']
+            result_tmp['eval_distribution'] = eval_dist.values
+            
+            if self.method == "ratio":
+                result_tmp['ratio'] = result_tmp['training_distribution'] / result_tmp['eval_distribution']
+                result_tmp['ratio'] = result_tmp.ratio.apply(lambda x: 1/x if x<1 else x)
+            elif self.method == "diff":
+                result_tmp['difference'] = abs(result_tmp['training_distribution'] - result_tmp['eval_distribution'])
+            result = result.append(result_tmp)
+     
+        result['passed'] = result.iloc[:,-1] < self.threshold
+        result = result.round(3)
+        
+        return result
     
     def plot(self, df_train, df_eval, save_plots: bool = True):
         """
@@ -112,6 +133,6 @@ class DataShift(ModelTest):
         :df_eval: data to be evaluated on, protected features should not be encoded yet
         """
         self.result = self.get_result(df_train, df_eval)
-        self.passed = False if self.result else True
+        self.passed = False if False in list(self.result.passed) else True
 
         return self.passed

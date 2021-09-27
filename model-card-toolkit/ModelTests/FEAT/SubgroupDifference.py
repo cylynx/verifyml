@@ -20,7 +20,7 @@ class SubgroupDifference(ModelTest):
     :metric: type of bias metric for the test, choose from ('fpr', 'fnr', 'pr'),
              'fpr' - false positive rate, 'fnr' - false negative rate, 'pr': positive rate
     :method: type of method for the test, choose from ('diff', 'ratio')
-    :threshold: threshold which if the max difference of false positive, false negative, negative
+    :threshold: threshold for maximum difference/ratio of the specified bias metric of any 2 groups
     """
 
     attr: str
