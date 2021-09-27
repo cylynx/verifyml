@@ -33,14 +33,17 @@ class SubgroupMetricThreshold(ModelTest):
 
     def __post_init__(self):
         metrics = {"fpr", "tpr", "fnr", "tnr"}
+        if self.metric in ["fpr", "fnr"]:
+            req = "lower"
+        if self.metric in ["tpr", "tnr"]:
+            req = "higher"
         if self.metric not in metrics:
             raise AttributeError(f"metric should be one of {metrics}.")
 
         default_test_desc = inspect.cleandoc(
             f"""
            Test if the groups within {self.attr} attribute passes the {self.metric} threshold.
-           To pass, fpr/fnr has to be lower than the threshold or tpr/tnr has to be greater
-           than the thresholds specified. Also, mark the optimal points that maximises the AUC
+           To pass, {self.metric} has to be {req} than the threshold specified. Also, mark the optimal points that maximises the AUC
            value for each group.
         """
         )
