@@ -47,7 +47,7 @@ class Permutation(ModelTest):
         if self.test_name is None:
             self.test_name = "Subgroup Permutation Test"
         if self.test_desc is None:
-            self.test_desc = f"Test if the {self.method} of the {metric_name} of the groups within {self.attr} attribute of the original dataset and the perturn dataset exceeds the threshold. To pass, this value cannot exceed the threshold"
+            self.test_desc = f"Test if the {self.method} of the {metric_name} of the subgroups of {self.attr} attribute of the original dataset and the perturbed dataset exceeds the threshold. To pass, this value cannot exceed the threshold"
 
     @staticmethod
     def add_predictions_to_df(df: DataFrame, model, encoder):

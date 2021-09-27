@@ -30,18 +30,19 @@ class FeatureImportance(ModelTest):
         if self.test_desc is None:
             self.test_desc = f"Test if the subgroups of the protected attributes are the top ranking important variables. To pass, subgroups should not be ranked in the top {self.threshold} features"
 
-    def plot(self, df: DataFrame, threshold: int, save_plots: bool = True):
+    def plot(self, df: DataFrame, show_n:int = 10, save_plots: bool = True):
         """
         :df: A dataframe with 2 columns - first column of feature names and second column of importance values
+        :show_n: Show the top n important features on the plot
         """
         title = "Feature Importance Plot"
         df_sorted = df.sort_values(df.columns[1],ascending=False)
         # Plot top n important features
         plt.figure(figsize=(15, 8))
-        plt.bar(df_sorted.iloc[:threshold, 0], df_sorted.iloc[:threshold, 1])
+        plt.barh(df_sorted.iloc[:show_n, 0], df_sorted.iloc[:show_n, 1])
+        plt.gca().invert_yaxis()
         plt.title(title)
-        plt.ylabel("Relative Importance Value")
-        plt.xticks(rotation=45)
+        plt.xlabel("Relative Importance Value")
         plt.tight_layout()
 
         if save_plots:
