@@ -1,10 +1,10 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
+import inspect
 import matplotlib.pyplot as plt
 import pandas as pd
 from pandas import DataFrame
 from sklearn.metrics import confusion_matrix
-from typing import ClassVar
 
 from ..ModelTest import ModelTest
 from ..utils import plot_to_str
@@ -27,26 +27,34 @@ class SubgroupDifference(ModelTest):
     metric: str
     method: str
     threshold: float
-    plots: dict[str, str] = field(repr=False, default_factory=lambda: {})
-
-    technique: ClassVar[str] = "Subgroup Difference"
+    plots: dict[str, str] = field(repr=False, default_factory=dict)
+    test_name: str = "Subgroup Disparity Test"
+    test_desc: str = None
 
     def __post_init__(self):
-        metrics = {"fpr", "fnr", "pr"}
-        metric_name_dict = {"fpr":"false postive rate", "fnr":"false negative rate", "pr": "positive rate"}
+        metrics = {
+            "fpr": "false postive rate",
+            "fnr": "false negative rate",
+            "pr": "positive rate",
+        }
         if self.metric not in metrics:
             raise AttributeError(f"metric should be one of {metrics}.")
 
         methods = {"diff", "ratio"}
         if self.method not in methods:
             raise AttributeError(f"method should be one of {methods}.")
-        
-        metric_name = metric_name_dict[self.metric]
-        if self.test_name is None:
-            self.test_name = "Subgroup Disparity Test"
-        if self.test_desc is None:
-            self.test_desc = f"Test if the maximum {self.method} of the {metric_name} of any 2 groups within {self.attr} attribute exceeds the threshold. To pass, this value cannot exceed the threshold."
-    
+
+        metric_name = metrics[self.metric]
+        default_test_desc = inspect.cleandoc(
+            f"""
+           Test if the maximum {self.method} of the {metric_name} of any 2 groups within
+           {self.attr} attribute exceeds the threshold. To pass, this value cannot 
+           exceed the threshold.
+        """
+        )
+
+        self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
+
     def get_metric_dict(self, attr: str, df: DataFrame) -> dict[str, float]:
         """
         Reads a df and returns a dictionary that shows the metric max
@@ -95,16 +103,16 @@ class SubgroupDifference(ModelTest):
 
     def plot(self):
         plt.figure(figsize=(12, 6))
-        if self.metric == 'fnr':
+        if self.metric == "fnr":
             plt.bar(list(self.fnr.keys()), list(self.fnr.values()))
             plt.title("False Negative Rates")
-        elif self.metric == 'fpr':
+        elif self.metric == "fpr":
             plt.bar(list(self.fpr.keys()), list(self.fpr.values()))
             plt.title("False Positive Rates")
-        elif self.metric == 'pr':
+        elif self.metric == "pr":
             plt.bar(list(self.pr.keys()), list(self.pr.values()))
             plt.title("Predicted Positive Rates")
-            
+
         title = f"Attribute: {self.attr}"
         plt.suptitle(title)
 
@@ -138,7 +146,7 @@ class SubgroupDifference(ModelTest):
         result_value = self.result[self.get_result_key()]
 
         self.passed = True if result_value <= self.threshold else False
-        
+
         # Convert result object into DataFrame
         self.result = pd.DataFrame(self.result.values(), columns=self.result.keys())
         self.result = self.result.round(3)

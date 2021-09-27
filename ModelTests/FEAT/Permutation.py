@@ -1,10 +1,10 @@
 from __future__ import annotations
 from dataclasses import dataclass
+import inspect
 import pandas as pd
 from pandas import DataFrame, Series
 import numpy as np
 from sklearn.metrics import confusion_matrix
-from typing import ClassVar
 
 from ..ModelTest import ModelTest
 
@@ -14,7 +14,7 @@ class Permutation(ModelTest):
     """
     Check if the difference/ratio of specified bias metric of groups within a specified protected attribute of
     the original dataset and the perturb dataset exceeds the threshold. Output a dataframe showing the test result of each groups.
-    i.e. Flag male gender group if 
+    i.e. Flag male gender group if
     False positive rate of male group in original test data - False positive rate of male group in perturbed gender test data
     >threshold.
     Take the higher value as the numerator or the value to be subtracted from.
@@ -30,24 +30,32 @@ class Permutation(ModelTest):
     metric: str
     method: str
     threshold: float
-
-    technique: ClassVar[str] = "Permutation"
+    test_name: str = "Subgroup Permutation Test"
+    test_desc: str = None
 
     def __post_init__(self):
-        metrics = {"fpr", "fnr", "pr"}
-        metric_name_dict = {"fpr":"false postive rate", "fnr":"false negative rate", "pr": "positive rate"}
+        metrics = {
+            "fpr": "false postive rate",
+            "fnr": "false negative rate",
+            "pr": "positive rate",
+        }
         if self.metric not in metrics:
             raise AttributeError(f"metric should be one of {metrics}.")
 
         methods = {"diff", "ratio"}
         if self.method not in methods:
             raise AttributeError(f"method should be one of {methods}.")
-        
-        metric_name = metric_name_dict[self.metric]
-        if self.test_name is None:
-            self.test_name = "Subgroup Permutation Test"
-        if self.test_desc is None:
-            self.test_desc = f"Test if the {self.method} of the {metric_name} of the subgroups of {self.attr} attribute of the original dataset and the perturbed dataset exceeds the threshold. To pass, this value cannot exceed the threshold"
+
+        metric_name = metrics[self.metric]
+        default_test_desc = inspect.cleandoc(
+            f"""
+           Test if the {self.method} of the {metric_name} of the subgroups of {self.attr}
+           attribute of the original dataset and the perturbed dataset exceeds the
+           threshold. To pass, this value cannot exceed the threshold.
+        """
+        )
+
+        self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
 
     @staticmethod
     def add_predictions_to_df(df: DataFrame, model, encoder):
@@ -118,16 +126,24 @@ class Permutation(ModelTest):
         """
         md_original = self.get_metric_dict_original(x_test, y_test, model, encoder)
         md_perturbed = self.get_metric_dict_perturbed(x_test, y_test, model, encoder)
-        
-        result = pd.DataFrame.from_dict(md_original, orient='index', columns=[f"{self.metric} of original data"])
+
+        result = pd.DataFrame.from_dict(
+            md_original, orient="index", columns=[f"{self.metric} of original data"]
+        )
         result[f"{self.metric} of perturbed data"] = md_perturbed.values()
-        
+
         if self.method == "ratio":
-            result['ratio'] = result[f"{self.metric} of original data"] / result[f"{self.metric} of perturbed data"]
-            result['ratio'] = result.ratio.apply(lambda x: 1/x if x<1 else x)
+            result["ratio"] = (
+                result[f"{self.metric} of original data"]
+                / result[f"{self.metric} of perturbed data"]
+            )
+            result["ratio"] = result.ratio.apply(lambda x: 1 / x if x < 1 else x)
         elif self.method == "diff":
-            result['difference'] = abs(result[f"{self.metric} of original data"] - result[f"{self.metric} of perturbed data"])
-        result['passed'] = result.iloc[:,-1] < self.threshold
+            result["difference"] = abs(
+                result[f"{self.metric} of original data"]
+                - result[f"{self.metric} of perturbed data"]
+            )
+        result["passed"] = result.iloc[:, -1] < self.threshold
         result = result.round(3)
         return result
 

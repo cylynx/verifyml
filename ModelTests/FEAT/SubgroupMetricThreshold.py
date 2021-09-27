@@ -1,9 +1,9 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
+import inspect
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from typing import ClassVar
 from sklearn.metrics import roc_curve
 
 from ..ModelTest import ModelTest
@@ -27,18 +27,25 @@ class SubgroupMetricThreshold(ModelTest):
     metric: str
     threshold: float
     proba_thresholds: dict = None
-    plots: dict[str, str] = field(repr=False, default_factory=lambda: {})
-
-    technique: ClassVar[str] = "Subgroup Metric Threshold"
+    plots: dict[str, str] = field(repr=False, default_factory=dict)
+    test_name: str = "ROC/Threshold Test"
+    test_desc: str = None
 
     def __post_init__(self):
         metrics = {"fpr", "tpr", "fnr", "tnr"}
         if self.metric not in metrics:
             raise AttributeError(f"metric should be one of {metrics}.")
-        if self.test_name is None:
-            self.test_name = "ROC/Threshold Test"
-        if self.test_desc is None:
-            self.test_desc = f"Test if the groups within {self.attr} attribute passes the {self.metric} threshold. To pass, fpr/fnr has to be lower than the threshold or tpr/tnr has to be greater than the thresholds specified. Also, mark the optimal points that maximises the AUC value for each group"
+
+        default_test_desc = inspect.cleandoc(
+            f"""
+           Test if the groups within {self.attr} attribute passes the {self.metric} threshold.
+           To pass, fpr/fnr has to be lower than the threshold or tpr/tnr has to be greater
+           than the thresholds specified. Also, mark the optimal points that maximises the AUC
+           value for each group.
+        """
+        )
+
+        self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
 
     def get_result(self, df_test_with_output) -> any:
         """
@@ -75,26 +82,34 @@ class SubgroupMetricThreshold(ModelTest):
             self.thresholds_lst[value] = thresholds_lst
             self.thresholds[value] = proba_threshold
             self.idx[value] = idx
-            
-            if self.metric in ['fpr', 'tnr']:
-                if self.metric == 'tnr':
-                    result[f"{self.attr}_{value}"] = 1 - self.fpr[value][self.idx[value]]
+
+            if self.metric in ["fpr", "tnr"]:
+                if self.metric == "tnr":
+                    result[f"{self.attr}_{value}"] = (
+                        1 - self.fpr[value][self.idx[value]]
+                    )
                 else:
                     result[f"{self.attr}_{value}"] = self.fpr[value][self.idx[value]]
-            elif self.metric in ['tpr', 'fnr']:
-                if self.metric == 'fnr':
-                    result[f"{self.attr}_{value}"] = 1 - self.tpr[value][self.idx[value]]
+            elif self.metric in ["tpr", "fnr"]:
+                if self.metric == "fnr":
+                    result[f"{self.attr}_{value}"] = (
+                        1 - self.tpr[value][self.idx[value]]
+                    )
                 else:
                     result[f"{self.attr}_{value}"] = self.tpr[value][self.idx[value]]
-                
-        result = pd.DataFrame.from_dict(result, orient='index', columns=[f"{self.metric} at current probability threshold"])
-        
-        if self.metric in ['tpr', 'tnr']:
-            result['passed'] = result.iloc[:,0].apply(lambda x: x>self.threshold)
-        if self.metric in ['fpr', 'fnr']:
-            result['passed'] = result.iloc[:,0].apply(lambda x: x<self.threshold)
+
+        result = pd.DataFrame.from_dict(
+            result,
+            orient="index",
+            columns=[f"{self.metric} at current probability threshold"],
+        )
+
+        if self.metric in ["tpr", "tnr"]:
+            result["passed"] = result.iloc[:, 0].apply(lambda x: x > self.threshold)
+        if self.metric in ["fpr", "fnr"]:
+            result["passed"] = result.iloc[:, 0].apply(lambda x: x < self.threshold)
         result = result.round(3)
-   
+
         return result
 
     def plot(self, save_plots: bool = True):

@@ -1,7 +1,8 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
+import inspect
+from numpy.lib.function_base import insert
 from pandas import DataFrame
-from typing import ClassVar
 import matplotlib.pyplot as plt
 
 from ..ModelTest import ModelTest
@@ -22,17 +23,22 @@ class DataShift(ModelTest):
     """
 
     protected_attr: list[str]
-    method: str = 'ratio'
+    method: str = "ratio"
     threshold: float = 1.25
-    plots: dict[str, str] = field(repr=False, default_factory=lambda: {})
+    plots: dict[str, str] = field(repr=False, default_factory=dict)
+    test_name: str = "Data Shift Test"
+    test_desc: str = None
 
-    technique: ClassVar[str] = "Data Shift"
-    
     def __post_init__(self):
-        if self.test_name is None:
-            self.test_name = "Data Shift Test"
-        if self.test_desc is None:
-            self.test_desc = f"Test if there is any shift in the distribution in the subgroups of the protected features. To pass, the {self.method} of the distribution for a group in the training data and evaluation data should not exceed the threshold."
+        default_test_desc = inspect.cleandoc(
+            f"""
+            Test if there is any shift in the distribution in the subgroups of the protected
+            features. To pass, the {self.method} of the distribution for a group in the 
+            training data and evaluation data should not exceed the threshold.
+        """
+        )
+
+        self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
 
     @staticmethod
     def get_df_distribution_by_pa(df: DataFrame, col: str):
@@ -42,7 +48,6 @@ class DataShift(ModelTest):
         df_dist = df.groupby(col)[col].apply(lambda x: x.count() / len(df))
 
         return df_dist
-
 
     def get_result(self, df_train: DataFrame, df_eval: DataFrame) -> any:
         """
@@ -56,25 +61,33 @@ class DataShift(ModelTest):
         for pa in self.protected_attr:
             train_dist = self.get_df_distribution_by_pa(df_train, pa)
             eval_dist = self.get_df_distribution_by_pa(df_eval, pa)
-            
+
             result_tmp = DataFrame(train_dist)
             result_tmp.index.name = None
-            result_tmp.index=result_tmp.index.to_series().apply(lambda x: f"{pa}_{x}")
-            result_tmp.columns=['training_distribution']
-            result_tmp['eval_distribution'] = eval_dist.values
-            
+            result_tmp.index = result_tmp.index.to_series().apply(lambda x: f"{pa}_{x}")
+            result_tmp.columns = ["training_distribution"]
+            result_tmp["eval_distribution"] = eval_dist.values
+
             if self.method == "ratio":
-                result_tmp['ratio'] = result_tmp['training_distribution'] / result_tmp['eval_distribution']
-                result_tmp['ratio'] = result_tmp.ratio.apply(lambda x: 1/x if x<1 else x)
+                result_tmp["ratio"] = (
+                    result_tmp["training_distribution"]
+                    / result_tmp["eval_distribution"]
+                )
+                result_tmp["ratio"] = result_tmp.ratio.apply(
+                    lambda x: 1 / x if x < 1 else x
+                )
             elif self.method == "diff":
-                result_tmp['difference'] = abs(result_tmp['training_distribution'] - result_tmp['eval_distribution'])
+                result_tmp["difference"] = abs(
+                    result_tmp["training_distribution"]
+                    - result_tmp["eval_distribution"]
+                )
             result = result.append(result_tmp)
-     
-        result['passed'] = result.iloc[:,-1] < self.threshold
+
+        result["passed"] = result.iloc[:, -1] < self.threshold
         result = result.round(3)
-        
+
         return result
-    
+
     def plot(self, df_train, df_eval, save_plots: bool = True):
         """
         Plot the distribution of the attribute groups for training and evaluation set
@@ -122,7 +135,6 @@ class DataShift(ModelTest):
 
         if save_plots:
             self.plots[test_title] = plot_to_str()
-
 
     def run(self, df_train: DataFrame, df_eval: DataFrame) -> bool:
         """
