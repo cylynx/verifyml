@@ -37,9 +37,9 @@ _UI_TEMPLATES = (
 _DEFAULT_UI_TEMPLATE_FILE = os.path.join("html", "default_template.html.jinja")
 
 # Constants about Model Cards Toolkit Assets (MCTA).
-_MCTA_PROTO_FILE = os.path.join('data', 'model_card.proto')
+_MCTA_PROTO_FILE = os.path.join("data", "model_card.proto")
 _MCTA_TEMPLATE_DIR = "template"
-_MCTA_RESOURCE_DIR = os.path.join('resources', 'plots')
+_MCTA_RESOURCE_DIR = os.path.join("resources", "plots")
 # Constants about the final generated model cards.
 _MODEL_CARDS_DIR = "model_cards"
 _DEFAULT_MODEL_CARD_FILE_NAME = "model_card.html"
@@ -82,7 +82,9 @@ class ModelCardToolkit:
     ```
     """
 
-    def __init__(self, output_dir: Optional[Text] = None):
+    def __init__(
+        self, output_dir: Optional[Text] = None, file_name: Optional[Text] = None
+    ):
         """Initializes the ModelCardToolkit.
 
         This function does not generate any assets by itself. Use the other API
@@ -92,9 +94,18 @@ class ModelCardToolkit:
         Args:
           output_dir: The path where MCT assets (such as data files and model cards)
             are written to. If not provided, a temp directory is used.
+          file_name: file name of the model card proto file. Defaults to model_card.proto
         """
         self.output_dir = output_dir or tempfile.mkdtemp()
-        self._mcta_proto_file = os.path.join(self.output_dir, _MCTA_PROTO_FILE)
+        self.proto_file_name = (
+            os.path.join(
+                "data",
+                file_name if file_name.endswith(".proto") else f"{file_name}.proto",
+            )
+            if file_name
+            else _MCTA_PROTO_FILE
+        )
+        self._mcta_proto_file = os.path.join(self.output_dir, self.proto_file_name)
         self._mcta_template_dir = os.path.join(self.output_dir, _MCTA_TEMPLATE_DIR)
         self._model_cards_dir = os.path.join(self.output_dir, _MODEL_CARDS_DIR)
 
@@ -189,7 +200,7 @@ class ModelCardToolkit:
         output_file=_DEFAULT_MODEL_CARD_FILE_NAME,
     ) -> Text:
         """Generates a model card document based on the MCT assets.
-        
+
         The model card document is both returned by this function, as well as saved
         to output_file.
 
