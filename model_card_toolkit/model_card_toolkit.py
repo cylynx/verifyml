@@ -26,8 +26,8 @@ from absl import logging
 import jinja2
 from google.protobuf import message
 
-from model_card_toolkit.model_card import ModelCard
-from model_card_toolkit.proto import model_card_pb2
+from .model_card import ModelCard
+from .proto import model_card_pb2
 
 # Constants about provided UI templates.
 _UI_TEMPLATES = (

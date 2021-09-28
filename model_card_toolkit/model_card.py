@@ -25,10 +25,10 @@ import pandas as pd
 import json as json_lib
 from typing import Any, Dict, List, Optional
 
-from model_card_toolkit.base_model_card_field import BaseModelCardField
-from model_card_toolkit.proto import model_card_pb2
-from model_card_toolkit.utils import validation
-from ModelTests import ModelTest
+from .base_model_card_field import BaseModelCardField
+from .proto import model_card_pb2
+from .utils import validation
+from model_tests import ModelTest
 
 _SCHEMA_VERSION_STRING = "schema_version"
 

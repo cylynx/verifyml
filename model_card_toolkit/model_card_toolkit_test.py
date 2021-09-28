@@ -20,9 +20,9 @@ import uuid
 from absl.testing import absltest
 
 from model_card_toolkit import model_card_toolkit
-from model_card_toolkit.proto import model_card_pb2
-from model_card_toolkit.utils import graphics
-from model_card_toolkit.utils.testdata import testdata_utils
+from .proto import model_card_pb2
+from .utils import graphics
+from .utils.testdata import testdata_utils
 
 
 class ModelCardToolkitTest(absltest.TestCase):

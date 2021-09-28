@@ -11,7 +11,7 @@ from ..utils import plot_to_str
 
 
 @dataclass
-class SubgroupDifference(ModelTest):
+class SubgroupDisparity(ModelTest):
     """
     Test if the maximum difference/ratio of a specified metric of any 2 groups within a specified protected attribute
     exceeds the threshold specified.

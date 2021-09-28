@@ -1,7 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 import inspect
-from numpy.lib.function_base import insert
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 

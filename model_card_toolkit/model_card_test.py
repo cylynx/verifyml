@@ -20,7 +20,7 @@ from absl.testing import absltest
 import jsonschema
 
 from model_card_toolkit import model_card
-from model_card_toolkit.proto import model_card_pb2
+from .proto import model_card_pb2
 
 from google.protobuf import text_format
 

@@ -1,5 +1,5 @@
 from .DataShift import DataShift
-from .SubgroupDifference import SubgroupDifference
+from .SubgroupDisparity import SubgroupDisparity
 from .Permutation import Permutation
 from .FeatureImportance import FeatureImportance
 from .SHAPFeatureImportance import SHAPFeatureImportance
