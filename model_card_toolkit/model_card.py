@@ -33,7 +33,6 @@ from ModelTests import ModelTest
 _SCHEMA_VERSION_STRING = "schema_version"
 
 
-
 @dataclasses.dataclass
 class Owner(BaseModelCardField):
     """The information about owners of a model.
@@ -127,6 +126,7 @@ class Citation(BaseModelCardField):
     _proto_type: dataclasses.InitVar[
         type(model_card_pb2.Citation)
     ] = model_card_pb2.Citation
+
 
 @dataclasses.dataclass
 class ModelDetails(BaseModelCardField):
@@ -313,15 +313,15 @@ class Test(BaseModelCardField):
     def read_model_test(self, model_test: ModelTest) -> None:
         self.name = model_test.test_name
         self.description = model_test.test_desc
-        self.threshold = str(getattr(model_test, 'threshold', None))
+        self.threshold = str(getattr(model_test, "threshold", None))
         self.result = (
             model_test.result.to_csv(index=True)
             if isinstance(model_test.result, pd.DataFrame)
             else str(model_test.result)
         )
         self.passed = model_test.passed
-      
-        plots = getattr(model_test, 'plots', None)
+
+        plots = getattr(model_test, "plots", None)
         if plots:
             collection = [Graphic(name=n, image=i) for n, i in plots.items()]
             self.graphics = GraphicsCollection(collection=collection)
