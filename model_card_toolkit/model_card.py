@@ -653,21 +653,15 @@ class ModelCard(BaseModelCardField):
         model_card_dict[_SCHEMA_VERSION_STRING] = validation.get_latest_schema_version()
         return json_lib.dumps(model_card_dict, indent=2)
 
-    def _from_json(self, json_dict: Dict[str, Any]) -> "ModelCard":
-        """Read ModelCard from JSON.
+    def from_json(self, json_dict: Dict[str, Any]) -> None:
+        """Reads ModelCard from JSON.
 
         If ModelCard fields have already been set, this function will overwrite any
         existing values.
 
-        WARNING: This method's interface may change in the future, do not use for
-        critical workflows.
-
         Args:
           json_dict: A JSON dict from which to populate fields in the model card
             schema.
-
-        Returns:
-          self
 
         Raises:
           JSONDecodeError: If `json_dict` is not a valid JSON string.
@@ -710,4 +704,3 @@ class ModelCard(BaseModelCardField):
         validation.validate_json_schema(json_dict)
         self.clear()
         _populate_from_json(json_dict, self)
-        return self

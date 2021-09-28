@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Model Cards Toolkit.
+"""Model Card Toolkit.
 
-The model cards toolkit (MCT) provides a set of utilities to help users
-generate Model Cards from trained models within ML pipelines.
+The Model Card Toolkit (MCT) provides a set of utilities to generate Model Cards
+from trained models, evaluations, and datasets in ML pipelines.
 """
 
 import os
@@ -37,12 +37,12 @@ _UI_TEMPLATES = (
 _DEFAULT_UI_TEMPLATE_FILE = os.path.join("html", "default_template.html.jinja")
 
 # Constants about Model Cards Toolkit Assets (MCTA).
-_MCTA_PROTO_FILE = "data/model_card.proto"
+_MCTA_PROTO_FILE = os.path.join('data', 'model_card.proto')
 _MCTA_TEMPLATE_DIR = "template"
-_MCTA_RESOURCE_DIR = "resources/plots"
+_MCTA_RESOURCE_DIR = os.path.join('resources', 'plots')
 # Constants about the final generated model cards.
+_MODEL_CARDS_DIR = "model_cards"
 _DEFAULT_MODEL_CARD_FILE_NAME = "model_card.html"
-_MODEL_CARDS_DIR = "model_cards/"
 
 
 class ModelCardToolkit:
@@ -74,7 +74,7 @@ class ModelCardToolkit:
     model_card = mct.scaffold_assets()
     model_card.model_details.name = 'My Model'
 
-    # Write the model card data to a data file
+    # Write the model card data to a proto file
     mct.update_model_card(model_card)
 
     # Return the model card document as an HTML page
@@ -85,9 +85,13 @@ class ModelCardToolkit:
     def __init__(self, output_dir: Optional[Text] = None):
         """Initializes the ModelCardToolkit.
 
+        This function does not generate any assets by itself. Use the other API
+        functions to generate Model Card assets. See class-level documentation for
+        example usage.
+
         Args:
-          output_dir: The MCT assets path where the data files and templates are
-            written to. If not given, a temp directory is used.
+          output_dir: The path where MCT assets (such as data files and model cards)
+            are written to. If not provided, a temp directory is used.
         """
         self.output_dir = output_dir or tempfile.mkdtemp()
         self._mcta_proto_file = os.path.join(self.output_dir, _MCTA_PROTO_FILE)
@@ -119,14 +123,16 @@ class ModelCardToolkit:
     def scaffold_assets(
         self, path: Optional[Text] = None, proto: Optional[message.Message] = None
     ) -> ModelCard:
-        """Generates the model cards tookit assets.
+        """Generates the Model Card Tookit assets.
 
-        If a path to an existing model card proto object is provided, it will be copied over as the base card instead of initializing a new one.
+        If a path to an existing model card proto object is provided,
+        it will be copied over as the base card instead of initializing a new one.
 
         Alternatively, if an existing proto object is provided, it will be copied over as the base card.
 
-        Model cards assets include the model card data files and customizable model
-        card UI templates. An assets directory is created if one does not already exist.
+        Assets include the ModelCard proto file, Model Card document, and jinja
+        template. These are written to the `output_dir` declared at
+        initialization.
 
         Args:
           path: The path to model card proto.
@@ -136,7 +142,7 @@ class ModelCardToolkit:
           A ModelCard representing the given model.
 
         Raises:
-          FileNotFoundError: if it failed to copy the UI template files.
+          FileNotFoundError: on failure to copy the template files.
         """
 
         # If path exist, read proto from path
@@ -182,14 +188,17 @@ class ModelCardToolkit:
         template_path: Optional[Text] = None,
         output_file=_DEFAULT_MODEL_CARD_FILE_NAME,
     ) -> Text:
-        """Generates a model card based on the MCT assets.
+        """Generates a model card document based on the MCT assets.
+        
+        The model card document is both returned by this function, as well as saved
+        to output_file.
 
         Args:
           model_card: The ModelCard object, generated from `scaffold_assets()`. If
             not provided, it will be read from the ModelCard proto file in the
             assets directory.
-          template_path: The file path of the UI template. If not provided, the
-            default UI template will be used.
+          template_path: The file path of the Jinja template. If not provided, the
+            default template will be used.
           output_file: The file name of the generated model card. If not provided,
             the default 'model_card.html' will be used. If the file already exists,
             then it will be overwritten.
@@ -235,7 +244,7 @@ class ModelCardToolkit:
             considerations=model_card.considerations,
         )
 
-        # Write the model card file.
+        # Write the model card document file and return its contents.
         mode_card_file_path = os.path.join(self._model_cards_dir, output_file)
         self._write_file(mode_card_file_path, model_card_file_content)
 
