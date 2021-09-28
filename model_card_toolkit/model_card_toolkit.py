@@ -24,6 +24,7 @@ from typing import Optional, Text
 
 from absl import logging
 import jinja2
+from google.protobuf import message
 
 from model_card_toolkit.model_card import ModelCard
 from model_card_toolkit.proto import model_card_pb2
@@ -93,7 +94,6 @@ class ModelCardToolkit:
         self._mcta_template_dir = os.path.join(self.output_dir, _MCTA_TEMPLATE_DIR)
         self._model_cards_dir = os.path.join(self.output_dir, _MODEL_CARDS_DIR)
 
-
     def _jinja_loader(self, template_dir: Text):
         return jinja2.FileSystemLoader(template_dir)
 
@@ -116,14 +116,21 @@ class ModelCardToolkit:
             model_card_proto.ParseFromString(f.read())
         return ModelCard().copy_from_proto(model_card_proto)
 
-
-    def scaffold_assets(self) -> ModelCard:
+    def scaffold_assets(
+        self, path: Optional[Text] = None, proto: Optional[message.Message] = None
+    ) -> ModelCard:
         """Generates the model cards tookit assets.
 
-        Model cards assets include the model card data files and customizable model
-        card UI templates.
+        If a path to an existing model card proto object is provided, it will be copied over as the base card instead of initializing a new one.
 
-        An assets directory is created if one does not already exist.
+        Alternatively, if an existing proto object is provided, it will be copied over as the base card.
+
+        Model cards assets include the model card data files and customizable model
+        card UI templates. An assets directory is created if one does not already exist.
+
+        Args:
+          path: The path to model card proto.
+          model_card: The ModelCard object.
 
         Returns:
           A ModelCard representing the given model.
@@ -131,7 +138,17 @@ class ModelCardToolkit:
         Raises:
           FileNotFoundError: if it failed to copy the UI template files.
         """
-        model_card = ModelCard()
+
+        # If path exist, read proto from path
+        if path and os.path.exists(path):
+            model_card = self._read_proto_file(path)
+        # If proto, bootstrap model card from proto
+        elif proto:
+            model_card_proto = model_card_pb2.ModelCard()
+            model_card_proto.ParseFromString(proto)
+            model_card = ModelCard().copy_from_proto(model_card_proto)
+        else:
+            model_card = ModelCard()
 
         # Write Proto file.
         self._write_proto_file(self._mcta_proto_file, model_card)
@@ -147,21 +164,6 @@ class ModelCardToolkit:
             )
 
         return model_card
-
-    def update_model_card_json(self, model_card: ModelCard) -> None:
-        """Updates the Proto file in the MCT assets directory.
-
-        Args:
-          model_card: The updated model card that users want to write back.
-
-        Raises:
-           Error: when the given model_card is invalid w.r.t. the schema.
-        """
-        logging.warning(
-            "update_model_card_json() will be deprecated in the next release. "
-            "Call update_model_card() and write to proto instead."
-        )
-        self.update_model_card(model_card)
 
     def update_model_card(self, model_card: ModelCard) -> None:
         """Updates the Proto file in the MCT assets directory.
@@ -238,4 +240,3 @@ class ModelCardToolkit:
         self._write_file(mode_card_file_path, model_card_file_content)
 
         return model_card_file_content
-
