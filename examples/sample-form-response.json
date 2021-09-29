@@ -238,7 +238,7 @@
         "key": "question_mJ1r5z",
         "label": "Mitigation strategies",
         "type": "TEXTAREA",
-        "value": "Because there is less data for certain demographic groups (e.g. youth, elderly), the model has much higher/lower false-positive rates for that segment than that of others. We will prioritize such cases after the initial model score to add a 2nd level of check and minimise disruption to the customer."
+        "value": "Because there is less data for certain demographic groups (e.g. youth, elderly), the model can have much higher/lower false-positive rates for that segment than that of others. We will prioritize such cases after the initial model score to add a 2nd level of check and minimise disruption to the customer."
       },
       {
         "key": "question_nPRoBe",
