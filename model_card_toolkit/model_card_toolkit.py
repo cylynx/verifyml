@@ -33,8 +33,10 @@ from .proto import model_card_pb2
 _UI_TEMPLATES = (
     "template/html/default_template.html.jinja",
     "template/md/default_template.md.jinja",
+    "template/md/results_template.md.jinja",
 )
 _DEFAULT_UI_TEMPLATE_FILE = os.path.join("html", "default_template.html.jinja")
+_DEFAULT_UI_RESULT_TEMPLATE_FILE = os.path.join("md", "results_template.md.jinja")
 
 # Constants about Model Cards Toolkit Assets (MCTA).
 _MCTA_PROTO_FILE = os.path.join("data", "model_card.proto")
@@ -43,6 +45,7 @@ _MCTA_RESOURCE_DIR = os.path.join("resources", "plots")
 # Constants about the final generated model cards.
 _MODEL_CARDS_DIR = "model_cards"
 _DEFAULT_MODEL_CARD_FILE_NAME = "model_card.html"
+_DEFAULT_MODEL_CARD_RESULTS_FILE_NAME = "model_card_results.md"
 
 
 class ModelCardToolkit:
@@ -253,6 +256,60 @@ class ModelCardToolkit:
             explainability_analysis=model_card.explainability_analysis,
             fairness_analysis=model_card.fairness_analysis,
             considerations=model_card.considerations,
+        )
+
+        # Write the model card document file and return its contents.
+        mode_card_file_path = os.path.join(self._model_cards_dir, output_file)
+        self._write_file(mode_card_file_path, model_card_file_content)
+
+        return model_card_file_content
+
+
+    def export_test_results(
+        self,
+        model_card: ModelCard,
+        template_path: Optional[Text] = None,
+        output_file=_DEFAULT_MODEL_CARD_RESULTS_FILE_NAME,
+    ) -> Text:
+        """Generates a document containing model card test results.
+
+        The model card result document is both returned by this function, as well as saved
+        to output_file.
+
+        Args:
+          model_card: The ModelCard object, generated from `scaffold_assets()`. If
+            not provided, it will be read from the ModelCard proto file in the
+            assets directory.
+          template_path: The file path of the Jinja template. If not provided, the
+            default template will be used.
+          output_file: The file name of the generated model card. If not provided,
+            the default 'model_card.html' will be used. If the file already exists,
+            then it will be overwritten.
+
+        Returns:
+          The model card file content.
+
+        Raises:
+          MCTError: If `export_format` is called before `scaffold_assets` has
+            generated model card assets.
+        """
+        if not template_path:
+            template_path = os.path.join(
+                self._mcta_template_dir, _DEFAULT_UI_RESULT_TEMPLATE_FILE
+            )
+        template_dir = os.path.dirname(template_path)
+        template_file = os.path.basename(template_path)
+
+        # Generate Model Card.
+        jinja_env = jinja2.Environment(
+            loader=self._jinja_loader(template_dir),
+            autoescape=True,
+            auto_reload=True,
+            cache_size=0,
+        )
+        template = jinja_env.get_template(template_file)
+        model_card_file_content = template.render(
+            test_results=model_card.get_test_results(),
         )
 
         # Write the model card document file and return its contents.
