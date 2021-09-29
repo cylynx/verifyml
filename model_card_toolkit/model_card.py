@@ -23,6 +23,7 @@ ModelCardsToolkit serves as an API to read and write MC properties by the users.
 import dataclasses
 import pandas as pd
 import json as json_lib
+from collections import Counter
 from typing import Any, Dict, List, Optional
 
 from .base_model_card_field import BaseModelCardField
@@ -31,6 +32,17 @@ from .utils import validation
 from model_tests import ModelTest
 
 _SCHEMA_VERSION_STRING = "schema_version"
+
+
+def _get_test_results(tests):
+  # hack
+  try:
+    passed = sum(1 for t in tests if t.passed)
+  except AttributeError:
+    print("all tests must have a 'passed' attribute")
+    raise
+
+  return {'passed': passed, 'failed': len(tests) - passed}
 
 
 @dataclasses.dataclass
@@ -351,6 +363,9 @@ class PerformanceMetric(BaseModelCardField):
         BaseModelCardField._get_type(model_card_pb2.PerformanceMetric)
     ] = model_card_pb2.PerformanceMetric
 
+    def get_test_results(self):
+      return _get_test_results(self.tests)
+
 
 @dataclasses.dataclass
 class QuantitativeAnalysis(BaseModelCardField):
@@ -412,6 +427,9 @@ class ExplainabilityReport(BaseModelCardField):
         BaseModelCardField._get_type(model_card_pb2.ExplainabilityReport)
     ] = model_card_pb2.ExplainabilityReport
 
+    def get_test_results(self):
+      return _get_test_results(self.tests)
+
 
 @dataclasses.dataclass
 class ExplainabilityAnalysis(BaseModelCardField):
@@ -457,6 +475,9 @@ class FairnessReport(BaseModelCardField):
     _proto_type: dataclasses.InitVar[
         BaseModelCardField._get_type(model_card_pb2.FairnessReport)
     ] = model_card_pb2.FairnessReport
+
+    def get_test_results(self):
+      return _get_test_results(self.tests)
 
 
 @dataclasses.dataclass
@@ -704,3 +725,32 @@ class ModelCard(BaseModelCardField):
         validation.validate_json_schema(json_dict)
         self.clear()
         _populate_from_json(json_dict, self)
+
+
+    def get_test_results(self):
+        """Return number of tests passed and failed.
+        
+        TODO: fix this mess
+        """
+        performance_test_counter = Counter()
+        explainability_test_counter = Counter()
+        fairness_test_counter = Counter()
+
+        performance_metrics = self.quantitative_analysis.performance_metrics
+        explainability_reports = self.explainability_analysis.explainability_reports
+        fairness_reports = self.fairness_analysis.fairness_reports
+        
+        for pm in performance_metrics:
+            performance_test_counter.update(pm.get_test_results())
+
+        for er in explainability_reports:
+            explainability_test_counter.update(er.get_test_results())
+
+        for fr in fairness_reports:
+            fairness_test_counter.update(fr.get_test_results())
+
+        return {
+            'performance_tests': dict(performance_test_counter),
+            'explainability_tests': dict(explainability_test_counter),
+            'fairness_tests': dict(fairness_test_counter),
+        }
