@@ -37,7 +37,7 @@ class SHAPFeatureImportance(ModelTest):
 
     def get_shap_values(self, model, model_type, x_train, x_test):
         if model_type == "trees":
-            explainer = shap.TreeExplainer(model=model, model_output="margin")
+            explainer = shap.TreeExplainer(model=model, model_output="margin", feature_perturbation="tree_path_dependent")
         elif model_type == "others":
             explainer = shap.PermutationExplainer(
                 model=model.predict_proba, data=x_train
@@ -84,24 +84,29 @@ class SHAPFeatureImportance(ModelTest):
         ).sort_values(0, ascending=False)
         agg_shap_df["feature_rank"] = agg_shap_df[0].rank(ascending=False)
         agg_shap_df.drop(0, axis=1, inplace=True)
-        attrs_string = "|".join([str(x) for x in self.attrs])
-        result = agg_shap_df[agg_shap_df.index.to_series().str.contains(attrs_string)]
+        attrs_string = "|".join([f"{x}_" for x in self.attrs])
+        result = agg_shap_df[agg_shap_df.index.to_series().str.contains(attrs_string)].copy()
         result["passed"] = result.feature_rank.apply(
             lambda x: True if x > self.threshold else False
         )
 
         return result
 
-    def shap_dependence_plot(self, x_test, save_plots: bool = True):
+    def shap_dependence_plot(self, x_test, show_all: bool = True, save_plots: bool = True):
         """
         Create a SHAP dependence plot to show the significant effect of the flagged
         protected attributes across the whole dataset.
+        
+        :show_all: if false, only show attributes that failed the test
         """
         if self.result is None:
             raise AttributeError("Cannot create dependence plot before running test.")
-
-        failed_attrs = self.result[self.result.passed == False].index
-        for r in failed_attrs:
+        if show_all:
+            attrs_to_show=self.result.index
+        else:
+            attrs_to_show = self.result[self.result.passed == False].index
+            
+        for r in attrs_to_show:
             shap.dependence_plot(
                 r,
                 shap_values=self.shap_values[1],

@@ -104,7 +104,7 @@ class DataShift(ModelTest):
         num = 0
         for pa in self.protected_attr:
             train_dist = self.get_df_distribution_by_pa(df_train, pa).sort_values(
-                "index"
+                axis="index"
             )
             train_dist.plot(kind="bar", color="green", ax=axs[num])
             axs[num].tick_params(axis="x", labelrotation=0)
@@ -125,7 +125,9 @@ class DataShift(ModelTest):
         )
         num = 0
         for pa in self.protected_attr:
-            eval_dist = self.get_df_distribution_by_pa(df_eval, pa).sort_values("index")
+            eval_dist = self.get_df_distribution_by_pa(df_eval, pa).sort_values(
+                axis="index"
+            )
             eval_dist.plot(kind="bar", color="red", ax=axs[num])
             axs[num].tick_params(axis="x", labelrotation=0)
             num += 1
