@@ -17,10 +17,11 @@ The Model Card Toolkit (MCT) provides a set of utilities to generate Model Cards
 from trained models, evaluations, and datasets in ML pipelines.
 """
 
+import json
 import os
 import pkgutil
 import tempfile
-from typing import Optional, Text
+from typing import Dict, Optional, Text
 
 from absl import logging
 import jinja2
@@ -43,6 +44,7 @@ _MCTA_RESOURCE_DIR = os.path.join("resources", "plots")
 # Constants about the final generated model cards.
 _MODEL_CARDS_DIR = "model_cards"
 _DEFAULT_MODEL_CARD_FILE_NAME = "model_card.html"
+_DEFAULT_MODEL_CARD_RESULTS_FILE_NAME = "model_card_results.json"
 
 
 class ModelCardToolkit:
@@ -260,3 +262,38 @@ class ModelCardToolkit:
         self._write_file(mode_card_file_path, model_card_file_content)
 
         return model_card_file_content
+
+
+    def export_test_results_json(
+        self,
+        model_card: ModelCard,
+        output_file=_DEFAULT_MODEL_CARD_RESULTS_FILE_NAME,
+    ) -> Dict:
+        """Generates a document containing model card test results.
+
+        The model card result document is both returned by this function, as well as saved
+        to output_file.
+
+        Args:
+          model_card: The ModelCard object, generated from `scaffold_assets()`. If
+            not provided, it will be read from the ModelCard proto file in the
+            assets directory.
+          output_file: The file name of the generated model card. If not provided,
+            the default 'model_card_results.json' will be used. If the file already exists,
+            then it will be overwritten.
+
+        Returns:
+          The model card file content.
+
+        Raises:
+          MCTError: If `export_test_results_json` is called before `scaffold_assets` has
+            generated model card assets.
+        """
+        model_card_test_results = model_card.get_test_results()
+
+        # write to json
+        full_path = os.path.join(self._model_cards_dir, output_file)
+        with open(full_path, 'w', encoding='utf-8') as f:
+            json.dump(model_card_test_results, f)
+
+        return model_card_test_results
