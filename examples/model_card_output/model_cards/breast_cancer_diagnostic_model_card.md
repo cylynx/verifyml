@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 
 
 
@@ -15,168 +14,75 @@
 
 
 
-<html lang="en">
-<head>
-<style>
-  h1 {text-align: center;}
-  .row {
-    display: flex;
-  }
-  .col {
-    flex: 1;
-    align-items: center; 
-    justify-content: center;
-  }
-  .card {
-    padding: 1em;
-    border: 1px solid #DADCE0;
-    margin: 10px;
-  }
-  .card .card {
-    padding: 1em;
-    border: none;
-    margin: 10px;
-  }
-  .img-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    text-align: center;
-  }
-  .img-item {
-    flex: 1;
-  }
-  .center {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-  }
-  table, th, td { border: 1px solid black; }
-  th, td { border: 1px solid #CCC; height: 30px; }
-  caption { font-weight: bold; }
-</style>
-<title>
-  Model Card for Breast Cancer Wisconsin (Diagnostic) Dataset
-</title>
-</head>
-<body>
-  <h1>
-    Model Card for Breast Cancer Wisconsin (Diagnostic) Dataset
-  </h1>
-    <div class="row">
-      <div class="col card">
-        <h2>Model Details</h2>
-          <h3>Overview</h3>
-              This model predicts whether breast cancer is benign or malignant based on image measurements.
-          <h3>Version</h3>
-              
+
+
+
+
+
+
+
+
+
+
+
+# Model Card for Breast Cancer Wisconsin (Diagnostic) Dataset
+
+## Model Details
+
+### Overview
+This model predicts whether breast cancer is benign or malignant based on image measurements. 
+
+### Version
   
-    <div>name: 81802684-29c0-405f-810c-45165841446a</div>
+name: 81802684-29c0-405f-810c-45165841446a 
 
-              
   
-    <div>date: 2021-09-28</div>
+date: 2021-09-28 
 
-              
   
 
-          
-          
-          <h3>Owners</h3>
-            
-              Model Cards Team, model-cards@google.com
-            
-          
-          
-          
-            <h3>References</h3>
-              <ul>
-              
-                <li><a href="https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)">https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)</a></li>
-              
-                <li><a href="https://minds.wisconsin.edu/bitstream/handle/1793/59692/TR1131.pdf">https://minds.wisconsin.edu/bitstream/handle/1793/59692/TR1131.pdf</a></li>
-              
-              </ul>
-          
-          
-        </div>
-      
-      
-      <div class="col card">
-        <h2>Considerations</h2>
-          
-            <h3>Intended Users</h3>
-              
-  
-  <ul>
-  
-    <li>Medical professionals</li>
-  
-    <li>ML researchers</li>
-  
-  </ul>
+### Owners
 
-          
-          
-            <h3>Use Cases</h3>
-              
-  
-  <ul>
-  
-    <li>Breast cancer diagnosis</li>
-  
-  </ul>
+* Model Cards Team, model-cards@google.com 
 
-          
-          
-            <h3>Limitations</h3>
-              
-  
-  <ul>
-  
-    <li>Breast cancer diagnosis</li>
-  
-  </ul>
 
-          
-          
-          
-            <h3>Ethical Considerations</h3>
-              <ul>
-                <li>
-                  <div><b>Risk:</b> Manual selection of image sections to digitize could create selection bias</div>
-                  <div><b>Mitigation Strategy:</b> Automate the selection process</div>
-                </li> </ul>
-          
-          
-      </div>
-      
-    </div>
-    
-      
-  <div class="col card">
-    <h2>Datasets</h2>
-    
-      <div class="row">
-        <div class="col card">
-          
-            
-            
-              <h4>Sensitive data</h4>
-              <ul>
-              
-              </ul>
-              
-              
-            
-            
-            
-              
-  <div class="img-container">
+### References
+
+* [https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
+* [https://minds.wisconsin.edu/bitstream/handle/1793/59692/TR1131.pdf](https://minds.wisconsin.edu/bitstream/handle/1793/59692/TR1131.pdf)
+
+
+## Considerations
+
+### Intended Users 
+
+* Medical professionals
+
+* ML researchers
+
+  
+### Use Cases 
+
+* Breast cancer diagnosis
+
+  
+### Limitations 
+
+* Breast cancer diagnosis
+
+   
+### Ethical Considerations 
+* __Risk:__ Manual selection of image sections to digitize could create selection bias
+  * __Mitigation Strategy:__ Automate the selection process    
+
+## Datasets    
+#### Sensitive data     
+ 
+
+
   
   
-    <div class="img-item">
-      <img src='data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAFgCAYAAACVLS/VAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
+<img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAFgCAYAAACVLS/VAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
 bGliIHZlcnNpb24zLjMuNCwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy8QVMy6AAAACXBIWXMAAAsT
 AAALEwEAmpwYAAAYuUlEQVR4nO3dfdBedX3n8feHBLSDVh7MZrOEEF1ZXLodwL1LfVrHgrBoLVDX
 slrHzVbcbGero0ttS3FGzLbD4G6X6mjXTirUuIMIUlkotQgGH1a3RSMgoGhBSkyykATFonZaTfLd
@@ -290,11 +196,9 @@ s6x3L7P/g+mH04bfD3ygqn4a+I8Mgmqh9vAP/596OkANXtR0OnA9g95ub1nEOqWxZYBoUnwKeOu0
 ySDwTjnAGqWxYIBoUvwOcDhwT3eZ63e66f8DWJfkq8Dz+YdnEy3eDXw8yVeAx6ZN3wC8rNv2a4Bv
 79+wqrYB1zHo1vs64K5u1jOBm5Pcw+AS2kUHWKM0FuyNV5LUxDMQSVITA0SS1MQAkSQ1MUAkSU0M
 EElSEwNEktTEAJEkNfl/7zz0lIXLm3YAAAAASUVORK5CYII=
-' alt='None' />
-    </div>
+">
   
-    <div class="img-item">
-      <img src='data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAFgCAYAAACVLS/VAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
+<img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAFgCAYAAACVLS/VAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
 bGliIHZlcnNpb24zLjMuNCwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy8QVMy6AAAACXBIWXMAAAsT
 AAALEwEAmpwYAAAWYklEQVR4nO3df7Ad5X3f8fdHPwjUdoJxFA1FEiI1JaFOjacyMbb/IHJg1IYG
 0hJix3WVGRy10ziDq9gxpp3BJC1jZlpsT+MkoxqCMoMxlNiBuB5+lB+243rAwsYGjAmEIEsqRiI2
@@ -398,35 +302,16 @@ gB/OmH4O+Ikkr+geiHTBLNucazvS1DFANOl+l0HfwVe601y/2y3/fWBzki8zeCDR92ZpP5sbgD/s
 TnEtZzAs9zXd5z0MvL7rPH87g+eofxb4DPDvu/bbuppurKofAr8DPMjgKYFfO9IGq+oHR9rOiHVL
 E8PReCVJTTwCkSQ1MUAkSU0MEElSEwNEktTEAJEkNTFAJElNDBBJUpP/Bwm25rijR7j/AAAAAElF
 TkSuQmCC
-' alt='None' />
-    </div>
+">
   
-  </div>
+   
+#### Sensitive data     
+ 
 
-            
-        </div>
-      </div>
-    
-      <div class="row">
-        <div class="col card">
-          
-            
-            
-              <h4>Sensitive data</h4>
-              <ul>
-              
-              </ul>
-              
-              
-            
-            
-            
-              
-  <div class="img-container">
+
   
   
-    <div class="img-item">
-      <img src='data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAFgCAYAAACVLS/VAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
+<img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAFgCAYAAACVLS/VAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
 bGliIHZlcnNpb24zLjMuNCwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy8QVMy6AAAACXBIWXMAAAsT
 AAALEwEAmpwYAAAVyklEQVR4nO3dfZBddX3H8c8nD2gHUIJs0zTJsj5QLNYBnBUVKIOgaaQKYpWK
 Dk0LNjoVB4ra0jAjUGcYrBrtiMWJJAN2EEWFiog8oxSrQEBIAohBJCTbkARxDNrxIcm3f5yT4bru
@@ -527,11 +412,9 @@ T1PxtahT8UI914V46/eT36ni0ppsv0nF18+OtkHSIbafV16mOr5cfh8VHX/eoCLwDp1ijUBPIEDQ
 Lz4qabakNeVlro+W0/9D0hLbD0p6uX73bCLjAklfsX2fpKdbpl8o6Zhy22+T9OToFSNio6SrVXT/
 fbWkH5Sz9pV0ve01Ki6hnTPFGoGeQG+8AIAUzkAAACkECAAghQABAKQQIACAFAIEAJBCgAAAUggQ
 AEDK/wN2Ad0cetDimgAAAABJRU5ErkJggg==
-' alt='None' />
-    </div>
+">
   
-    <div class="img-item">
-      <img src='data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAFgCAYAAACVLS/VAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
+<img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAFgCAYAAACVLS/VAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
 bGliIHZlcnNpb24zLjMuNCwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy8QVMy6AAAACXBIWXMAAAsT
 AAALEwEAmpwYAAAZT0lEQVR4nO3df7RlZX3f8fdnBlCLRCCOBJkZxiSUBo1geoOitgtByciioi0x
 0NRACxlNJUuLpiEkK4hmsXS1Ylox0olMwS5EjYqSisBUUNQacSAgICBIQWZEZhAVf6Qxw3z7x9lT
@@ -648,48 +531,31 @@ UVz/NfDfu+HRAf6hb/ph4FlJfj7JU4ATpuhzun6kec8A0ULzDnr3Dr7WXeZ6R9f+F8CpSW6l96Cg
 H0+x/VQuAS7qLnEtpzfE97u6/d0CvLi7eX4GveeKfwG4AfiTbvv1XU2XVdU/AG8HbqT35Lu7BnVY
 VT8d1M8u1i2NjaPxSpKaeAYiSWpigEiSmhggkqQmBogkqYkBIklqYoBIkpoYIJKkJv8Pe5/6+MG7
 3U0AAAAASUVORK5CYII=
-' alt='None' />
-    </div>
+">
   
-  </div>
 
-            
-        </div>
-      </div>
-    
-  </div>
+ 
 
-    
-    
-      
-<div class="col card">
-  <h2>Quantitative Analysis</h2>
+
+## Quantitative Analysis
   
     
       
-<div class="col card">
-  <h3>accuracy - 0.965034965034965</h3>
+### accuracy - 0.965034965034965
   
-  <div>
-    <b> Slice: </b>
-    training 
-  </div>
+__Slice:__ training 
   
   
   
   
     
-  <div class="row">
-    <div class="col">
-      
-        <div class="center"><i>ROC curve and confusion matrix</i></div>
-      
-      
-  <div class="img-container">
+  
+_ROC curve and confusion matrix_
+  
+    
   
   
-    <div class="img-item">
-      <img src='data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAYIAAAEGCAYAAABo25JHAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
+<img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAYIAAAEGCAYAAABo25JHAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
 bGliIHZlcnNpb24zLjMuNCwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy8QVMy6AAAACXBIWXMAAAsT
 AAALEwEAmpwYAAAr2UlEQVR4nO3deZyVZf3/8debTdxQEyxlEfcYEBARXJIgl3CnrwQmmIRmi2il
 WZhJyo++pakVaZmW4RaQpIZ7abgmygADAkaSooCISIqi8GX7/P6475kOw8yce5g5Zxzm/Xw85jH3
@@ -889,11 +755,9 @@ l+TupLEkbRd3pe/TbGB8bD3AzCTgsrRR9oBK594EPAiclP6mtu9her5bST58HyOpMsy1Ln2dbiap
 AoQMr4uSGwF+V9U5lfS++TxwiKSlks5Ll7ckufGgMXcl/rHk3kfNCkzSF0iq4X7Y0LE0Zunr2Csi
 rmzoWLY3biMwK7CIuE9SYx4T++OiBXB9QwexPXKJwMysiXMbgZlZE+dEYGbWxDkRmJk1cU4EZmZN
 nBOBmVkT9/8B13DThKLFdcoAAAAASUVORK5CYII=
-' alt='None' />
-    </div>
+">
   
-    <div class="img-item">
-      <img src='data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAATIAAAEGCAYAAADmLRl+AAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
+<img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAATIAAAEGCAYAAADmLRl+AAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
 bGliIHZlcnNpb24zLjMuNCwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy8QVMy6AAAACXBIWXMAAAsT
 AAALEwEAmpwYAAAZEElEQVR4nO3de7QW9X3v8fdnXxBBuQlSEKy03o41kViKt8aFmtZL0mq7rNUk
 DWnJ0rS5m6Rq1mpsXac9ek7UeJJ4kl21kmM04i1o4iUe1KV2WRUREkWNxBsYFEFQ5Lr3s7/nj5mt
@@ -1009,57 +873,39 @@ wIuS/iq9hyQdlnEP2wU4kQ09V5H0fy1KF9D4AUnN+zbg+fSzH5LM8PA+EfEGcDZJM24J7zXt7gD+
 oq+zH/giMCN9mLCU956e/gtJInyapIn5SkasdwMdkp4BLiZJpH02ADPTP8PxwEXp+U8Ac9L4nsbT
 hxue/cLMhgDXyMys8pzIzKzynMjMrPKcyMys8pzIzKzynMjMrPKcyMys8v4/k1My/IdAf5YAAAAA
 SUVORK5CYII=
-' alt='None' />
-    </div>
+">
   
-  </div>
     
-    </div>
-  </div>
 
   
   
-</div>
 
     
   
   
-</div>
 
-    
-    
-      
-<div class="col card">
-  <h2>Explainability Analysis</h2>
+
+
+
+## Explainability Analysis
   
     
       
-<div class="col card">
-  <h3>Feature Importance </h3>
+### Feature Importance 
   
-  <div>
-    <b> Slice: </b>
-    training 
-  </div>
+__Slice:__ training 
   
   
   
-  <div>
-    <b> Description: </b>
-    top 5 features 
-  </div>
+__Description:__ top 5 features 
   
   
     
-  <div class="row">
-    <div class="col">
-      
-      
-  <div class="img-container">
+  
+    
   
   
-    <div class="img-item">
-      <img src='data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAc4AAAD4CAYAAABlsga0AAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
+<img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAc4AAAD4CAYAAABlsga0AAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90
 bGliIHZlcnNpb24zLjMuNCwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy8QVMy6AAAACXBIWXMAAAsT
 AAALEwEAmpwYAAAY1UlEQVR4nO3de7SdVX3u8e/DxaAQokfQRtTuFlIRRUACFioqSG3PoGKstFat
 hZ4qxVapF2gZtaPHai9Q6tHjrZaqB2vTwgCLpdCKF25BFEwISbiI1gPnVA4HtUcjF4Mk/M4fa6Ys
@@ -1174,159 +1020,107 @@ J3kjcBmDJ9Y+VlU3J3knsLqqLgY+Cnwiyb8C/4/BH9Z5aSbzTXIYcBHwBOClSf6oqp41wrK32Qx/
 vmcDewAXtGe+/ndVHT+yoh+BGc73jW2F/SDwHR7+S+G8M8P5LhgznO+pSY4HNjP4/9VJIyt4HL9y
 T5KkDt6qlSSpg8EpSVIHg1OSpA4GpyRJHQxOSZI6GJySJHUwOCVJ6vD/AUb1TF/2OZI7AAAAAElF
 TkSuQmCC
-' alt='None' />
-    </div>
+">
   
-  </div>
     
-    </div>
-  </div>
 
   
   
-</div>
 
     
   
-</div>
 
-    
-    
-      
-<div class="col card">
-  <h2>Fairness Analysis</h2>
+
+
+
+## Fairness Analysis
   
     
       
-<div class="col card">
-  <h3>fairness parity metric </h3>
+### fairness parity metric 
   
-  <div>
-    <b> Slice: </b>
-    training 
-  </div>
+__Slice:__ training 
   
   
-  <div>
-    <b> Segment: </b>
-    gender 
-  </div>
+__Segment:__ gender 
   
   
-  <div>
-    <b> Description: </b>
-    TPR 
-  </div>
+__Description:__ TPR 
   
   
   
     
       
-<div class="col card">
   
-  <h4> sample test 1 </h4>
-  
-  
-  <div>
-    <b> Description: </b>
-    feature explainability test 
-  </div>
+#### sample test 1
   
   
-  <div>
-    <b> Threshold: </b>
-    0.6 
-  </div>
+__Description:__ feature explainability test
   
   
-  <div>
-    <b> Result: </b>
+__Threshold:__ 0.6 
+  
+  
+__Result:__
     
     
       0.7 
     
-  </div>
   
   
-    <div><b style="color:red;"> Failed</b></div>
+<b style="color:red;"> Failed</b>
   
   
-</div>
 
     
       
-<div class="col card">
   
-  <h4> sample test 2 </h4>
-  
-  
-  <div>
-    <b> Description: </b>
-    feature explainability test 2 
-  </div>
+#### sample test 2
   
   
-  <div>
-    <b> Threshold: </b>
-    0.6 
-  </div>
+__Description:__ feature explainability test 2
   
   
-  <div>
-    <b> Result: </b>
+__Threshold:__ 0.6 
+  
+  
+__Result:__
     
     
       0.7 
     
-  </div>
   
    
-    <div><b style="color:green;"> Passed</b></div> 
-    
+<b style="color:green;"> Passed</b>
   
-</div>
+  
 
     
       
-<div class="col card">
   
-  <h4> sample test 3 </h4>
-  
-  
-  <div>
-    <b> Description: </b>
-    feature explainability test 3 
-  </div>
+#### sample test 3
   
   
-  <div>
-    <b> Threshold: </b>
-    0.6 
-  </div>
+__Description:__ feature explainability test 3
   
   
-  <div>
-    <b> Result: </b>
+__Threshold:__ 0.6 
+  
+  
+__Result:__
     
     
       0.7 
     
-  </div>
   
   
-    <div><b style="color:red;"> Failed</b></div>
+<b style="color:red;"> Failed</b>
   
   
-</div>
 
     
   
-</div>
 
     
   
-</div>
 
-    
-</body>
-</html>
