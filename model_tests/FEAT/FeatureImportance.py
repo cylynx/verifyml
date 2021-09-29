@@ -66,12 +66,12 @@ class FeatureImportance(ModelTest):
         df_importance_sorted["feature_rank"] = df_importance_sorted.iloc[:, 0].rank(
             ascending=False
         )
-        df_importance_sorted = df_importance_sorted.iloc[:, 1:]
+        df_importance_sorted = df_importance_sorted[['feature_rank']]
 
-        attrs_string = "|".join([str(x) for x in self.attrs])
+        attrs_string = "|".join([f"{x}_" for x in self.attrs])
         result = df_importance_sorted[
             df_importance_sorted.index.to_series().str.contains(attrs_string)
-        ]
+        ].copy()
         result["passed"] = result.feature_rank.apply(
             lambda x: True if x > self.threshold else False
         )

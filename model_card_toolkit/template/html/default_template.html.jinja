@@ -278,7 +278,7 @@
           {% if model_details.owners %}<h3>Owners</h3>
             {% if model_details.owners|length > 1 %}
               {% for owner in model_details.owners %}
-                <li>{{ owner.name }}{% if owner.contact %}, {{ owner.contact }} {% endif %}</li>
+                <li>{{ owner.name }}{% if owner.role %}(owner.role){% endif %}{% if owner.contact %}, {{ owner.contact }} {% endif %}</li>
               {% endfor %}
             {% else %}
               {{ model_details.owners[0].name }}, {{ model_details.owners[0].contact }}
@@ -318,7 +318,7 @@
               <h3>Output Format</h3>
                 <div style="white-space:pre-wrap;">{{ model_parameters.output_format }}</div>{% endif %}
       {% endif %}
-      {% if considerations and (considerations.users or considerations.use_cases or considerations.limitations or considerations.tradeoffs or considerations.ethical_considerations) %}
+      {% if considerations and (considerations.users or considerations.use_cases or considerations.limitations or considerations.tradeoffs or considerations.ethical_considerations or considerations.fairness_assessment) %}
       <div class="col card">
         <h2>Considerations</h2>
           {% if considerations.users %}
