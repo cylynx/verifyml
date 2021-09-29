@@ -238,7 +238,7 @@
         "key": "question_mJ1r5z",
         "label": "Mitigation strategies",
         "type": "TEXTAREA",
-        "value": "Because there is less data for certain demographic groups (e.g. the elderly), the model has higher false-positive rates for that segment. We will prioritize such cases after the initial model score to add a 2nd level of check and minimise disruption to the customer."
+        "value": "Because there is less data for certain demographic groups (e.g. youth, elderly), the model has much higher/lower false-positive rates for that segment than that of others. We will prioritize such cases after the initial model score to add a 2nd level of check and minimise disruption to the customer."
       },
       {
         "key": "question_nPRoBe",
@@ -268,13 +268,13 @@
         "key": "question_3jeK94",
         "label": "Segment of analysis 2",
         "type": "INPUT_TEXT",
-        "value": "Age"
+        "value": "Age and gender"
       },
       {
         "key": "question_w2j2x9",
         "label": "Description of fairness analysis 2",
         "type": "TEXTAREA",
-        "value": "False positive rate across age bins should not differ by more than 20%"
+        "value": "Disparity ratio of false positive rates of any 2 bins in the respective attribute should not be more than a factor of 1.25"
       },
       {
         "key": "question_3xVGN5",
