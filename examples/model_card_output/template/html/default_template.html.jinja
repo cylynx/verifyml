@@ -318,7 +318,7 @@
               <h3>Output Format</h3>
                 <div style="white-space:pre-wrap;">{{ model_parameters.output_format }}</div>{% endif %}
       {% endif %}
-      {% if considerations and (considerations.users or considerations.use_cases or considerations.limitations or considerations.tradeoffs or considerations.ethical_considerations) %}
+      {% if considerations and (considerations.users or considerations.use_cases or considerations.limitations or considerations.tradeoffs or considerations.ethical_considerations or considerations.fairness_assessment) %}
       <div class="col card">
         <h2>Considerations</h2>
           {% if considerations.users %}
