@@ -170,7 +170,7 @@ _{{ graphics.description }}_
 {% endif %}{% if model_details.owners %}
 ### Owners
 {% for owner in model_details.owners %}
-* {{ owner.name }}{% if owner.contact %}, {{ owner.contact }} {% endif %}
+* {{ owner.name }}{% if owner.role %}(owner.role){% endif %}{% if owner.contact %}, {{ owner.contact }} {% endif %}
 {% endfor %}
 {% endif %}{% if model_details.licenses %}
 ### Licenses

@@ -278,7 +278,7 @@
           {% if model_details.owners %}<h3>Owners</h3>
             {% if model_details.owners|length > 1 %}
               {% for owner in model_details.owners %}
-                <li>{{ owner.name }}{% if owner.contact %}, {{ owner.contact }} {% endif %}</li>
+                <li>{{ owner.name }}{% if owner.role %}(owner.role){% endif %}{% if owner.contact %}, {{ owner.contact }} {% endif %}</li>
               {% endfor %}
             {% else %}
               {{ model_details.owners[0].name }}, {{ model_details.owners[0].contact }}
