@@ -728,10 +728,7 @@ class ModelCard(BaseModelCardField):
 
 
     def get_test_results(self):
-        """Return number of tests passed and failed.
-        
-        TODO: fix this mess
-        """
+        """Return number of tests passed and failed."""
         performance_test_counter = Counter()
         explainability_test_counter = Counter()
         fairness_test_counter = Counter()
