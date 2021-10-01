@@ -363,9 +363,6 @@ class PerformanceMetric(BaseModelCardField):
         BaseModelCardField._get_type(model_card_pb2.PerformanceMetric)
     ] = model_card_pb2.PerformanceMetric
 
-    def get_test_results(self):
-      return _get_test_results(self.tests)
-
 
 @dataclasses.dataclass
 class QuantitativeAnalysis(BaseModelCardField):
@@ -427,9 +424,6 @@ class ExplainabilityReport(BaseModelCardField):
         BaseModelCardField._get_type(model_card_pb2.ExplainabilityReport)
     ] = model_card_pb2.ExplainabilityReport
 
-    def get_test_results(self):
-      return _get_test_results(self.tests)
-
 
 @dataclasses.dataclass
 class ExplainabilityAnalysis(BaseModelCardField):
@@ -475,9 +469,6 @@ class FairnessReport(BaseModelCardField):
     _proto_type: dataclasses.InitVar[
         BaseModelCardField._get_type(model_card_pb2.FairnessReport)
     ] = model_card_pb2.FairnessReport
-
-    def get_test_results(self):
-      return _get_test_results(self.tests)
 
 
 @dataclasses.dataclass
@@ -738,13 +729,13 @@ class ModelCard(BaseModelCardField):
         fairness_reports = self.fairness_analysis.fairness_reports
         
         for pm in performance_metrics:
-            performance_test_counter.update(pm.get_test_results())
+            performance_test_counter.update(_get_test_results(pm.tests))
 
         for er in explainability_reports:
-            explainability_test_counter.update(er.get_test_results())
+            explainability_test_counter.update(_get_test_results(er.tests))
 
         for fr in fairness_reports:
-            fairness_test_counter.update(fr.get_test_results())
+            fairness_test_counter.update(_get_test_results(fr.tests))
 
         return {
             'performance_tests': dict(performance_test_counter),
