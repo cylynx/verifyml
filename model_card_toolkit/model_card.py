@@ -35,21 +35,18 @@ _SCHEMA_VERSION_STRING = "schema_version"
 
 
 def _get_reports_test_results(reports):
-  """
-  Get summary of tests passed and failed across multiple reports.
-  Each report has a list of tests.
-  """
-  result_counter = Counter()
+    """
+    Get summary of tests passed and failed across multiple reports.
+    Each report has a list of tests.
+    """
+    result_counter = Counter()
 
-  for r in reports:
-    tests = r.tests
-    passed = sum(1 for t in tests if t.passed)
-    result_counter.update({
-      'passed': passed, 
-      'failed': len(tests) - passed
-    })
-  
-  return dict(result_counter)
+    for r in reports:
+        tests = r.tests
+        passed = sum(1 for t in tests if t.passed)
+        result_counter.update({"passed": passed, "failed": len(tests) - passed})
+
+    return dict(result_counter)
 
 
 @dataclasses.dataclass
@@ -724,17 +721,16 @@ class ModelCard(BaseModelCardField):
         self.clear()
         _populate_from_json(json_dict, self)
 
-
     def get_test_results(self):
-        """Return overall number of tests passed and failed across performance metrics, 
+        """Return overall number of tests passed and failed across performance metrics,
         explainability reports, fairness reports.
         """
         performance_metrics = self.quantitative_analysis.performance_metrics
         explainability_reports = self.explainability_analysis.explainability_reports
         fairness_reports = self.fairness_analysis.fairness_reports
-        
+
         return {
-            'performance_tests': _get_reports_test_results(performance_metrics),
-            'explainability_tests': _get_reports_test_results(explainability_reports),
-            'fairness_tests': _get_reports_test_results(fairness_reports),
+            "performance_tests": _get_reports_test_results(performance_metrics),
+            "explainability_tests": _get_reports_test_results(explainability_reports),
+            "fairness_tests": _get_reports_test_results(fairness_reports),
         }
