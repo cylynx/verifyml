@@ -23,7 +23,7 @@ ModelCardsToolkit serves as an API to read and write MC properties by the users.
 import dataclasses
 import pandas as pd
 import json as json_lib
-from collections import Counter
+from collections import Counter, defaultdict
 from typing import Any, Dict, List, Optional
 
 from .base_model_card_field import BaseModelCardField
@@ -32,21 +32,6 @@ from .utils import validation
 from model_tests import ModelTest
 
 _SCHEMA_VERSION_STRING = "schema_version"
-
-
-def _get_reports_test_results(reports):
-    """
-    Get summary of tests passed and failed across multiple reports.
-    Each report has a list of tests.
-    """
-    result_counter = Counter()
-
-    for r in reports:
-        tests = r.tests
-        passed = sum(1 for t in tests if t.passed)
-        result_counter.update({"passed": passed, "failed": len(tests) - passed})
-
-    return dict(result_counter)
 
 
 @dataclasses.dataclass
@@ -721,6 +706,21 @@ class ModelCard(BaseModelCardField):
         self.clear()
         _populate_from_json(json_dict, self)
 
+    @staticmethod
+    def _get_reports_test_results(reports: List):
+        """
+        Get summary of tests passed and failed across multiple reports.
+        Each report has a list of tests.
+        """
+        result_counter = Counter()
+
+        for r in reports:
+            tests = r.tests
+            passed = sum(1 for t in tests if t.passed)
+            result_counter.update({"passed": passed, "failed": len(tests) - passed})
+
+        return dict(result_counter)
+
     def get_test_results(self):
         """Return overall number of tests passed and failed across performance metrics,
         explainability reports, fairness reports.
@@ -730,7 +730,37 @@ class ModelCard(BaseModelCardField):
         fairness_reports = self.fairness_analysis.fairness_reports
 
         return {
-            "performance_tests": _get_reports_test_results(performance_metrics),
-            "explainability_tests": _get_reports_test_results(explainability_reports),
-            "fairness_tests": _get_reports_test_results(fairness_reports),
+            "performance_tests": self._get_reports_test_results(performance_metrics),
+            "explainability_tests": self._get_reports_test_results(explainability_reports),
+            "fairness_tests": self._get_reports_test_results(fairness_reports),
         }
+    
+    @staticmethod
+    def group_reports(reports):
+      """Given a list of reports, group them into those with the same type+slice.
+      Returns a dict of {type+slice: {set of reports with this type+slice}}
+      """
+      type_slice_to_reports = defaultdict(set)
+      
+      for r in reports:
+        if r.type is not None and r.slice is not None:
+          type_slice_to_reports[f'{r.type}{r.slice}'].add(r)
+      
+      return type_slice_to_reports
+
+    @staticmethod
+    def find_common_reports(reports_a: List, reports_b: List):
+      """Given 2 lists of reports, find all reports that have the same type and slice in both lists."""
+      type_slice_a = ModelCard.group_reports(reports_a)
+      type_slice_b = ModelCard.group_reports(reports_b)
+
+      common_type_slices = type_slice_a.keys() & type_slice_b.keys()
+
+      for ts in common_type_slices:
+        # TODO find suitable data structure
+
+    def compare(self, other):
+      """Compare reports across self and another model card. Only reports that have the same
+      type and slice will be compared."""
+
+
