@@ -34,15 +34,22 @@ from model_tests import ModelTest
 _SCHEMA_VERSION_STRING = "schema_version"
 
 
-def _get_test_results(tests):
-  # hack
-  try:
-    passed = sum(1 for t in tests if t.passed)
-  except AttributeError:
-    print("all tests must have a 'passed' attribute")
-    raise
+def _get_reports_test_results(reports):
+  """
+  Get summary of tests passed and failed across multiple reports.
+  Each report has a list of tests.
+  """
+  result_counter = Counter()
 
-  return {'passed': passed, 'failed': len(tests) - passed}
+  for r in reports:
+    tests = r.tests
+    passed = sum(1 for t in tests if t.passed)
+    result_counter.update({
+      'passed': passed, 
+      'failed': len(tests) - passed
+    })
+  
+  return dict(result_counter)
 
 
 @dataclasses.dataclass
@@ -719,26 +726,15 @@ class ModelCard(BaseModelCardField):
 
 
     def get_test_results(self):
-        """Return number of tests passed and failed."""
-        performance_test_counter = Counter()
-        explainability_test_counter = Counter()
-        fairness_test_counter = Counter()
-
+        """Return overall number of tests passed and failed across performance metrics, 
+        explainability reports, fairness reports.
+        """
         performance_metrics = self.quantitative_analysis.performance_metrics
         explainability_reports = self.explainability_analysis.explainability_reports
         fairness_reports = self.fairness_analysis.fairness_reports
         
-        for pm in performance_metrics:
-            performance_test_counter.update(_get_test_results(pm.tests))
-
-        for er in explainability_reports:
-            explainability_test_counter.update(_get_test_results(er.tests))
-
-        for fr in fairness_reports:
-            fairness_test_counter.update(_get_test_results(fr.tests))
-
         return {
-            'performance_tests': dict(performance_test_counter),
-            'explainability_tests': dict(explainability_test_counter),
-            'fairness_tests': dict(fairness_test_counter),
+            'performance_tests': _get_reports_test_results(performance_metrics),
+            'explainability_tests': _get_reports_test_results(explainability_reports),
+            'fairness_tests': _get_reports_test_results(fairness_reports),
         }
