@@ -707,7 +707,7 @@ class ModelCard(BaseModelCardField):
         _populate_from_json(json_dict, self)
 
     @staticmethod
-    def _get_reports_test_results(reports: List):
+    def _get_reports_results(reports: List):
         """
         Get summary of tests passed and failed across multiple reports.
         Each report has a list of tests.
@@ -730,9 +730,7 @@ class ModelCard(BaseModelCardField):
         fairness_reports = self.fairness_analysis.fairness_reports
 
         return {
-            "performance_tests": self._get_reports_test_results(performance_metrics),
-            "explainability_tests": self._get_reports_test_results(explainability_reports),
-            "fairness_tests": self._get_reports_test_results(fairness_reports),
+            "performance_tests": self._get_reports_results(performance_metrics),
+            "explainability_tests": self._get_reports_results(explainability_reports),
+            "fairness_tests": self._get_reports_results(fairness_reports),
         }
-    
-

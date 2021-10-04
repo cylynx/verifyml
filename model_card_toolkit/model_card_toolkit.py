@@ -136,15 +136,19 @@ class ModelCardToolkit:
         with open(path, "rb") as f:
             model_card_proto.ParseFromString(f.read())
         return ModelCard().copy_from_proto(model_card_proto)
-    
-    def _get_jinja_template(self, template_path: str = None, template_file_name: str = None):
-        """ Given the name of a UI template file name, return its jinja template. If 
+
+    def _get_jinja_template(
+        self, template_path: str = None, template_file_name: str = None
+    ):
+        """Given the name of a UI template file name, return its jinja template. If
         the template path is provided, use that instead.
         """
         if template_path is None and template_file_name is None:
-            raise ValueError('Pass either template_file_name or template_path')
+            raise ValueError("Pass either template_file_name or template_path")
 
-        _template_path = template_path or os.path.join(self._mcta_template_dir, template_file_name)
+        _template_path = template_path or os.path.join(
+            self._mcta_template_dir, template_file_name
+        )
         template_dir = os.path.dirname(_template_path)
 
         template_file = os.path.basename(_template_path)
@@ -154,7 +158,7 @@ class ModelCardToolkit:
             auto_reload=True,
             cache_size=0,
         )
-        
+
         return jinja_env.get_template(template_file)
 
     def scaffold_assets(
@@ -273,7 +277,6 @@ class ModelCardToolkit:
 
         return model_card_file_content
 
-
     def export_test_results_json(
         self,
         model_card: ModelCard,
@@ -303,27 +306,27 @@ class ModelCardToolkit:
 
         # write to json
         full_path = os.path.join(self._model_cards_dir, output_file)
-        with open(full_path, 'w', encoding='utf-8') as f:
+        with open(full_path, "w", encoding="utf-8") as f:
             json.dump(model_card_test_results, f)
 
         return model_card_test_results
 
     @staticmethod
     def group_reports(reports) -> Dict[Text, List]:
-      """Given a list of model card reports, group them into those with the same type+slice.
-      Returns a dict of {type+slice: {set of reports with this type+slice}}
-      """
-      type_slice_to_reports = defaultdict(list)
-      
-      for r in reports:
-        if r.type is not None and r.slice is not None:
-          type_slice_to_reports[f'{r.type}{r.slice}'].append(r)
-      
-      return type_slice_to_reports
+        """Given a list of model card reports, group them into those with the same type+slice.
+        Returns a dict of {type+slice: {set of reports with this type+slice}}
+        """
+        type_slice_to_reports = defaultdict(list)
+
+        for r in reports:
+            if r.type is not None and r.slice is not None:
+                type_slice_to_reports[f"{r.type}{r.slice}"].append(r)
+
+        return type_slice_to_reports
 
     @staticmethod
     def find_common_reports(reports_a: List, reports_b: List) -> List[Tuple]:
-        """Given 2 lists of model card reports, find all reports that have the same type and slice in 
+        """Given 2 lists of model card reports, find all reports that have the same type and slice in
         both lists.
 
         Returns a list of [(report A, report B), ...].
@@ -336,7 +339,7 @@ class ModelCardToolkit:
         # find intersection of types+slices. might be empty, can short-circuit if slow
         common_type_slices = type_slice_a.keys() & type_slice_b.keys()
         common_reports_dict = {
-            ts: list(itertools.product(type_slice_a[ts], type_slice_b[ts])) 
+            ts: list(itertools.product(type_slice_a[ts], type_slice_b[ts]))
             for ts in common_type_slices
         }
 
@@ -359,31 +362,30 @@ class ModelCardToolkit:
 
         fr_a = card_a.fairness_analysis.fairness_reports
         fr_b = card_b.fairness_analysis.fairness_reports
-        
+
         common_pm = ModelCardToolkit.find_common_reports(pm_a, pm_b)
         common_er = ModelCardToolkit.find_common_reports(er_a, er_b)
         common_fr = ModelCardToolkit.find_common_reports(fr_a, fr_b)
 
         if common_pm or common_er or common_fr:
-            common_reports_combined = { 'pm': common_pm, 'er': common_er, 'fr': common_fr }
+            common_reports_combined = {
+                "pm": common_pm,
+                "er": common_er,
+                "fr": common_fr,
+            }
 
             # render
-            template = self._get_jinja_template(template_file_name=_COMPARISON_UI_TEMPLATE_FILE)
+            template = self._get_jinja_template(
+                template_file_name=_COMPARISON_UI_TEMPLATE_FILE
+            )
             comparison_card = template.render(
                 card_a_name=card_a.model_details.name,
                 card_b_name=card_b.model_details.name,
-                common_reports_pm=common_reports_combined['pm'],
-                common_reports_er=common_reports_combined['er'],
-                common_reports_fr=common_reports_combined['fr'],
+                common_reports_pm=common_reports_combined["pm"],
+                common_reports_er=common_reports_combined["er"],
+                common_reports_fr=common_reports_combined["fr"],
             )
 
             return comparison_card
         else:
             return '<h1 style="text-align: left;"> No common reports found </h1>'
-
-
-
-
-
-
-
