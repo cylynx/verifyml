@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+{% macro render_header(card_a_name, card_b_name) %}
+ <div style="width: 100%; overflow: hidden;">
+     <div style="width: 50%; float: left;"> 
+        <h1>{{ card_a_name }}</h2>
+    </div>
+     <div style="margin-left: 50%;"> 
+        <h1>{{ card_b_name }}</h2>
+    </div>
+</div>
+{% endmacro %}
+{% macro render_metrics_graphics(graphics) %}
+  <div class="row">
+    <div class="col">
+      {% if graphics.description %}
+        <div class="center"><i>{{ graphics.description }}</i></div>
+      {% endif %}
+      {{ render_graphics(graphics.collection) }}    
+    </div>
+  </div>
+{% endmacro %}
+{% macro render_graphics(graphics) %}
+  <div class="img-container">
+  {% if graphics.description %}<p>{{ graphics.description }}</p>{% endif %}
+  {% for graph in graphics %}
+    <div class="img-item">
+      <img src='data:image/jpeg;base64,{{ graph.image }}' alt='{{ graph.name }}' />
+    </div>
+  {% endfor %}
+  </div>
+{% endmacro %}
+{% macro render_report(report) %}
+<div class="col card">
+  <h3>{{ report.type }} {% if report.value %}- {{ report.value }}{% endif %}</h3>
+  {% if report.slice %}
+  <div>
+    <b> Slice: </b>
+    {{ report.slice }} 
+  </div>
+  {% endif %}
+  {% if report.segment %}
+  <div>
+    <b> Segment: </b>
+    {{ report.segment }} 
+  </div>
+  {% endif %}
+  {% if report.description %}
+  <div>
+    <b> Description: </b>
+    {{ report.description }} 
+  </div>
+  {% endif %}
+  {% if report.graphics.collection %}
+    {{ render_metrics_graphics(report.graphics) }}
+  {% endif %}
+  {% if report.tests %}
+    {% for test in report.tests %}
+      {{ render_test(test)}}
+    {% endfor %}
+  {% endif %}
+</div>
+{% endmacro %}
+{% macro render_common_reports(common_reports) %}
+{% for _tuple in common_reports %}
+ <div style="width: 100%; overflow: hidden;">
+    {# tuple of (report A, report B) #}
+     <div style="width: 50%; float: left;"> {{ render_report(_tuple[0]) }} </div>
+     <div style="margin-left: 50%;"> {{ render_report(_tuple[1]) }} </div>
+</div>
+{% endfor %}
+{% endmacro %}
+
+<html lang="en">
+<head>
+<style>
+h1 {text-align: left;}
+</style>
+<title>Model Card Comparison</title>
+</head>
+<body>
+{{ render_header(card_a_name, card_b_name) }}
+{% if common_reports_pm %}
+    <h2>Performance Metrics</h3>
+    {{ render_common_reports(common_reports_pm) }}
+{% endif %}
+{% if common_reports_er %}
+    <h2>Explainability Reports</h3>
+    {{ render_common_reports(common_reports_er) }}
+{% endif %}
+{% if common_reports_fr %}
+    <h2>Fairness Reports</h3>
+    {{ render_common_reports(common_reports_fr) }}
+{% endif %}
+</body>
+</html>

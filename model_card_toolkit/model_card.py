@@ -23,7 +23,7 @@ ModelCardsToolkit serves as an API to read and write MC properties by the users.
 import dataclasses
 import pandas as pd
 import json as json_lib
-from collections import Counter, defaultdict
+from collections import Counter
 from typing import Any, Dict, List, Optional
 
 from .base_model_card_field import BaseModelCardField
@@ -735,32 +735,4 @@ class ModelCard(BaseModelCardField):
             "fairness_tests": self._get_reports_test_results(fairness_reports),
         }
     
-    @staticmethod
-    def group_reports(reports):
-      """Given a list of reports, group them into those with the same type+slice.
-      Returns a dict of {type+slice: {set of reports with this type+slice}}
-      """
-      type_slice_to_reports = defaultdict(set)
-      
-      for r in reports:
-        if r.type is not None and r.slice is not None:
-          type_slice_to_reports[f'{r.type}{r.slice}'].add(r)
-      
-      return type_slice_to_reports
-
-    @staticmethod
-    def find_common_reports(reports_a: List, reports_b: List):
-      """Given 2 lists of reports, find all reports that have the same type and slice in both lists."""
-      type_slice_a = ModelCard.group_reports(reports_a)
-      type_slice_b = ModelCard.group_reports(reports_b)
-
-      common_type_slices = type_slice_a.keys() & type_slice_b.keys()
-
-      for ts in common_type_slices:
-        # TODO find suitable data structure
-
-    def compare(self, other):
-      """Compare reports across self and another model card. Only reports that have the same
-      type and slice will be compared."""
-
 

@@ -21,7 +21,9 @@ import json
 import os
 import pkgutil
 import tempfile
-from typing import Dict, Optional, Text
+import itertools
+from typing import Dict, Optional, Text, List, Tuple
+from collections import defaultdict
 
 from absl import logging
 import jinja2
@@ -33,9 +35,11 @@ from .proto import model_card_pb2
 # Constants about provided UI templates.
 _UI_TEMPLATES = (
     "template/html/default_template.html.jinja",
+    "template/html/compare.html.jinja",
     "template/md/default_template.md.jinja",
 )
 _DEFAULT_UI_TEMPLATE_FILE = os.path.join("html", "default_template.html.jinja")
+_COMPARISON_UI_TEMPLATE_FILE = os.path.join("html", "compare.html.jinja")
 
 # Constants about Model Cards Toolkit Assets (MCTA).
 _MCTA_PROTO_FILE = os.path.join("data", "model_card.proto")
@@ -132,6 +136,26 @@ class ModelCardToolkit:
         with open(path, "rb") as f:
             model_card_proto.ParseFromString(f.read())
         return ModelCard().copy_from_proto(model_card_proto)
+    
+    def _get_jinja_template(self, template_path: str = None, template_file_name: str = None):
+        """ Given the name of a UI template file name, return its jinja template. If 
+        the template path is provided, use that instead.
+        """
+        if template_path is None and template_file_name is None:
+            raise ValueError('Pass either template_file_name or template_path')
+
+        _template_path = template_path or os.path.join(self._mcta_template_dir, template_file_name)
+        template_dir = os.path.dirname(_template_path)
+
+        template_file = os.path.basename(_template_path)
+        jinja_env = jinja2.Environment(
+            loader=self._jinja_loader(template_dir),
+            autoescape=True,
+            auto_reload=True,
+            cache_size=0,
+        )
+        
+        return jinja_env.get_template(template_file)
 
     def scaffold_assets(
         self, path: Optional[Text] = None, proto: Optional[message.Message] = None
@@ -223,13 +247,6 @@ class ModelCardToolkit:
           MCTError: If `export_format` is called before `scaffold_assets` has
             generated model card assets.
         """
-        if not template_path:
-            template_path = os.path.join(
-                self._mcta_template_dir, _DEFAULT_UI_TEMPLATE_FILE
-            )
-        template_dir = os.path.dirname(template_path)
-        template_file = os.path.basename(template_path)
-
         # If model_card is passed in, write to Proto file.
         if model_card:
             self.update_model_card(model_card)
@@ -240,14 +257,7 @@ class ModelCardToolkit:
         else:
             raise ValueError("scaffold_assets() must be called before export_format().")
 
-        # Generate Model Card.
-        jinja_env = jinja2.Environment(
-            loader=self._jinja_loader(template_dir),
-            autoescape=True,
-            auto_reload=True,
-            cache_size=0,
-        )
-        template = jinja_env.get_template(template_file)
+        template = self._get_jinja_template(template_path, _DEFAULT_UI_TEMPLATE_FILE)
         model_card_file_content = template.render(
             model_details=model_card.model_details,
             model_parameters=model_card.model_parameters,
@@ -297,3 +307,83 @@ class ModelCardToolkit:
             json.dump(model_card_test_results, f)
 
         return model_card_test_results
+
+    @staticmethod
+    def group_reports(reports) -> Dict[Text, List]:
+      """Given a list of model card reports, group them into those with the same type+slice.
+      Returns a dict of {type+slice: {set of reports with this type+slice}}
+      """
+      type_slice_to_reports = defaultdict(list)
+      
+      for r in reports:
+        if r.type is not None and r.slice is not None:
+          type_slice_to_reports[f'{r.type}{r.slice}'].append(r)
+      
+      return type_slice_to_reports
+
+    @staticmethod
+    def find_common_reports(reports_a: List, reports_b: List) -> List[Tuple]:
+        """Given 2 lists of model card reports, find all reports that have the same type and slice in 
+        both lists.
+
+        Returns a list of [(report A, report B), ...].
+        The list of (report A, report B) tuples is a cartesian product between reports in A vs reports
+        in B with the same type+slice.
+        """
+        type_slice_a = ModelCardToolkit.group_reports(reports_a)
+        type_slice_b = ModelCardToolkit.group_reports(reports_b)
+
+        # find intersection of types+slices. might be empty, can short-circuit if slow
+        common_type_slices = type_slice_a.keys() & type_slice_b.keys()
+        common_reports_dict = {
+            ts: list(itertools.product(type_slice_a[ts], type_slice_b[ts])) 
+            for ts in common_type_slices
+        }
+
+        # dont need type+slice info for now so just return list of tuples
+        common_reports = []
+        for list_of_report_tuples in common_reports_dict.values():
+            common_reports += list_of_report_tuples
+
+        return common_reports
+
+    def compare_model_cards(self, card_a: ModelCard, card_b: ModelCard) -> Text:
+        """Compare reports across given model cards A and B and render them side by side.
+        Only reports that have the same type and slice will be compared."""
+
+        pm_a = card_a.quantitative_analysis.performance_metrics
+        pm_b = card_b.quantitative_analysis.performance_metrics
+
+        er_a = card_a.explainability_analysis.explainability_reports
+        er_b = card_b.explainability_analysis.explainability_reports
+
+        fr_a = card_a.fairness_analysis.fairness_reports
+        fr_b = card_b.fairness_analysis.fairness_reports
+        
+        common_pm = ModelCardToolkit.find_common_reports(pm_a, pm_b)
+        common_er = ModelCardToolkit.find_common_reports(er_a, er_b)
+        common_fr = ModelCardToolkit.find_common_reports(fr_a, fr_b)
+
+        if common_pm or common_er or common_fr:
+            common_reports_combined = { 'pm': common_pm, 'er': common_er, 'fr': common_fr }
+
+            # render
+            template = self._get_jinja_template(template_file_name=_COMPARISON_UI_TEMPLATE_FILE)
+            comparison_card = template.render(
+                card_a_name=card_a.model_details.name,
+                card_b_name=card_b.model_details.name,
+                common_reports_pm=common_reports_combined['pm'],
+                common_reports_er=common_reports_combined['er'],
+                common_reports_fr=common_reports_combined['fr'],
+            )
+
+            return comparison_card
+        else:
+            return '<h1 style="text-align: left;"> No common reports found </h1>'
+
+
+
+
+
+
+
