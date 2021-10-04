@@ -35,30 +35,30 @@ class SHAPFeatureImportance(ModelTest):
 
         self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
 
-    def get_shap_values(self, model, model_type, x_train, x_test):
+    def get_shap_values(self, model, model_type, x_train_encoded, x_test_encoded):
         if model_type == "trees":
             explainer = shap.TreeExplainer(model=model, model_output="margin", feature_perturbation="tree_path_dependent")
         elif model_type == "others":
             explainer = shap.PermutationExplainer(
-                model=model.predict_proba, data=x_train
+                model=model.predict_proba, data=x_train_encoded
             )
         else:
             raise ValueError("model_type should be 'trees' or 'others'")
 
-        self.shap_values = explainer.shap_values(x_test)
+        self.shap_values = explainer.shap_values(x_test_encoded)
 
         return self.shap_values
 
-    def shap_summary_plot(self, x_test, save_plots: bool = True):
+    def shap_summary_plot(self, x_test_encoded, save_plots: bool = True):
         """
         Make a shap summary plot.
 
-        :x_test: data to be used for shapely explanations, preferably eval set, categorical features have to be already encoded
+        :x_test_encoded: data to be used for shapely explanations, categorical features have to be encoded
         :save_plots: if True, saves the plots to the class instance
         """
         shap.summary_plot(
             shap_values=self.shap_values[1],
-            features=x_test,
+            features=x_test_encoded,
             max_display=20,
             plot_type="dot",
             show=False,
@@ -70,17 +70,17 @@ class SHAPFeatureImportance(ModelTest):
             plot_to_str()
 
     def get_result(
-        self, model, model_type: str, x_train: DataFrame, x_test: DataFrame
+        self, model, model_type: str, x_train_encoded: DataFrame, x_test_encoded: DataFrame
     ) -> list:
         """
         Output the protected attributes that are listed in the top specified % of the features influencing the predictions
         , using aggregated shapely values.
         """
-        shap_values = self.get_shap_values(model, model_type, x_train, x_test)
+        shap_values = self.get_shap_values(model, model_type, x_train_encoded, x_test_encoded)
 
         # Take the mean of the absolute of the shapely values to get the aggretated importance for each features
         agg_shap_df = DataFrame(
-            DataFrame(shap_values[1], columns=x_test.columns).abs().mean()
+            DataFrame(shap_values[1], columns=x_test_encoded.columns).abs().mean()
         ).sort_values(0, ascending=False)
         agg_shap_df["feature_rank"] = agg_shap_df[0].rank(ascending=False)
         agg_shap_df.drop(0, axis=1, inplace=True)
@@ -92,7 +92,7 @@ class SHAPFeatureImportance(ModelTest):
 
         return result
 
-    def shap_dependence_plot(self, x_test, show_all: bool = True, save_plots: bool = True):
+    def shap_dependence_plot(self, x_test_encoded, show_all: bool = True, save_plots: bool = True):
         """
         Create a SHAP dependence plot to show the significant effect of the flagged
         protected attributes across the whole dataset.
@@ -110,7 +110,7 @@ class SHAPFeatureImportance(ModelTest):
             shap.dependence_plot(
                 r,
                 shap_values=self.shap_values[1],
-                features=x_test,
+                features=x_test_encoded,
                 interaction_index=None,
                 show=False,
             )
@@ -121,17 +121,17 @@ class SHAPFeatureImportance(ModelTest):
                 plot_to_str()
 
     def run(
-        self, model, model_type: str, x_train: DataFrame, x_test: DataFrame
+        self, model, model_type: str, x_train_encoded: DataFrame, x_test_encoded: DataFrame
     ) -> bool:
         """
         Runs test by calculating result and evaluating if it passes a defined condition.
 
         :model: trained model object
         :model_type: type of algorithim, choose from ['trees','others']
-        :x_train: training data features, categorical features have to be already encoded
-        :x_test: data to be used for shapely explanations, preferably eval set, categorical features have to be already encoded
+        :x_train_encoded: training data features, categorical features have to be encoded
+        :x_test_encoded: data to be used for shapely explanations, preferably eval set, categorical features have to be encoded
         """
-        self.result = self.get_result(model, model_type, x_train, x_test)
+        self.result = self.get_result(model, model_type, x_train_encoded, x_test_encoded)
         self.passed = False if False in list(self.result.passed) else True
 
         return self.passed
