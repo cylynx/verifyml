@@ -1,8 +1,9 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 import inspect
-from pandas import DataFrame
+import pandas as pd
 import matplotlib.pyplot as plt
+from scipy.stats import chi2_contingency, norm
 
 from ..ModelTest import ModelTest
 from ..utils import plot_to_str
@@ -16,84 +17,108 @@ class DataShift(ModelTest):
     passed. Take the higher value as the numerator or the value to be subtracted from.
 
     :protected_attr: list of protected attributes
-    :method: type of method for the test, choose from ('diff', 'ratio')
-    :threshold: probability distribution threshold of an attribute, where if the difference between training data
-                distribution and evalaution distribution exceeds the threhold, the attribute will be flagged
+    :method: type of method for the test, choose from ('chi2', 'ratio', 'diff')
+    :threshold: probability distribution threshold or significance level of chi-sq test
     """
 
     protected_attr: list[str]
-    method: str = "ratio"
+    method: str = "chi2"
     threshold: float = 1.25
     plots: dict[str, str] = field(repr=False, default_factory=dict)
     test_name: str = "Data Shift Test"
     test_desc: str = None
 
     def __post_init__(self):
+        
+        if self.method == "chi2":
+            pass_desc = f"""
+                        To pass, the p-value have to be greater than the significance 
+                        level of chi-square test of independence between the type of data 
+                        (training and evaluation) and the attribute distribution, as specified 
+                        by the threshold argument.
+                        """
+        else:
+            pass_desc = f"""
+                        To pass, the {self.method} of distribution of the subgroup in the 
+                        training data and evaluation data should not exceed the threshold.
+                        """
+            
         default_test_desc = inspect.cleandoc(
             f"""
-            Test if there is any shift in the distribution in the subgroups of the protected
-            features. To pass, the {self.method} of the distribution for a group in the 
-            training data and evaluation data should not exceed the threshold.
-        """
+            Test if there is any shift in the distribution of the subgroups of the protected
+            features. {pass_desc}
+            """
         )
 
         self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
 
     @staticmethod
-    def get_df_distribution_by_pa(df: DataFrame, col: str):
+    def get_df_distribution_by_pa(df: DataFrame, col: str, freq: bool = False):
         """
         Get the probability distribution of a specified column's values in a given df.
+        
+        :freq: output the contingency table if true else output the probabilites
         """
-        df_dist = df.groupby(col)[col].apply(lambda x: x.count() / len(df))
+        if freq:
+            df_dist = df.groupby(col)[col].apply(lambda x: x.count())
+        else:
+            df_dist = df.groupby(col)[col].apply(lambda x: x.count() / len(df))
 
         return df_dist
 
-    def get_result(self, df_train: DataFrame, df_eval: DataFrame) -> any:
+    def get_result(self, x_train: DataFrame, x_test: DataFrame) -> any:
         """
         Calculate test result.
 
-        :df_train: training data features, protected features should not be encoded yet
-        :df_eval: data to be evaluated on, protected features should not be encoded yet
+        :x_train: training data features, protected features should not be encoded 
+        :x_test: data to be evaluated on, protected features should not be encoded 
         """
-        result = DataFrame()
+        result = pd.DataFrame()
 
         for pa in self.protected_attr:
-            train_dist = self.get_df_distribution_by_pa(df_train, pa)
-            eval_dist = self.get_df_distribution_by_pa(df_eval, pa)
-
-            result_tmp = DataFrame(train_dist)
-            result_tmp.index.name = None
-            result_tmp.index = result_tmp.index.to_series().apply(lambda x: f"{pa}_{x}")
-            result_tmp.columns = ["training_distribution"]
-            result_tmp["eval_distribution"] = eval_dist.values
-
-            if self.method == "ratio":
-                result_tmp["ratio"] = (
-                    result_tmp["training_distribution"]
-                    / result_tmp["eval_distribution"]
+            train_dist = pd.DataFrame(self.get_df_distribution_by_pa(x_train, pa))
+            eval_dist = pd.DataFrame(self.get_df_distribution_by_pa(x_test, pa))
+  
+            df_dist=pd.concat([train_dist,eval_dist],axis=1)
+            df_dist.columns = ['training_distribution', 'eval_distribution']
+            df_dist.index = df_dist.index.to_series().apply(lambda x: f"{pa}_{x}")
+            
+            if self.method == "chi2":
+                train_freq = pd.DataFrame(self.get_df_distribution_by_pa(x_train, pa, True))
+                eval_freq = pd.DataFrame(self.get_df_distribution_by_pa(x_test, pa, True))
+                df_freq=pd.concat([train_freq,eval_freq],axis=1)
+                _,p,_,_=chi2_contingency(df_freq.values)
+                df_dist["p-value"] = p
+                    
+            elif self.method == "ratio":
+                df_dist["ratio"] = (
+                    df_dist["training_distribution"]
+                    / df_dist["eval_distribution"]
                 )
-                result_tmp["ratio"] = result_tmp.ratio.apply(
+                df_dist["ratio"] = df_dist.ratio.apply(
                     lambda x: 1 / x if x < 1 else x
                 )
             elif self.method == "diff":
-                result_tmp["difference"] = abs(
-                    result_tmp["training_distribution"]
-                    - result_tmp["eval_distribution"]
+                df_dist["difference"] = abs(
+                    df_dist["training_distribution"]
+                    - df_dist["eval_distribution"]
                 )
-            result = result.append(result_tmp)
-
-        result["passed"] = result.iloc[:, -1] < self.threshold
+            result = result.append(df_dist)
+        
+        if self.method == "chi2":
+            result["passed"] = result.iloc[:, -1] > self.threshold
+        else:
+            result["passed"] = result.iloc[:, -1] <= self.threshold
         result = result.round(3)
 
         return result
 
-    def plot(self, df_train, df_eval, save_plots: bool = True):
+    def plot(self, alpha: float = 0.05, save_plots: bool = True):
         """
-        Plot the distribution of the attribute groups for training and evaluation set
-        and optionally save the plots to the class instance.
-
-        :df_train: training data features, protected features should not be encoded yet
-        :df_eval: data to be evaluated on, protected features should not be encoded yet
+        Plot the the probability distribution of subgroups of protected attribute for
+        training and evaluation data respectively, also include the confidence interval bands.
+        
+        :alpha: significance level for confidence interval
         :save_plots: if True, saves the plots to the class instance
         """
         fig, axs = plt.subplots(
@@ -103,49 +128,34 @@ class DataShift(ModelTest):
         )
         num = 0
         for pa in self.protected_attr:
-            train_dist = self.get_df_distribution_by_pa(df_train, pa).sort_values(
-                axis="index"
-            )
-            train_dist.plot(kind="bar", color="green", ax=axs[num])
-            axs[num].tick_params(axis="x", labelrotation=0)
-            num += 1
+            df_plot = self.result[['training_distribution','eval_distribution']]
+            df_plot = df_plot[df_plot.index.to_series().str.contains(f"{pa}_")]
+            
+            z_value = norm.ppf(1-alpha/2)
+            train_ci = list(df_plot['training_distribution'].apply(lambda x: z_value*(x*(1-x)/self.df_size[0])**0.5))
+            eval_ci = list(df_plot['eval_distribution'].apply(lambda x: z_value*(x*(1-x)/self.df_size[1])**0.5))
+            
+            df_plot.plot.bar(yerr=[train_ci, eval_ci], rot=0, ax=axs[num])
+            num+=1
 
-        training_title = (
-            "Probability Distribution of protected attributes in training set"
+        title = (
+            "Probability Distribution of protected attributes"
         )
-        fig.suptitle(training_title)
+        fig.suptitle(title)
 
         if save_plots:
-            self.plots[training_title] = plot_to_str()
+            self.plots[title] = plot_to_str()
 
-        fig, axs = plt.subplots(
-            1,
-            len(self.protected_attr),
-            figsize=(18, 6),
-        )
-        num = 0
-        for pa in self.protected_attr:
-            eval_dist = self.get_df_distribution_by_pa(df_eval, pa).sort_values(
-                axis="index"
-            )
-            eval_dist.plot(kind="bar", color="red", ax=axs[num])
-            axs[num].tick_params(axis="x", labelrotation=0)
-            num += 1
-        test_title = "Probability Distribution of protected attributes in test set"
-        fig.suptitle(test_title)
-
-        if save_plots:
-            self.plots[test_title] = plot_to_str()
-
-    def run(self, df_train: DataFrame, df_eval: DataFrame) -> bool:
+    def run(self, x_train: DataFrame, x_test: DataFrame) -> bool:
         """
         Runs test by calculating result / retrieving cached property and evaluating if
         it passes a defined condition.
 
-        :df_train: training data features, protected features should not be encoded yet
-        :df_eval: data to be evaluated on, protected features should not be encoded yet
+        :x_train: training data features, protected features should not be encoded
+        :x_test: data to be evaluated on, protected features should not be encoded
         """
-        self.result = self.get_result(df_train, df_eval)
+        self.result = self.get_result(x_train, x_test)
+        self.df_size = [len(x_train), len(x_test)]
         self.passed = False if False in list(self.result.passed) else True
 
         return self.passed

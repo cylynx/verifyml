@@ -155,7 +155,7 @@ class SubgroupMetricThreshold(ModelTest):
                 color=color,
                 marker=".",
                 s=90,
-                label=f"{optimal_txt} = {str(optimal_threshold)}, {self.attr}_{value}",
+                label=f"{optimal_txt} = {str(round(optimal_threshold,3))}, {self.attr}_{value}",
             )
 
             plt.scatter(
@@ -213,7 +213,7 @@ class SubgroupMetricThreshold(ModelTest):
         Runs test by calculating result and evaluating if it passes a defined condition.
 
         :df_test_with_output: evaluation set dataframe containing protected attributes with 'prediction_probas' and 'truth' columns,
-                            protected attribute should not be encoded yet
+                              protected attribute should not be encoded
         """
         self.result = self.get_result(df_test_with_output)
         self.passed = False if False in list(self.result.passed) else True

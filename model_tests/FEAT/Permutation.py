@@ -1,23 +1,27 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import inspect
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 from pandas import DataFrame, Series
 import numpy as np
 from sklearn.metrics import confusion_matrix
+from scipy.stats import norm
 
 from ..ModelTest import ModelTest
+from ..utils import plot_to_str
 
 
 @dataclass
 class Permutation(ModelTest):
     """
-    Check if the difference/ratio of specified bias metric of groups within a specified protected attribute of
-    the original dataset and the perturb dataset exceeds the threshold. Output a dataframe showing the test result of each groups.
+    Check if the difference/ratio of specified bias metric of groups within the specified protected attribute of
+    original dataset is worse than that of perturbed dataset by a specified threshold. Output a dataframe showing 
+    the test result of each groups.
     i.e. Flag male gender group if
-    False positive rate of male group in original test data - False positive rate of male group in perturbed gender test data
-    >threshold.
-    Take the higher value as the numerator or the value to be subtracted from.
+    
+        FPR of male group in original data - (or division) FPR of male group in perturbed gender data > threshold
 
     :attr: protected attribute specified
     :metric: type of bias metric for the test, choose from ('fpr', 'fnr', 'pr'),
@@ -30,6 +34,7 @@ class Permutation(ModelTest):
     metric: str
     method: str
     threshold: float
+    plots: dict[str, str] = field(repr=False, default_factory=dict)
     test_name: str = "Subgroup Permutation Test"
     test_desc: str = None
 
@@ -60,35 +65,37 @@ class Permutation(ModelTest):
     @staticmethod
     def add_predictions_to_df(df: DataFrame, model, encoder):
         """Add a column to a given df with values predicted by a given model."""
-        y_pred = model.predict(df)
-        df = encoder.inverse_transform(df)
+        df=df.copy()
+        y_pred = model.predict(encoder.transform(df))
         df["prediction"] = y_pred
         return df
-
-    @staticmethod
-    def get_metric_dict(attr: str, metric: str, df: DataFrame) -> dict[str, float]:
-        """Calculate metric differences for a protected attribute on a given df."""
+    
+    def get_metric_dict(self, metric: str, df: DataFrame) -> dict[str, float]:
+        """Calculate metric ratio/difference and size for each subgroup of protected attribute on a given df."""
         metric_dict = {}
-
-        for i in sorted(df[attr].unique()):
-            tmp = df[df[attr] == i]
+        size_list = []
+        
+        for i in sorted(df[self.attr].unique()):
+            tmp = df[df[self.attr] == i]
             cm = confusion_matrix(tmp.truth, tmp.prediction)
 
             if metric == "fpr":
-                metric_dict[f"{attr}_{i}"] = cm[0][1] / cm[0].sum()
+                metric_dict[f"{self.attr}_{i}"] = cm[0][1] / cm[0].sum()
+                size_list.append(cm[0].sum())
             elif metric == "fnr":
-                metric_dict[f"{attr}_{i}"] = cm[1][0] / cm[1].sum()
+                metric_dict[f"{self.attr}_{i}"] = cm[1][0] / cm[1].sum()
+                size_list.append(cm[1].sum())
             elif metric == "pr":
-                metric_dict[f"{attr}_{i}"] = cm[1].sum() / cm.sum()
+                metric_dict[f"{self.attr}_{i}"] = (cm[1][1]+cm[0][1]) / cm.sum()
+                size_list.append(cm.sum())
 
-        return metric_dict
+        return metric_dict, size_list
 
     @staticmethod
     def perturb_df(attr: str, df: DataFrame, encoder):
         """Perturb the protected attribute column values of a given df."""
+        df=df.copy()
         df[attr] = np.random.permutation(df[attr].values)
-        df = encoder.transform(df)
-
         return df
 
     def get_metric_dict_original(
@@ -98,8 +105,8 @@ class Permutation(ModelTest):
         df_original = self.add_predictions_to_df(x_test, model, encoder)
         df_original["truth"] = y_test
 
-        self.metric_dict_original = self.get_metric_dict(
-            self.attr, self.metric, df_original
+        self.metric_dict_original, self.size_list_original = self.get_metric_dict(
+            self.metric, df_original
         )
 
         return self.metric_dict_original
@@ -108,13 +115,12 @@ class Permutation(ModelTest):
         self, x_test: DataFrame, y_test: Series, model, encoder
     ):
         """Get metric dict for perturbed dataset."""
-        df_perturbed = encoder.inverse_transform(x_test)
-        df_perturbed = self.perturb_df(self.attr, df_perturbed, encoder)
+        df_perturbed = self.perturb_df(self.attr, x_test, encoder)
         df_perturbed = self.add_predictions_to_df(df_perturbed, model, encoder)
         df_perturbed["truth"] = y_test
 
-        self.metric_dict_perturbed = self.get_metric_dict(
-            self.attr, self.metric, df_perturbed
+        self.metric_dict_perturbed, self.size_list_perturbed = self.get_metric_dict(
+            self.metric, df_perturbed
         )
 
         return self.metric_dict_perturbed
@@ -137,21 +143,48 @@ class Permutation(ModelTest):
                 result[f"{self.metric} of original data"]
                 / result[f"{self.metric} of perturbed data"]
             )
-            result["ratio"] = result.ratio.apply(lambda x: 1 / x if x < 1 else x)
         elif self.method == "diff":
-            result["difference"] = abs(
+            result["difference"] = (
                 result[f"{self.metric} of original data"]
                 - result[f"{self.metric} of perturbed data"]
             )
-        result["passed"] = result.iloc[:, -1] < self.threshold
+        result["passed"] = result.iloc[:, -1] <= self.threshold
         result = result.round(3)
         return result
+    
+    def plot(self, alpha: float = 0.05, save_plots: bool = True):
+        """
+        Plot the metric of interest across the attribute subgroups resulting from the
+        original and perturbed data respectively, also include the confidence interval bands.
+        
+        :alpha: significance level for confidence interval
+        :save_plots: if True, saves the plots to the class instance
+        """
+        df_plot = self.result[[f"{self.metric} of original data",f"{self.metric} of perturbed data"]]
+        
+        z_value = norm.ppf(1-alpha/2)
+        original_tmp = df_plot[f"{self.metric} of original data"].values
+        original_ci = z_value*np.divide(np.multiply(original_tmp, 1-original_tmp), self.size_list_original)**0.5
+        perturbed_tmp = df_plot[f"{self.metric} of perturbed data"].values
+        perturbed_ci = z_value*np.divide(np.multiply(perturbed_tmp, 1-perturbed_tmp), self.size_list_perturbed)**0.5
+                                  
+        df_plot.plot.bar(yerr=[original_ci, perturbed_ci], rot=0, figsize=(12, 6))
+        plt.axis([None, None, 0, None])
+        
+        title_dict = {'fpr':'False Positive Rates', 'fnr':'False Negative Rates', 'pr': 'Predicted Positive Rates'}
+        title = (
+            f"{title_dict[self.metric]} across {self.attr} subgroups"
+        )
+        plt.title(title)
+
+        if save_plots:
+            self.plots[title] = plot_to_str()
 
     def run(self, x_test: DataFrame, y_test: Series, model, encoder) -> bool:
         """
         Runs test by calculating result and evaluating if it passes a defined condition.
 
-        :x_test: dataframe containing features to be inputted into the model predictions
+        :x_test: test df to be inputted into the model, before categorical features are encoded
         :y_test: array/list/series containing the truth of x_test
         :model: model object
         :encoder: one hot encoder object, to allow for permutation of the protected attribute
