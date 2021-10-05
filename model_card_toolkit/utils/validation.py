@@ -29,6 +29,7 @@ _SCHEMA_VERSIONS = frozenset(
     (
         "0.0.1",
         "0.0.2",
+        "0.0.3",
     )
 )
 _LATEST_SCHEMA_VERSION = max(_SCHEMA_VERSIONS, key=semantic_version.Version)
