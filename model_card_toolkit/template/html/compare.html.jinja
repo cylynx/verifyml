@@ -69,6 +69,59 @@
 </div>
 {% endfor %}
 {% endmacro %}
+{% macro render_test(test) %}
+<div class="col card">
+  {% if test.name %}
+  <h4> {{ test.name  }} </h4>
+  {% endif %}
+  {% if test.description %}
+  <div>
+    <b> Description: </b>
+    {{ test.description }} 
+  </div>
+  {% endif %}
+  {% if test.threshold %}
+  <div>
+    <b> Threshold: </b>
+    {{ test.threshold }} 
+  </div>
+  {% endif %}
+  {% if test.result %}
+  <div>
+    <b> Result: </b>
+    {# looks like a csv file #}
+    {% if '\n' in test.result and ',' in test.result %}
+      {{ render_results_table(test.result) }}
+    {% else %}
+      {{ test.result }} 
+    {% endif %}
+  </div>
+  {% endif %}
+  {% if test.passed == true %} 
+    <div><b style="color:green;"> Passed</b></div> 
+    {% else %}
+    <div><b style="color:red;"> Failed</b></div>
+  {% endif %}
+  {% if test.graphics.collection %}
+    {{ render_metrics_graphics(test.graphics) }}
+  {% endif %}
+</div>
+{% endmacro %}
+{% macro render_results_table(results) %}
+<table>
+{% set results_list = results.split('\n') %}
+  {% for row in results_list %}
+    {% if (row is defined) and row %}
+      <tr>
+      {% set items = row.split(',') %}
+      {% for item in items %}
+      <td>{{ item }}</td>
+      {% endfor %}
+      </tr>
+    {% endif %}
+  {% endfor %}
+</table>
+{% endmacro %}
 
 <html lang="en">
 <head>

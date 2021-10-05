@@ -319,8 +319,8 @@ class ModelCardToolkit:
         type_slice_to_reports = defaultdict(list)
 
         for r in reports:
-            if r.type is not None and r.slice is not None:
-                type_slice_to_reports[f"{r.type}{r.slice}"].append(r)
+            if r.type is not None or r.slice is not None:
+                type_slice_to_reports[f"{str(r.type)}{str(r.slice)}"].append(r)
 
         return type_slice_to_reports
 
