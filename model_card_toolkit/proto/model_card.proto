@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package third_party.py.model_card_toolkit.proto;
+package model_card_toolkit.proto;
 
 // The information about owners of a model.
 // The next tag number is 4.

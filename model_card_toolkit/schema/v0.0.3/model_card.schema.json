@@ -1,0 +1,601 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/ModelCard",
+    "definitions": {
+        "ModelCard": {
+            "properties": {
+                "model_details": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.ModelDetails",
+                    "additionalProperties": true,
+                    "description": "Descriptive metadata for the model."
+                },
+                "model_parameters": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.ModelParameters",
+                    "additionalProperties": true,
+                    "description": "Technical metadata for the model."
+                },
+                "quantitative_analysis": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.QuantitativeAnalysis",
+                    "additionalProperties": true,
+                    "description": "Quantitative analysis of model performance."
+                },
+                "considerations": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.Considerations",
+                    "additionalProperties": true,
+                    "description": "Any considerations related to model construction, training, and application"
+                },
+                "explainability_analysis": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.ExplainabilityAnalysis",
+                    "additionalProperties": true,
+                    "description": "Explainability analysis being reported."
+                },
+                "fairness_analysis": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.FairnessAnalysis",
+                    "additionalProperties": true,
+                    "description": "Fairness analysis being reported."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "Fields used to generate the Model Card.\n The next tag number is 7."
+        },
+        "model_card_toolkit.proto.Citation": {
+            "properties": {
+                "style": {
+                    "type": "string",
+                    "description": "The citation style."
+                },
+                "citation": {
+                    "type": "string",
+                    "description": "The citation content."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "A citation for the model.\n The next tag number is 3."
+        },
+        "model_card_toolkit.proto.Considerations": {
+            "properties": {
+                "users": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.User"
+                    },
+                    "type": "array",
+                    "description": "Who are the intended users of the model?"
+                },
+                "use_cases": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.UseCase"
+                    },
+                    "type": "array",
+                    "description": "What are the intended use cases of the model?"
+                },
+                "limitations": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.Limitation"
+                    },
+                    "type": "array",
+                    "description": "What are the known limitations of the model?"
+                },
+                "tradeoffs": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.Tradeoff"
+                    },
+                    "type": "array",
+                    "description": "What are the known accuracy/performance tradeoffs for the model?"
+                },
+                "ethical_considerations": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.Risk"
+                    },
+                    "type": "array",
+                    "description": "What are the ethical risks involved in application of this model?"
+                },
+                "fairness_assessment": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.FairnessAssessment"
+                    },
+                    "type": "array",
+                    "description": "How does the model affect groups at risk of being systematically disadvantaged?\n What are the harms and benefits to the various affected groups?"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "Considerations related to model construction, training, and application.\n The considerations section includes qualitative information about your model,\n including some analysis of its risks and limitations. As such, this section\n usually requires careful consideration, and conversations with many relevant\n stakeholders, including other model developers, dataset producers, and\n downstream users likely to interact with your model, or be affected by its\n outputs.\n The next tag number is 6."
+        },
+        "model_card_toolkit.proto.Dataset": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the dataset."
+                },
+                "link": {
+                    "type": "string",
+                    "description": "A link to the dataset."
+                },
+                "sensitive": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.SensitiveData",
+                    "additionalProperties": true,
+                    "description": "Does this dataset contain any human, PII, or sensitive data?"
+                },
+                "graphics": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.GraphicsCollection",
+                    "additionalProperties": true,
+                    "description": "Visualizations of the dataset."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A description of the dataset. Can describe size of dataset, whether it's\n used for training, testing, or validation, etc."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "Provide some information about a dataset used to generate a model.\n The next tag number is 6."
+        },
+        "model_card_toolkit.proto.ExplainabilityAnalysis": {
+            "properties": {
+                "explainability_reports": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.ExplainabilityReport"
+                    },
+                    "type": "array",
+                    "description": "Model explainability report e.g. feature importance, decision trees etc."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "Model explainability analysis.\n The next tag number is 2."
+        },
+        "model_card_toolkit.proto.ExplainabilityReport": {
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "The type of explainability method."
+                },
+                "slice": {
+                    "type": "string",
+                    "description": "The name of the slice the explainability method was computed on.\n By default, assume this metric is not sliced."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "User-friendly description of the explainability method."
+                },
+                "graphics": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.GraphicsCollection",
+                    "additionalProperties": true,
+                    "description": "A collection of visualizations related to the explainability method."
+                },
+                "tests": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.Test"
+                    },
+                    "type": "array",
+                    "description": "A collection of tests associated with the explainability method."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "Model explainability report.\n The next tag number is 6."
+        },
+        "model_card_toolkit.proto.FairnessAnalysis": {
+            "properties": {
+                "fairness_reports": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.FairnessReport"
+                    },
+                    "type": "array",
+                    "description": "Fairness report to evaluate the model performance on various groups."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "Model fairness analysis.\n The next tag number is 2."
+        },
+        "model_card_toolkit.proto.FairnessAssessment": {
+            "properties": {
+                "group_at_risk": {
+                    "type": "string",
+                    "description": "The groups or individuals at risk of being systematically disadvantaged by the model."
+                },
+                "benefits": {
+                    "type": "string",
+                    "description": "Expected benefits to the identified groups."
+                },
+                "harms": {
+                    "type": "string",
+                    "description": "Expected harms to the identified groups."
+                },
+                "mitigation_strategy": {
+                    "type": "string",
+                    "description": "With respect to the benefits and harms outlined, please describe any mitigation strategy implemented."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "Information about the benefits and harms of the model to an identified at risk group.\n The next tag number is 5."
+        },
+        "model_card_toolkit.proto.FairnessReport": {
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "The type of fairness study conducted."
+                },
+                "slice": {
+                    "type": "string",
+                    "description": "The name of the slice the fairness report was computed on.\n By default, assume this metric is not sliced."
+                },
+                "segment": {
+                    "type": "string",
+                    "description": "Segment of dataset which the fairness report is meant to assess.\n e.g. age, gender, age and gender, etc."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "User-friendly description of the fairness method."
+                },
+                "graphics": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.GraphicsCollection",
+                    "additionalProperties": true,
+                    "description": "A collection of visualizations related to the fairness method."
+                },
+                "tests": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.Test"
+                    },
+                    "type": "array",
+                    "description": "Tests related to fairness considerations."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "Report associated with a model fairness method.\n The next tag number is 7."
+        },
+        "model_card_toolkit.proto.Graphic": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the graphic."
+                },
+                "image": {
+                    "type": "string",
+                    "description": "The image, encoded as a base64 string."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "A named inline plot.\n The next tag number is 3."
+        },
+        "model_card_toolkit.proto.GraphicsCollection": {
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "description": "A description of the Graphics collection."
+                },
+                "collection": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.Graphic"
+                    },
+                    "type": "array",
+                    "description": "A collection of graphics."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "A collection of graphics.\n Each graphic in the collection field has both a name and an image.\n The next tag number is 3."
+        },
+        "model_card_toolkit.proto.License": {
+            "properties": {
+                "identifier": {
+                    "type": "string",
+                    "description": "A standard SPDX license identifier (https://spdx.org/licenses/), or\n \"proprietary\" for an unlicensed module."
+                },
+                "custom_text": {
+                    "type": "string",
+                    "description": "The text of a custom license."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "The next tag number is 3."
+        },
+        "model_card_toolkit.proto.Limitation": {
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "description": "A description of the limitation."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "A limitation a model."
+        },
+        "model_card_toolkit.proto.ModelDetails": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the model."
+                },
+                "overview": {
+                    "type": "string",
+                    "description": "A brief, one-line description of the model."
+                },
+                "documentation": {
+                    "type": "string",
+                    "description": "A more thorough description of the model and its usage."
+                },
+                "owners": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.Owner"
+                    },
+                    "type": "array",
+                    "description": "The individuals or teams who own the model."
+                },
+                "version": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.Version",
+                    "additionalProperties": true,
+                    "description": "The version of the model."
+                },
+                "licenses": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.License"
+                    },
+                    "type": "array",
+                    "description": "The license information for the model."
+                },
+                "references": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.Reference"
+                    },
+                    "type": "array",
+                    "description": "Provide any additional references the reader may need."
+                },
+                "citations": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.Citation"
+                    },
+                    "type": "array",
+                    "description": "How should the model be cited?"
+                },
+                "regulatory_requirements": {
+                    "type": "string",
+                    "description": "Provide any regulatory requirements that the model should comply to."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "This section provides a general, high-level description of the model.\n The next tag number is 10."
+        },
+        "model_card_toolkit.proto.ModelParameters": {
+            "properties": {
+                "model_architecture": {
+                    "type": "string",
+                    "description": "Specifies the architecture of your model."
+                },
+                "data": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.Dataset"
+                    },
+                    "type": "array",
+                    "description": "Specifies the datasets used to train and evaluate your model."
+                },
+                "input_format": {
+                    "type": "string",
+                    "description": "Describes the data format for inputs to your model."
+                },
+                "output_format": {
+                    "type": "string",
+                    "description": "Describes the data format for outputs from your model."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "Parameters for construction of the model.\n The next tag number is 5."
+        },
+        "model_card_toolkit.proto.Owner": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the model owner."
+                },
+                "contact": {
+                    "type": "string",
+                    "description": "The contact information for the model owner or owners."
+                },
+                "role": {
+                    "type": "string",
+                    "description": "The role of the person e.g. developer, owner, auditor."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "The information about owners of a model.\n The next tag number is 4."
+        },
+        "model_card_toolkit.proto.PerformanceMetric": {
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "The type of performance metric."
+                },
+                "value": {
+                    "type": "string",
+                    "description": "The value of the performance metric."
+                },
+                "slice": {
+                    "type": "string",
+                    "description": "The name of the slice this metric was computed on.\n By default, assume this metric is not sliced."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "User-friendly description of the performance metric."
+                },
+                "graphics": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.GraphicsCollection",
+                    "additionalProperties": true,
+                    "description": "A collection of visualizations related to the metric and slice."
+                },
+                "tests": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.Test"
+                    },
+                    "type": "array",
+                    "description": "A collection of tests associated with the metric."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "The details of the performance metric."
+        },
+        "model_card_toolkit.proto.QuantitativeAnalysis": {
+            "properties": {
+                "performance_metrics": {
+                    "items": {
+                        "$ref": "#/definitions/model_card_toolkit.proto.PerformanceMetric"
+                    },
+                    "type": "array",
+                    "description": "The performance metrics being reported."
+                },
+                "graphics": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.GraphicsCollection",
+                    "additionalProperties": true,
+                    "description": "A collection of visualizations of model performance.\n Retain for backward compatibility with model scorecard.\n Prefer to use GraphicsCollection within PerformanceMetric."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "The quantitative analysis of a model.\n The next tag number is 3."
+        },
+        "model_card_toolkit.proto.Reference": {
+            "properties": {
+                "reference": {
+                    "type": "string",
+                    "description": "A reference to a resource."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object"
+        },
+        "model_card_toolkit.proto.Risk": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the risk."
+                },
+                "mitigation_strategy": {
+                    "type": "string",
+                    "description": "A mitigation strategy that you've implemented, or one you suggest to users."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "Information about risks involved when using the model.\n The next tag number is 3."
+        },
+        "model_card_toolkit.proto.SensitiveData": {
+            "properties": {
+                "sensitive_data": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "A description of any sensitive data that may be present in a dataset.\n Be sure to note PII information such as names, addresses, phone numbers,\n etc. Preferably, such info should be scrubbed from a dataset if possible.\n Note that even non-identifying information, such as zip code, age, race,\n and gender, can be used to identify individuals when aggregated. Please\n describe any such fields here."
+                },
+                "sensitive_data_used": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "A list of sensitive data used in the deployed model."
+                },
+                "justification": {
+                    "type": "string",
+                    "description": "Please include a justification of the need to use the fields in deployment."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "Sensitive data, such as PII (personally-identifiable information).\n The next tag number is 4."
+        },
+        "model_card_toolkit.proto.Test": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the test."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "User-friendly description of the test."
+                },
+                "threshold": {
+                    "type": "string",
+                    "description": "Threshold required to pass the test."
+                },
+                "result": {
+                    "type": "string",
+                    "description": "Result returned by the test."
+                },
+                "passed": {
+                    "type": "boolean",
+                    "description": "Whether the model result satisfies the given threshold."
+                },
+                "graphics": {
+                    "$ref": "#/definitions/model_card_toolkit.proto.GraphicsCollection",
+                    "additionalProperties": true,
+                    "description": "A collection of visualizations related to the test."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "Information about test that is runned against the model.\n The next tag number is 7."
+        },
+        "model_card_toolkit.proto.Tradeoff": {
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "description": "A description of the tradeoff."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "A tradeoff for a model."
+        },
+        "model_card_toolkit.proto.UseCase": {
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "description": "A description of a use case."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "A type of use case for a model."
+        },
+        "model_card_toolkit.proto.User": {
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "description": "A description of a user."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "A type of user for a model."
+        },
+        "model_card_toolkit.proto.Version": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the version."
+                },
+                "date": {
+                    "type": "string",
+                    "description": "The date this version was released."
+                },
+                "diff": {
+                    "type": "string",
+                    "description": "The changes from the previous version."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "description": "The information about verions of a model.\n If there are multiple versions of the model, or there may be in the future,\n it’s useful for your audience to know which version of the model is discussed\n in the Model Card. If there are previous versions of this model, briefly\n describe how this version is different. If no more than one version of the\n model will be released, this field may be omitted.\n The next tag number is 4."
+        }
+    }
+}
