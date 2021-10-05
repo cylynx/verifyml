@@ -56,7 +56,9 @@ class SubgroupMetricThreshold(ModelTest):
         passes the maximum/mininum specified metric thresholds. Output a dataframe showing the test result of each groups.
         """
         if not self.attr in set(df_test_with_output.columns):
-            raise KeyError(f"{self.attr} column is not in given df.")
+            raise KeyError(f"Protected attribute {self.attr} column is not in given df, and ensure it is not encoded.")
+        if not {"prediction_probas", "truth"}.issubset(df_test_with_output.columns):
+            raise KeyError("df should have 'prediction_probas' and 'truth' columns.")
 
         result = {}
         self.fpr = {}

@@ -16,9 +16,9 @@ from ..utils import plot_to_str
 @dataclass
 class Permutation(ModelTest):
     """
-    Check if the difference/ratio of specified bias metric of groups within the specified protected attribute of
-    original dataset is worse than that of perturbed dataset by a specified threshold. Output a dataframe showing 
-    the test result of each groups.
+    Check if the specified bias metric of specified attribute groups of original dataset 
+    is worse than that of perturbed dataset by a specified threshold. Output a dataframe 
+    showing the test result of each groups.
     i.e. Flag male gender group if
     
         FPR of male group in original data - (or division) FPR of male group in perturbed gender data > threshold
@@ -54,10 +54,11 @@ class Permutation(ModelTest):
         metric_name = metrics[self.metric]
         default_test_desc = inspect.cleandoc(
             f"""
-           Test if the {self.method} of the {metric_name} of the subgroups of {self.attr}
-           attribute of the original dataset and the perturbed dataset exceeds the
-           threshold. To pass, this value cannot exceed the threshold.
-        """
+            Test if the {self.method} of the {metric_name} of the {self.attr} subgroups of 
+            the original dataset and the perturbed dataset exceeds the threshold. 
+            The metric for perturbed dataset will be the {"denominator" if self.method == 'ratio' else "subtrahend"}. 
+            To pass, this computed value cannot exceed the threshold.
+            """
         )
 
         self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
@@ -92,7 +93,7 @@ class Permutation(ModelTest):
         return metric_dict, size_list
 
     @staticmethod
-    def perturb_df(attr: str, df: DataFrame, encoder):
+    def perturb_df(attr: str, df: DataFrame):
         """Perturb the protected attribute column values of a given df."""
         df=df.copy()
         df[attr] = np.random.permutation(df[attr].values)
@@ -115,7 +116,7 @@ class Permutation(ModelTest):
         self, x_test: DataFrame, y_test: Series, model, encoder
     ):
         """Get metric dict for perturbed dataset."""
-        df_perturbed = self.perturb_df(self.attr, x_test, encoder)
+        df_perturbed = self.perturb_df(self.attr, x_test)
         df_perturbed = self.add_predictions_to_df(df_perturbed, model, encoder)
         df_perturbed["truth"] = y_test
 
@@ -130,6 +131,9 @@ class Permutation(ModelTest):
         Calculate test result. Compare the original vs perturbed metric
         dicts and output the attribute groups that failed the test.
         """
+        if not self.attr in set(x_test.columns):
+            raise KeyError(f"Protected attribute {self.attr} column is not in given df, and ensure it is not encoded.")
+        
         md_original = self.get_metric_dict_original(x_test, y_test, model, encoder)
         md_perturbed = self.get_metric_dict_perturbed(x_test, y_test, model, encoder)
 
@@ -184,10 +188,10 @@ class Permutation(ModelTest):
         """
         Runs test by calculating result and evaluating if it passes a defined condition.
 
-        :x_test: test df to be inputted into the model, before categorical features are encoded
+        :x_test: test df to be inputted into the model, protected attributes not to be encoded
         :y_test: array/list/series containing the truth of x_test
         :model: model object
-        :encoder: one hot encoder object, to allow for permutation of the protected attribute
+        :encoder: one hot encoder object for protected attributes, must contain transform() function 
         """
         self.result = self.get_result(x_test, y_test, model, encoder)
         self.passed = False if False in list(self.result.passed) else True

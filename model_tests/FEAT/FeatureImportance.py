@@ -27,10 +27,10 @@ class FeatureImportance(ModelTest):
     def __post_init__(self):
         default_test_desc = inspect.cleandoc(
             f"""
-           Test if the subgroups of the protected attributes are the top ranking important
-           variables. To pass, subgroups should not be ranked in the top {self.threshold} 
-           features.
-        """
+            Test if the subgroups of the protected attributes are the top ranking important
+            variables. To pass, subgroups should not be ranked in the top {self.threshold} 
+            features.
+            """
         )
 
         self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
@@ -58,8 +58,11 @@ class FeatureImportance(ModelTest):
         Output the protected attributes that are listed in the top specified number of the features,
         using feature importance values inputted by the user.
 
-        :df_importance: A dataframe with 2 columns - first column of feature names and second column of importance values
+        :df_importance: A dataframe with 2 columns - first column with feature names and second column with importance values
         """
+        if df_importance.shape[1] != 2:
+            raise AttributeError(f"There should be 2 columns in the dataframe - first column with feature names and second column with importance values")
+            
         df_importance_sorted = df_importance.sort_values(
             df_importance.columns[1], ascending=False
         ).set_index(df_importance.columns[0])

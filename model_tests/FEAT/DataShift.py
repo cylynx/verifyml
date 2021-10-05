@@ -33,9 +33,8 @@ class DataShift(ModelTest):
         if self.method == "chi2":
             pass_desc = f"""
                         To pass, the p-value have to be greater than the significance 
-                        level of chi-square test of independence between the type of data 
-                        (training and evaluation) and the attribute distribution, as specified 
-                        by the threshold argument.
+                        level of chi-square test of independence between the datasets 
+                        and the attribute distribution, as specified by the threshold argument.
                         """
         else:
             pass_desc = f"""
@@ -45,8 +44,7 @@ class DataShift(ModelTest):
             
         default_test_desc = inspect.cleandoc(
             f"""
-            Test if there is any shift in the distribution of the subgroups of the protected
-            features. {pass_desc}
+            Test if there is any shift in the distribution of the attribute subgroups across the different datasets. {pass_desc}
             """
         )
 
@@ -73,11 +71,13 @@ class DataShift(ModelTest):
         :x_train: training data features, protected features should not be encoded 
         :x_test: data to be evaluated on, protected features should not be encoded 
         """
+        if (not set(self.protected_attr).issubset(x_train.columns)) or (not set(self.protected_attr).issubset(x_test.columns)):
+            raise KeyError(f"Protected attribute columns {set(self.protected_attr)} are not in given df, and ensure they are not encoded.")
+            
         result = pd.DataFrame()
-
         for pa in self.protected_attr:
-            train_dist = pd.DataFrame(self.get_df_distribution_by_pa(x_train, pa))
-            eval_dist = pd.DataFrame(self.get_df_distribution_by_pa(x_test, pa))
+            train_dist = pd.DataFrame(self.get_df_distribution_by_pa(x_train, pa, False))
+            eval_dist = pd.DataFrame(self.get_df_distribution_by_pa(x_test, pa, False))
   
             df_dist=pd.concat([train_dist,eval_dist],axis=1)
             df_dist.columns = ['training_distribution', 'eval_distribution']
@@ -135,7 +135,7 @@ class DataShift(ModelTest):
             train_ci = list(df_plot['training_distribution'].apply(lambda x: z_value*(x*(1-x)/self.df_size[0])**0.5))
             eval_ci = list(df_plot['eval_distribution'].apply(lambda x: z_value*(x*(1-x)/self.df_size[1])**0.5))
             
-            df_plot.plot.bar(yerr=[train_ci, eval_ci], rot=0, ax=axs[num])
+            df_plot.plot.bar(yerr=[train_ci, eval_ci], rot=0, ax=axs[num], title=pa)
             num+=1
 
         title = (

@@ -144,7 +144,9 @@ class SubgroupDisparity(ModelTest):
         :df_test_with_output: dataframe containing protected attributes with "prediction" and "truth" column
         """
         if not {"prediction", "truth"}.issubset(df_test_with_output.columns):
-            raise ValueError("df should have 'prediction' and 'truth' columns.")
+            raise KeyError("df should have 'prediction' and 'truth' columns.")
+        if not self.attr in set(df_test_with_output.columns):
+            raise KeyError(f"Protected attribute {self.attr} column is not in given df, and ensure it is not encoded.")
 
         self.metric_dict, self.size_list = self.get_metric_dict(df_test_with_output)
         table = self.get_contingency_table(df_test_with_output)

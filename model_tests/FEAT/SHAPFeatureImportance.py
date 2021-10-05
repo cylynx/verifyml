@@ -76,6 +76,9 @@ class SHAPFeatureImportance(ModelTest):
         Output the protected attributes that are listed in the top specified % of the features influencing the predictions
         , using aggregated shapely values.
         """
+        if ('object' in list(x_train_encoded.dtypes)) or ('object' in list(x_test_encoded.dtypes)):
+            raise AttributeError(f"Categorical features have to be encoded.")
+        
         shap_values = self.get_shap_values(model, model_type, x_train_encoded, x_test_encoded)
 
         # Take the mean of the absolute of the shapely values to get the aggretated importance for each features
