@@ -29,7 +29,6 @@ from typing import Any, Dict, List, Optional
 from .base_model_card_field import BaseModelCardField
 from .proto import model_card_pb2
 from .utils import validation
-from model_tests import ModelTest
 
 _SCHEMA_VERSION_STRING = "schema_version"
 
@@ -311,7 +310,7 @@ class Test(BaseModelCardField):
 
     _proto_type: dataclasses.InitVar[type(model_card_pb2.Test)] = model_card_pb2.Test
 
-    def read_model_test(self, model_test: ModelTest) -> None:
+    def read_model_test(self, model_test) -> None:
         self.name = model_test.test_name
         self.description = model_test.test_desc
         self.threshold = str(getattr(model_test, "threshold", None))

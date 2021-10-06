@@ -3,7 +3,7 @@
 - Set version number and configs in `setup.cfg`
 
 ```bash
-pip install --upgrade setuptools
+pip install --upgrade setuptools build twine
 
 # build package files
 python -m build
