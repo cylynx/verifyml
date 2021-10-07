@@ -20,14 +20,14 @@
   </div>
 {% endmacro %}
 {% macro render_graphics(graphics) %}
-  <div class="img-container">
   {% if graphics.description %}<p>{{ graphics.description }}</p>{% endif %}
   {% for graph in graphics %}
+  <div class="img-container">
     <div class="img-item">
       <img src='data:image/jpeg;base64,{{ graph.image }}' alt='{{ graph.name }}' />
     </div>
-  {% endfor %}
   </div>
+  {% endfor %}
 {% endmacro %}
 {% macro render_report(report) %}
 <div class="col card">
@@ -153,6 +153,9 @@
   }
   .img-item {
     flex: 1;
+  }
+  img {
+    max-width: 100%
   }
   .center {
     margin-left: auto;
