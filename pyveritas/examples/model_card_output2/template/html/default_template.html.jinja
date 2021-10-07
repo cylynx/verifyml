@@ -119,7 +119,13 @@
 {% endmacro %}
 {% macro render_report(report) %}
 <div class="col card">
-  <h3>{{ report.type }} {% if report.value %}- {{ report.value }}{% endif %} {% if report.slice %}({{ report.slice }}){% endif %}</h3>
+  <h3>{{ report.type }} {% if report.value %}- {{ report.value }}{% endif %}</h3>
+  {% if report.slice %}
+  <div>
+    <b> Slice: </b>
+    {{ report.slice }} 
+  </div>
+  {% endif %}
   {% if report.segment %}
   <div>
     <b> Segment: </b>
@@ -227,9 +233,9 @@
     margin: 10px;
   }
   .card .card {
-    padding: 0.5em;
-    padding-bottom: 0em;
+    padding: 1em;
     border: none;
+    margin: 10px;
   }
   .img-container {
     display: flex;
