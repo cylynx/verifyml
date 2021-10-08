@@ -86,10 +86,7 @@ __Result:__
 {% endmacro %}
 
 {% macro render_report(report) %}
-### {{ report.type }} {% if report.value %}- {{ report.value }}{% endif %}
-  {% if report.slice %}
-__Slice:__ {{ report.slice }} 
-  {% endif %}
+### {{ report.type }} {% if report.value %}- {{ report.value }}{% endif %}{% if report.slice %}({{ report.slice }}){% endif %}
   {% if report.segment %}
 __Segment:__ {{ report.segment }} 
   {% endif %}
