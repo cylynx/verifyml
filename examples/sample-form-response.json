@@ -256,7 +256,7 @@
         "key": "question_nrDXrR",
         "label": "Description of fairness analysis",
         "type": "TEXTAREA",
-        "value": "False positive rate for the credit scoring model should be below 2% which is the existing average false positive rate of the rule based model"
+        "value": "False positive rate for the credit scoring model should be below 2.5% which is the existing average false positive rate of the rule based model"
       },
       {
         "key": "question_w4aZNY",
