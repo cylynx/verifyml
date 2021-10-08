@@ -11,7 +11,7 @@ from ..utils import plot_to_str
 
 
 @dataclass
-class SubgroupMetricThreshold(ModelTest):
+class MinMaxMetricThreshold(ModelTest):
     """
     Test if at the current probability thresholds, for a particular attribute, the fpr/tpr of its groups
     passes the maximum/mininum specified metric thresholds. Output a dataframe showing the test result of each groups.
@@ -28,7 +28,7 @@ class SubgroupMetricThreshold(ModelTest):
     threshold: float
     proba_thresholds: dict = None
     plots: dict[str, str] = field(repr=False, default_factory=dict)
-    test_name: str = "ROC/Threshold Test"
+    test_name: str = "ROC/Min Max Threshold Test"
     test_desc: str = None
 
     def __post_init__(self):

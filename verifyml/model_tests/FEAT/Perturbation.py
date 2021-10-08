@@ -14,7 +14,7 @@ from ..utils import plot_to_str
 
 
 @dataclass
-class Permutation(ModelTest):
+class Perturbation(ModelTest):
     """
     Check if the specified bias metric of specified attribute groups of original dataset 
     is worse than that of perturbed dataset by a specified threshold. Output a dataframe 
@@ -35,7 +35,7 @@ class Permutation(ModelTest):
     method: str
     threshold: float
     plots: dict[str, str] = field(repr=False, default_factory=dict)
-    test_name: str = "Subgroup Permutation Test"
+    test_name: str = "Subgroup Perturbation Test"
     test_desc: str = None
 
     def __post_init__(self):
