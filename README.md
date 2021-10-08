@@ -4,13 +4,13 @@ VerifyML is an opinionated, open-source toolkit and workflow to help companies i
 
 - A git and code first approach to model development and maintenance.
 - Automatic generation of model cards - machine learning documents that provide context and transparency into a model's development and performance.
-- Model tests for validating performance of models across protected groups of interests, during developing and in production.
+- Model tests for validating performance of models across protected groups of interest, during development and in production.
 
 ## Workflow
 
 ![](verifyml-workflow.png)
 
-The VerifyML workflow starts from model conceptualization, to model building and deployment. In a typical data science workflow, a model is typically developed by a data scientist with inputs from the business team. This means that typically a model serves to maximise the business objective without considerations of side effects, differential benefits and harms across groups, and performance degradation over time.
+The VerifyML workflow starts from model conceptualization, to model building and deployment. In a typical data science workflow, a model is developed by a data scientist with inputs from the business team. The model optimizes for business objectives without considerations of side effects, differential benefits and harms across groups, and performance degradation over time.
 
 The VerifyML workflow introduces these concepts and trade-offs as part of the model lifecycle. By bringing these questions to the fore, teams gain the following benefits:
 
@@ -18,7 +18,7 @@ The VerifyML workflow introduces these concepts and trade-offs as part of the mo
 - Faster alignment across model builders, product owners and internal auditors
 - Oversight and accountability
 
-These qualitative inputs then get translated to code (where possible) and act as modelling constraints or considerations. The model card captures and logs artifacts relevant in the model development phase and allow such information to be easy shared across the organization.  
+These qualitative inputs then get translated to code (where possible) and act as modelling constraints or considerations. The model card captures and logs artifacts relevant in the model development phase and allow such information to be easily shared across the organization.  
 
 Tests relating to performance or fairness can also be included to ensure that the model meets the desired objective. This can be added to a CI/CD process where such tests are run on a regular basis to ensure that there is no unexpected drift in performance.
 
@@ -99,7 +99,7 @@ python -m twine upload --repository testpypi dist/*
 
 ## Prior Art
 
-The model card in VeriyML is adpated from Google's [Model Card Toolkit](https://github.com/tensorflow/model-card-toolkit). It is backward compatible with v0.0.2 and expands on it by adding sections on explainability and fairness.  
+The model card in VerifyML is adapted from Google's [Model Card Toolkit](https://github.com/tensorflow/model-card-toolkit). It is backward compatible with v0.0.2 and expands on it by adding sections on explainability and fairness.  
 
 ## References
 
