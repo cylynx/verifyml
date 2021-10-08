@@ -274,7 +274,7 @@
         "key": "question_w2j2x9",
         "label": "Description of fairness analysis 2",
         "type": "TEXTAREA",
-        "value": "Disparity ratio of false positive rates of any 2 bins in the respective attribute should not be more than a factor of 1.25"
+        "value": "Disparity ratio of false positive rates of any 2 bins in the respective attribute should not be more than a factor of 1.5"
       },
       {
         "key": "question_3xVGN5",
