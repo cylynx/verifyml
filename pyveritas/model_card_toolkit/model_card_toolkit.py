@@ -191,9 +191,7 @@ class ModelCardToolkit:
             model_card = self._read_proto_file(path)
         # If proto, bootstrap model card from proto
         elif proto:
-            model_card_proto = model_card_pb2.ModelCard()
-            model_card_proto.ParseFromString(proto)
-            model_card = ModelCard().copy_from_proto(model_card_proto)
+            model_card = ModelCard()._from_proto(proto)
         else:
             model_card = ModelCard()
 

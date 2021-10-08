@@ -202,4 +202,4 @@ def tally_form_to_mc(form_path: str):
             )
         )
 
-    return mc.to_proto().SerializeToString()
+    return mc.to_proto()
