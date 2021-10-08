@@ -1,5 +1,6 @@
 import json
-import model_card_toolkit as mctlib
+from .. import model_card_toolkit as mct
+from .. import model_card
 from typing import List, Union
 
 
@@ -46,26 +47,26 @@ def tally_form_to_mc(form_path: str):
 
     res = json.loads(data)
     questions = res["data"]["fields"]
-    mc = mctlib.ModelCard()
+    mc = mct.ModelCard()
 
     ## Parse model details
     mc.model_details.name = get_answer(questions, "Name")
     mc.model_details.overview = get_answer(questions, "Overview")
     mc.considerations.users = [
-        mctlib.User(description=get_answer(questions, "Intended Users"))
+        model_card.User(description=get_answer(questions, "Intended Users"))
     ]
     mc.considerations.use_cases = [
-        mctlib.UseCase(description=get_answer(questions, "Intended Use Cases"))
+        model_card.UseCase(description=get_answer(questions, "Intended Use Cases"))
     ]
-    mc.model_details.version = mctlib.Version(name=get_answer(questions, "Version"))
+    mc.model_details.version = model_card.Version(name=get_answer(questions, "Version"))
     mc.model_details.owners = [
-        mctlib.Owner(
+        model_card.Owner(
             name=get_answer(questions, "Product Owner(s)"), role="Product Owner(s)"
         ),
-        mctlib.Owner(
+        model_card.Owner(
             name=get_answer(questions, "Model Developer(s)"), role="Model Developer(s)"
         ),
-        mctlib.Owner(name=get_answer(questions, "Reviewer(s)"), role="Reviewer(s)"),
+        model_card.Owner(name=get_answer(questions, "Reviewer(s)"), role="Reviewer(s)"),
     ]
     mc.model_details.regulatory_requirements = " ".join(
         get_answer(
@@ -76,10 +77,10 @@ def tally_form_to_mc(form_path: str):
 
     # Parse data
     mc.model_parameters.data = [
-        mctlib.Dataset(
+        model_card.Dataset(
             name=get_answer(questions, "Name of dataset"),
             description=get_answer(questions, "Description of dataset"),
-            sensitive=mctlib.SensitiveData(
+            sensitive=model_card.SensitiveData(
                 sensitive_data=str_to_list(
                     get_answer(questions, "Protected attributes in dataset")
                 ),
@@ -95,10 +96,10 @@ def tally_form_to_mc(form_path: str):
 
     if get_answer(questions, "Name of dataset 2"):
         mc.model_parameters.data.append(
-            mctlib.Dataset(
+            model_card.Dataset(
                 name=get_answer(questions, "Name of dataset 2"),
                 description=get_answer(questions, "Description of dataset 2"),
-                sensitive=mctlib.SensitiveData(
+                sensitive=model_card.SensitiveData(
                     sensitive_data=str_to_list(
                         get_answer(questions, "Protected attributes in dataset 2")
                     ),
@@ -117,10 +118,10 @@ def tally_form_to_mc(form_path: str):
 
     if get_answer(questions, "Name of dataset 3"):
         mc.model_parameters.data.append(
-            mctlib.Dataset(
+            model_card.Dataset(
                 name=get_answer(questions, "Name of dataset 3"),
                 description=get_answer(questions, "Description of dataset 3"),
-                sensitive=mctlib.SensitiveData(
+                sensitive=model_card.SensitiveData(
                     sensitive_data=str_to_list(
                         get_answer(questions, "Protected attributes in dataset 3")
                     ),
@@ -139,7 +140,7 @@ def tally_form_to_mc(form_path: str):
 
     ## Quantitative analysis
     mc.quantitative_analysis.performance_metrics = [
-        mctlib.PerformanceMetric(
+        model_card.PerformanceMetric(
             type=get_answer(
                 questions,
                 "What is the key metric used in evaluating the model's performance?",
@@ -149,21 +150,21 @@ def tally_form_to_mc(form_path: str):
 
     if get_answer(questions, "2nd metric (if applicable)"):
         mc.quantitative_analysis.performance_metrics.append(
-            mctlib.PerformanceMetric(
+            model_card.PerformanceMetric(
                 type=get_answer(questions, "2nd metric (if applicable)"),
             )
         )
 
     if get_answer(questions, "3rd metric (if applicable)"):
         mc.quantitative_analysis.performance_metrics.append(
-            mctlib.PerformanceMetric(
+            model_card.PerformanceMetric(
                 type=get_answer(questions, "3rd metric (if applicable)"),
             )
         )
 
     ## Fairness consideration
     mc.considerations.fairness_assessment = [
-        mctlib.FairnessAssessment(
+        model_card.FairnessAssessment(
             group_at_risk=get_answer(
                 questions,
                 "Who are the individuals and groups that are considered to be at-risk of being systematically disadvantaged by the system?",
@@ -176,7 +177,7 @@ def tally_form_to_mc(form_path: str):
 
     ## Fairness analysis
     mc.fairness_analysis.fairness_reports = [
-        mctlib.FairnessReport(
+        model_card.FairnessReport(
             type=get_answer(questions, "Type of fairness analysis conducted"),
             segment=get_answer(questions, "Segment of analysis"),
             description=get_answer(questions, "Description of fairness analysis"),
@@ -185,7 +186,7 @@ def tally_form_to_mc(form_path: str):
 
     if get_answer(questions, "Type of fairness analysis conducted 2"):
         mc.fairness_analysis.fairness_reports.append(
-            mctlib.FairnessReport(
+            model_card.FairnessReport(
                 type=get_answer(questions, "Type of fairness analysis conducted 2"),
                 segment=get_answer(questions, "Segment of analysis 2"),
                 description=get_answer(questions, "Description of fairness analysis 2"),
@@ -194,11 +195,11 @@ def tally_form_to_mc(form_path: str):
 
     if get_answer(questions, "Type of fairness analysis conducted 3"):
         mc.fairness_analysis.fairness_reports.append(
-            mctlib.FairnessReport(
+            model_card.FairnessReport(
                 type=get_answer(questions, "Type of fairness analysis conducted 3"),
                 segment=get_answer(questions, "Segment of analysis 3"),
                 description=get_answer(questions, "Description of fairness analysis 3"),
             )
         )
 
-    return mc.to_proto().SerializeToString()
+    return mc.to_proto()
