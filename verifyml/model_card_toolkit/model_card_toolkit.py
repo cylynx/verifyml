@@ -348,7 +348,7 @@ class ModelCardToolkit:
 
         return common_reports
 
-    def compare_model_cards(self, card_a: ModelCard, card_b: ModelCard) -> Text:
+    def compare_model_cards(self, card_a: ModelCard, card_b: ModelCard, export_path: str = None) -> Text:
         """Compare reports across given model cards A and B and render them side by side.
         Only reports that have the same type and slice will be compared."""
 
@@ -383,6 +383,11 @@ class ModelCardToolkit:
                 common_reports_er=common_reports_combined["er"],
                 common_reports_fr=common_reports_combined["fr"],
             )
+
+            # write to html file if export path is specified
+            if export_path is not None:
+                with open(export_path, "w") as html_file:
+                    html_file.write(comparison_card)
 
             return comparison_card
         else:
