@@ -200,7 +200,9 @@ class ModelCardToolkit:
 
         # Write UI template files.
         for template_path in _UI_TEMPLATES:
-            template_content = pkgutil.get_data("verifyml.model_card_toolkit", template_path)
+            template_content = pkgutil.get_data(
+                "verifyml.model_card_toolkit", template_path
+            )
             if template_content is None:
                 raise FileNotFoundError(f"Cannot find file: '{template_path}'")
             template_content = template_content.decode("utf8")
@@ -346,9 +348,19 @@ class ModelCardToolkit:
         for list_of_report_tuples in common_reports_dict.values():
             common_reports += list_of_report_tuples
 
-        return common_reports
+        # ideal order: train-recall, train-precision, test-recall, test-precision
+        # each list element is a tuple of (report A, report B)
+        return sorted(
+            common_reports,
+            key=lambda x: (
+                0 if x[0].slice is not None and "train" in x[0].slice.lower() else 1,
+                0 if x[0].type is not None and "recall" in x[0].type.lower() else 1,
+            ),
+        )
 
-    def compare_model_cards(self, card_a: ModelCard, card_b: ModelCard, export_path: str = None) -> Text:
+    def compare_model_cards(
+        self, card_a: ModelCard, card_b: ModelCard, export_path: str = None
+    ) -> Text:
         """Compare reports across given model cards A and B and render them side by side.
         Only reports that have the same type and slice will be compared."""
 
