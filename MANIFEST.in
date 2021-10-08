@@ -1,6 +1,6 @@
-graft pyveritas
+graft verifyml
 global-exclude *.pyc
-prune pyveritas/model_card_toolkit/template/html/test/
-prune pyveritas/model_card_toolkit/template/md/test/
-prune pyveritas/model_card_toolkit/template/test/
-prune pyveritas/model_card_toolkit/utils/testdata/
+prune verifyml/model_card_toolkit/template/html/test/
+prune verifyml/model_card_toolkit/template/md/test/
+prune verifyml/model_card_toolkit/template/test/
+prune verifyml/model_card_toolkit/utils/testdata/
