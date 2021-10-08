@@ -202,7 +202,7 @@ class ModelCardToolkit:
 
         # Write UI template files.
         for template_path in _UI_TEMPLATES:
-            template_content = pkgutil.get_data("model_card_toolkit", template_path)
+            template_content = pkgutil.get_data("pyveritas.model_card_toolkit", template_path)
             if template_content is None:
                 raise FileNotFoundError(f"Cannot find file: '{template_path}'")
             template_content = template_content.decode("utf8")
