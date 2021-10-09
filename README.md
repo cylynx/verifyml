@@ -27,6 +27,7 @@ Tests relating to performance or fairness can also be included to ensure that th
 The Model Card Toolkit is hosted on [PyPI](https://pypi.org/project/verifyml/), and can be installed with `pip install verifyml`.
 
 ## Getting Started
+
 ### Generate a model card
 
 You can bootstrap a model card with our [tally web form](https://tally.so/r/mR4Nlw) or generate it with the python toolkit:
@@ -55,7 +56,28 @@ model_card.model_parameters.data[0].graphics.collection = [
 ]
 ```
 
-### Add test cases
+### Save and export to html
+
+```py
+html = mct.export_format(output_file="example.html")
+display.display(display.HTML(html))
+```
+
+## Model Tests
+
+Model tests provides an out of the box way to conduct checks and analysis on performance, explainability and fairness. The tests included in VerifyML are atomic functions that can be imported and run without a model card. However, by using it with a model card, it provides a way to standardize objectives and check for intended or unintended model biases. It also automates documentation and renders the insights to a business friendly report.
+
+Currently, VerifyML provides 5 classes of tests:
+
+1) __Subgroup Disparity Test__ - For a given metric, assert that the difference between the best and worst performing group is less than a specified threshold
+2) __Min/Max Metric Threshold Test__ - For a given metric, assert that all groups should be below / above a specified threshold
+3) __Perturbation Test__ - Assert that a given metric does not change significantly after perturbing on a specified input variable
+4) __Feature Importance Test__ - Assert that certain specified variables are not included as the top n most important features  
+5) __Data Shift Test__ - Assert that the distributions of specified attributes are similar across two given datasets of interest
+
+The detailed [model tests readme](/verifyml/model_tests/README.md) contains more information on the tests.
+
+### Example usage
 
 ```py
 from verifyml.model_tests.FEAT import SubgroupDisparity
@@ -66,36 +88,25 @@ sgd_test.run(output) # test data with prediction results
 sgd_test.plot(alpha=0.05)
 ```
 
-### Save and export to html
+### Adding the test to the model card
 
 ```py
-html = mct.export_format(output_file="example.html")
-display.display(display.HTML(html))
+import verifyml.model_card_toolkit as mctlib
+
+mc_sgd_test = mctlib.Test()
+mc_sgd_test.read_model_test(sgd_test)
+model_card.fairness_analysis.fairness_reports[0].tests = [mc_smt_test]
 ```
-
-## FEAT Tests
-
-Add section on the variety of FEAT tests
 
 ## Schema
 
-Model cards are stored as a protobuf format. You can see the model card protobuf schema in the [proto directory](verifyml/model_card_toolkit/proto). A translated copy in json schema format is also made available for convenience in the [schema folder](verifyml/model_card_toolkit/schema)
+Model cards are stored as a protobuf format. The reference model card protobuf schema can be found in the [proto directory](verifyml/model_card_toolkit/proto/model_card.proto). A translated copy in json schema format is also made available for convenience in the [schema folder](verifyml/model_card_toolkit/schema)
 
-## Development
+## Contributions and Development
 
-### Publishing to PyPI
+Contributions are always welcome - check out [CONTRIBUTING.md](CONTRIBUTING.md)
 
-- Set version number and configs in `setup.cfg`
-
-```bash
-pip install --upgrade setuptools build twine
-
-# build package files
-python -m build
-
-# upload to testpypi
-python -m twine upload --repository testpypi dist/*
-```
+The package and it's functionalities can be easily extended to meet the needs of a team. Check out [DEVELOPMENT.md](DEVELOPMENT.md) for more info.
 
 ## Prior Art
 
