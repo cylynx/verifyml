@@ -26,7 +26,7 @@ use GitHub pull requests for this purpose. Consult
 information on using pull requests.
 
 ## License
-By contributing, you agree that your contributions will be licensed under its MIT License.
+By contributing, you agree that your contributions will be licensed under its Apache License.
 
 ## Code of Conduct
 
