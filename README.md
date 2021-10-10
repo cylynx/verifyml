@@ -104,9 +104,9 @@ Model cards are stored as a protobuf format. The reference model card protobuf s
 
 ## Contributions and Development
 
-Contributions are always welcome - check out [CONTRIBUTING.md](CONTRIBUTING.md)
+Contributions are always welcome - check out [CONTRIBUTING](CONTRIBUTING.md)
 
-The package and it's functionalities can be easily extended to meet the needs of a team. Check out [DEVELOPMENT.md](DEVELOPMENT.md) for more info.
+The package and it's functionalities can be easily extended to meet the needs of a team. Check out [DEVELOPMENT](DEVELOPMENT.md) for more info.
 
 ## Prior Art
 
@@ -116,3 +116,6 @@ The model card in VerifyML is adapted from Google's [Model Card Toolkit](https:/
 
 [1] https://arxiv.org/abs/1810.03993
 
+## License
+
+VerifyML is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE.md) for the full license text.
