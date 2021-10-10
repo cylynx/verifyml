@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 from dataclasses import dataclass, field
+from typing import Literal
 import inspect
 import matplotlib.pyplot as plt
 import numpy as np
@@ -26,19 +27,29 @@ from ..utils import plot_to_str
 
 @dataclass
 class MinMaxMetricThreshold(ModelTest):
-    """
-    Test if at the current probability thresholds, for a particular attribute, the fpr/tpr of its groups
-    passes the maximum/mininum specified metric thresholds. Output a dataframe showing the test result of each groups.
+    """Test if all the subgroups for a given attribute meets a certain level of expected,
+    performance. If fpr / fnr is used as a metric, they have to be lower than the threshold.
+    If tpr / tnr is used as a metric, they have to be greater than the threshold.
 
-    :attr: protected attribute
-    :metric: choose from ['fpr','tpr', 'fnr', 'tnr']
-    :threshold: To pass, fpr/fnr has to be lower than the threshold or tpr/tnr has to be greater than the thresholds specified
-    :proba_thresholds: optional argument. dictionary object with keys as the attribute groups and the values as the thresholds
-                       for the output to be classified as 1, default input will set thresholds of each group to be 0.5
+    The test also stores a dataframe showing the results of each groups and ROC curve plots
+    for every subgroup along with the points which maximises tpr-fpr.
+
+    Args:
+      attr: Column name of the protected attribute.
+      metric: Type of performance metric for the test, choose from 'fpr' - false positive rate,
+        'tpr' - true positive rate, 'fnr' - false negative rate, 'tnr' - true negative rate.
+      threshold: Threshold for the test. To pass, fpr / fnr has to be lower than the threshold or tpr/tnr
+        has to be greater than the threshold.
+      proba_thresholds: An optional dictionary object with keys as the attribute groups and the values
+        as the thresholds for the output to be classified as 1. By default the thresholds for each group
+        is assumed to be 0.5.
+      test_name: Name of the test, default is 'ROC/Min Max Threshold Test'.
+      test_desc: Description of the test. If none is provided, an automatic description
+         will be generated based on the rest of the arguments passed in.
     """
 
     attr: str
-    metric: str
+    metric: Literal["fpr", "tpr", "fnr", "tnr"]
     threshold: float
     proba_thresholds: dict = None
     plots: dict[str, str] = field(repr=False, default_factory=dict)
@@ -52,25 +63,32 @@ class MinMaxMetricThreshold(ModelTest):
         if self.metric in ["tpr", "tnr"]:
             req = "higher"
         if self.metric not in metrics:
-            raise AttributeError(f"metric should be one of {metrics}.")
+            raise ValueError(f"metric should be one of {metrics}.")
 
         default_test_desc = inspect.cleandoc(
             f"""
-           Test if the groups within {self.attr} attribute passes the {self.metric} threshold.
-           To pass, {self.metric} has to be {req} than the threshold specified. Also, mark the optimal points that maximises the AUC
-           value for each group.
-        """
+           Test if the {self.metric} of the subgroups within {self.attr} 
+           is {req} than the threshold of {self.metric}.
+            """
         )
-
         self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
 
-    def get_result(self, df_test_with_output) -> any:
-        """
-        Test if at the current probability thresholds, for a particular attribute, the fpr/tpr of its groups
-        passes the maximum/mininum specified metric thresholds. Output a dataframe showing the test result of each groups.
+    def get_result(self, df_test_with_output: pd.DataFrame) -> pd.DataFrame:
+        """Test if at the current probability thresholds, for a particular
+        attribute, the fpr/tpr of its groups passes the maximum/mininum
+        specified metric thresholds.
+
+        Args:
+          df_test_with_output: Dataframe containing protected attributes with
+            "prediction_probas" and "truth" column.
+        
+        Returns:
+          Dataframe with the results of each group.
         """
         if not self.attr in set(df_test_with_output.columns):
-            raise KeyError(f"Protected attribute {self.attr} column is not in given df, and ensure it is not encoded.")
+            raise KeyError(
+                f"Protected attribute {self.attr} column is not in given df, or is not encoded."
+            )
         if not {"prediction_probas", "truth"}.issubset(df_test_with_output.columns):
             raise KeyError("df should have 'prediction_probas' and 'truth' columns.")
 
@@ -132,8 +150,11 @@ class MinMaxMetricThreshold(ModelTest):
         return result
 
     def plot(self, save_plots: bool = True):
-        """Plots ROC curve for every group in the attribute, also mark the points of optimal probability threshold,
-        which maximises tpr-fpr.
+        """Plots ROC curve for every group in the attribute and mark the
+        optimal probability threshold, the point which maximises tpr-fpr.
+
+        Args:
+          save_plots: If True, saves the plots to the class instance.
         """
         if self.result is None:
             raise AttributeError("Cannot plot before obtaining results.")
@@ -224,12 +245,14 @@ class MinMaxMetricThreshold(ModelTest):
         if save_plots:
             self.plots[title] = plot_to_str()
 
-    def run(self, df_test_with_output) -> bool:
-        """
-        Runs test by calculating result and evaluating if it passes a defined condition.
+    def run(self, df_test_with_output: pd.DataFrame) -> bool:
+        """Runs test by calculating result and evaluating if it passes a defined
+        condition.
 
-        :df_test_with_output: evaluation set dataframe containing protected attributes with 'prediction_probas' and 'truth' columns,
-                              protected attribute should not be encoded
+        Args:
+          df_test_with_output: Dataframe containing protected attributes with
+            "prediction_probas" and "truth" column. protected attribute should
+             not be encoded.
         """
         self.result = self.get_result(df_test_with_output)
         self.passed = False if False in list(self.result.passed) else True

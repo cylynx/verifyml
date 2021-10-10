@@ -24,12 +24,12 @@ from ..utils import plot_to_str
 
 @dataclass
 class FeatureImportance(ModelTest):
-    """
-    Ouput a dataframe consisting of protected attributes and its respective ranking based on user-inputted feature importance values.
-    To pass, subgroups of protected attributes should not fall in the top n most important variables.
+    """Ouput a dataframe consisting of protected attributes and its respective
+    ranking based on user-inputted feature importance values. To pass, subgroups
+    of protected attributes should not fall in the top n most important
+    variables.
 
-    :attrs: protected attributes
-    :threshold: the top n features to be specified
+    :attrs: protected attributes :threshold: the top n features to be specified
     """
 
     attrs: list[str]
@@ -41,18 +41,18 @@ class FeatureImportance(ModelTest):
     def __post_init__(self):
         default_test_desc = inspect.cleandoc(
             f"""
-            Test if the subgroups of the protected attributes are the top ranking important
-            variables. To pass, subgroups should not be ranked in the top {self.threshold} 
-            features.
+            Test if the subgroups of the protected attributes are the top
+            ranking important variables. To pass, subgroups should not be ranked
+            in the top {self.threshold} features.
             """
         )
 
         self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
 
     def plot(self, df: DataFrame, show_n: int = 10, save_plots: bool = True):
-        """
-        :df: A dataframe with 2 columns - first column of feature names and second column of importance values
-        :show_n: Show the top n important features on the plot
+        """:df: A dataframe with 2 columns - first column of feature names and
+        second column of importance values :show_n: Show the top n important
+        features on the plot
         """
         title = "Feature Importance Plot"
         df_sorted = df.sort_values(df.columns[1], ascending=False)
@@ -68,22 +68,25 @@ class FeatureImportance(ModelTest):
             self.plots[title] = plot_to_str()
 
     def get_result(self, df_importance) -> any:
-        """
-        Output the protected attributes that are listed in the top specified number of the features,
-        using feature importance values inputted by the user.
+        """Output the protected attributes that are listed in the top specified
+        number of the features, using feature importance values inputted by the
+        user.
 
-        :df_importance: A dataframe with 2 columns - first column with feature names and second column with importance values
+        :df_importance: A dataframe with 2 columns - first column with feature
+        names and second column with importance values
         """
         if df_importance.shape[1] != 2:
-            raise AttributeError(f"There should be 2 columns in the dataframe - first column with feature names and second column with importance values")
-            
+            raise AttributeError(
+                f"There should be 2 columns in the dataframe - first column with feature names and second column with importance values"
+            )
+
         df_importance_sorted = df_importance.sort_values(
             df_importance.columns[1], ascending=False
         ).set_index(df_importance.columns[0])
         df_importance_sorted["feature_rank"] = df_importance_sorted.iloc[:, 0].rank(
             ascending=False
         )
-        df_importance_sorted = df_importance_sorted[['feature_rank']]
+        df_importance_sorted = df_importance_sorted[["feature_rank"]]
 
         attrs_string = "|".join([f"{x}_" for x in self.attrs])
         result = df_importance_sorted[
@@ -96,10 +99,11 @@ class FeatureImportance(ModelTest):
         return result
 
     def run(self, df_importance) -> bool:
-        """
-        Runs test by calculating result and evaluating if it passes a defined condition.
+        """Runs test by calculating result and evaluating if it passes a defined
+        condition.
 
-        :df_importance: A dataframe with 2 columns - first column of feature names and second column of importance values
+        :df_importance: A dataframe with 2 columns - first column of feature
+        names and second column of importance values
         """
         self.result = self.get_result(df_importance)
         self.passed = False if False in list(self.result.passed) else True
