@@ -23,8 +23,8 @@ ModelCardsToolkit serves as an API to read and write MC properties by the users.
 import dataclasses
 import pandas as pd
 import json as json_lib
-from collections import Counter
-from typing import Any, Dict, List, Optional
+import collections
+from typing import Any, Dict, List, Optional, Counter
 
 from .base_model_card_field import BaseModelCardField
 from .proto import model_card_pb2
@@ -706,10 +706,15 @@ class ModelCard(BaseModelCardField):
         _populate_from_json(json_dict, self)
 
     @staticmethod
-    def _get_reports_results(reports: List):
-        """
-        Get summary of tests passed and failed across multiple reports.
+    def _get_reports_results(reports: List) -> Counter:
+        """Get summary of tests passed and failed across multiple reports.
         Each report has a list of tests.
+
+        Args:
+          reports: List of reports to calculate over.
+
+        Returns:
+          Counter of test cases passed and failed
         """
         result_counter = Counter()
 
@@ -720,9 +725,13 @@ class ModelCard(BaseModelCardField):
 
         return dict(result_counter)
 
-    def get_test_results(self):
+    def get_test_results(self) -> Dict[str, Counter]:
         """Return overall number of tests passed and failed across performance metrics,
         explainability reports, fairness reports.
+
+        Returns:
+          Counter of test cases passed and failed for performance tests, explainability tests,
+          and fairness tests in a dictionary.
         """
         performance_metrics = self.quantitative_analysis.performance_metrics
         explainability_reports = self.explainability_analysis.explainability_reports

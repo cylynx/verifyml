@@ -314,7 +314,12 @@ class ModelCardToolkit:
     @staticmethod
     def group_reports(reports) -> Dict[Text, List]:
         """Given a list of model card reports, group them into those with the same type+slice.
-        Returns a dict of {type+slice: {set of reports with this type+slice}}
+
+        Args:
+          reports: ModelCard reports.
+
+        Returns:
+            Dict of {type+slice: {set of reports with this type+slice}}
         """
         type_slice_to_reports = defaultdict(list)
 
@@ -329,9 +334,13 @@ class ModelCardToolkit:
         """Given 2 lists of model card reports, find all reports that have the same type and slice in
         both lists.
 
-        Returns a list of [(report A, report B), ...].
-        The list of (report A, report B) tuples is a cartesian product between reports in A vs reports
-        in B with the same type+slice.
+        Args:
+          reports_a: List of ModelCard report.
+          reports_b: List of ModelCard report.
+
+        Returns:
+            List of [(report A, report B), ...]. The list of (report A, report B) tuples is a cartesian
+            product between reports in A vs reports in B with the same type+slice.
         """
         type_slice_a = ModelCardToolkit.group_reports(reports_a)
         type_slice_b = ModelCardToolkit.group_reports(reports_b)
@@ -359,10 +368,19 @@ class ModelCardToolkit:
         )
 
     def compare_model_cards(
-        self, card_a: ModelCard, card_b: ModelCard, export_path: str = None
+        self, card_a: ModelCard, card_b: ModelCard, export_path: Optional[Text] = None
     ) -> Text:
         """Compare reports across given model cards A and B and render them side by side.
-        Only reports that have the same type and slice will be compared."""
+        Only reports that have the same type and slice will be compared.
+
+        Args:
+          card_a: ModelCard for comparison.
+          card_b: ModelCard for comparison.
+          export_path: Optional path to export comparison report
+
+        Returns:
+            HTML report of the model card differences.
+        """
 
         pm_a = card_a.quantitative_analysis.performance_metrics
         pm_b = card_b.quantitative_analysis.performance_metrics
