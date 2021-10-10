@@ -22,7 +22,7 @@ import os
 import pkgutil
 import tempfile
 import itertools
-from typing import Dict, Optional, Text, List, Tuple
+from typing import Dict, Optional, List, Tuple
 from collections import defaultdict
 
 from absl import logging
@@ -89,7 +89,7 @@ class ModelCardToolkit:
     """
 
     def __init__(
-        self, output_dir: Optional[Text] = None, file_name: Optional[Text] = None
+        self, output_dir: Optional[str] = None, file_name: Optional[str] = None
     ):
         """Initializes the ModelCardToolkit.
 
@@ -115,22 +115,22 @@ class ModelCardToolkit:
         self._mcta_template_dir = os.path.join(self.output_dir, _MCTA_TEMPLATE_DIR)
         self._model_cards_dir = os.path.join(self.output_dir, _MODEL_CARDS_DIR)
 
-    def _jinja_loader(self, template_dir: Text):
+    def _jinja_loader(self, template_dir: str):
         return jinja2.FileSystemLoader(template_dir)
 
-    def _write_file(self, path: Text, content: Text) -> None:
+    def _write_file(self, path: str, content: str) -> None:
         """Write content to the path."""
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w+") as f:
             f.write(content)
 
-    def _write_proto_file(self, path: Text, model_card: ModelCard) -> None:
+    def _write_proto_file(self, path: str, model_card: ModelCard) -> None:
         """Write serialized model card proto to the path."""
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "wb") as f:
             f.write(model_card.to_proto().SerializeToString())
 
-    def _read_proto_file(self, path: Text) -> ModelCard:
+    def _read_proto_file(self, path: str) -> ModelCard:
         """Read serialized model card proto from the path."""
         model_card_proto = model_card_pb2.ModelCard()
         with open(path, "rb") as f:
@@ -162,7 +162,7 @@ class ModelCardToolkit:
         return jinja_env.get_template(template_file)
 
     def scaffold_assets(
-        self, path: Optional[Text] = None, proto: Optional[message.Message] = None
+        self, path: Optional[str] = None, proto: Optional[message.Message] = None
     ) -> ModelCard:
         """Generates the Model Card Tookit assets.
 
@@ -226,9 +226,9 @@ class ModelCardToolkit:
     def export_format(
         self,
         model_card: Optional[ModelCard] = None,
-        template_path: Optional[Text] = None,
+        template_path: Optional[str] = None,
         output_file=_DEFAULT_MODEL_CARD_FILE_NAME,
-    ) -> Text:
+    ) -> str:
         """Generates a model card document based on the MCT assets.
 
         The model card document is both returned by this function, as well as saved
@@ -312,7 +312,7 @@ class ModelCardToolkit:
         return model_card_test_results
 
     @staticmethod
-    def group_reports(reports) -> Dict[Text, List]:
+    def group_reports(reports) -> Dict[str, List]:
         """Given a list of model card reports, group them into those with the same type+slice.
 
         Args:
@@ -368,8 +368,8 @@ class ModelCardToolkit:
         )
 
     def compare_model_cards(
-        self, card_a: ModelCard, card_b: ModelCard, export_path: Optional[Text] = None
-    ) -> Text:
+        self, card_a: ModelCard, card_b: ModelCard, export_path: Optional[str] = None
+    ) -> str:
         """Compare reports across given model cards A and B and render them side by side.
         Only reports that have the same type and slice will be compared.
 
