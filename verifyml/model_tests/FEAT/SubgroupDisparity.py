@@ -193,10 +193,10 @@ class SubgroupDisparity(ModelTest):
             )
 
         if self.method == "ratio":
-            self.metric_dict, _ = self.get_metric_dict(df_test_with_output)
+            self.metric_dict, self.size_list = self.get_metric_dict(df_test_with_output)
             result = max(self.metric_dict.values()) / min(self.metric_dict.values())
         elif self.method == "diff":
-            self.metric_dict, _ = self.get_metric_dict(df_test_with_output)
+            self.metric_dict, self.size_list = self.get_metric_dict(df_test_with_output)
             result = max(self.metric_dict.values()) - min(self.metric_dict.values())
         elif self.method == "chi2":
             table = self.get_contingency_table(df_test_with_output)

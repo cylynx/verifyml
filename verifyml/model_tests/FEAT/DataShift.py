@@ -125,32 +125,16 @@ class DataShift(ModelTest):
 
         result = pd.DataFrame()
         for pa in self.protected_attr:
-            if self.method == "ratio" or self.method == "diff":
-                train_dist = pd.DataFrame(
-                    self.get_df_distribution_by_pa(x_train, pa, False)
-                )
-                eval_dist = pd.DataFrame(
-                    self.get_df_distribution_by_pa(x_test, pa, False)
-                )
+            train_dist = pd.DataFrame(
+                self.get_df_distribution_by_pa(x_train, pa, False)
+            )
+            eval_dist = pd.DataFrame(self.get_df_distribution_by_pa(x_test, pa, False))
 
-                df_dist = pd.concat([train_dist, eval_dist], axis=1)
-                df_dist.columns = ["training_distribution", "eval_distribution"]
-                df_dist.index = df_dist.index.to_series().apply(lambda x: f"{pa}_{x}")
+            df_dist = pd.concat([train_dist, eval_dist], axis=1)
+            df_dist.columns = ["training_distribution", "eval_distribution"]
+            df_dist.index = df_dist.index.to_series().apply(lambda x: f"{pa}_{x}")
 
-                if self.method == "ratio":
-                    df_dist["ratio"] = (
-                        df_dist["training_distribution"] / df_dist["eval_distribution"]
-                    )
-                    df_dist["ratio"] = df_dist.ratio.apply(
-                        lambda x: 1 / x if x < 1 else x
-                    )
-
-                if self.method == "diff":
-                    df_dist["difference"] = abs(
-                        df_dist["training_distribution"] - df_dist["eval_distribution"]
-                    )
-
-            elif self.method == "chi2":
+            if self.method == "chi2":
                 train_freq = pd.DataFrame(
                     self.get_df_distribution_by_pa(x_train, pa, True)
                 )
@@ -160,6 +144,16 @@ class DataShift(ModelTest):
                 df_freq = pd.concat([train_freq, eval_freq], axis=1)
                 _, p, _, _ = chi2_contingency(df_freq.values)
                 df_dist["p-value"] = p
+
+            elif self.method == "ratio":
+                df_dist["ratio"] = (
+                    df_dist["training_distribution"] / df_dist["eval_distribution"]
+                )
+                df_dist["ratio"] = df_dist.ratio.apply(lambda x: 1 / x if x < 1 else x)
+            elif self.method == "diff":
+                df_dist["difference"] = abs(
+                    df_dist["training_distribution"] - df_dist["eval_distribution"]
+                )
 
             else:
                 raise ValueError(

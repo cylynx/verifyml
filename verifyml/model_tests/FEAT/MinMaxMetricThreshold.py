@@ -68,7 +68,7 @@ class MinMaxMetricThreshold(ModelTest):
         default_test_desc = inspect.cleandoc(
             f"""
            Test if the {self.metric} of the subgroups within {self.attr} 
-           is {req} than the threshold of {self.metric}.
+           is {req} than the threshold of {self.threshold}.
             """
         )
         self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
