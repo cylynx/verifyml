@@ -26,7 +26,7 @@ class ModelTest(ABC):
     @abstractmethod
     def run(self) -> bool:
         """
-        Contains logic specific to a model test. This method should: 1) Get test
-        result and update self.result 2) Update self.passed, a boolean
-        indicating if result meets a defined condition
+        Contains logic specific to a model test. This method should: 
+        1) Get test result and update self.result 
+        2) Update self.passed, a boolean indicating if result meets a defined condition
         """
