@@ -35,10 +35,10 @@ class DataShift(ModelTest):
     passed the data shift test.
 
     To pass, if ratio is used, the ratio of distribution of the subgroups in the
-    datasets should not exceed should not exceed the threshold.
+    datasets should not exceed the threshold.
 
-    if diff is used, the difference of distribution of the subgroups in the
-    datasets should not exceed should not exceed the threshold.
+    If diff is used, the difference of distribution of the subgroups in the
+    datasets should not exceed the threshold.
 
     If chi2 is used, the p-value calculated from a chi-square test of
     independence between the datasets should be greater than the level of
@@ -66,7 +66,7 @@ class DataShift(ModelTest):
             pass_desc = f"""
                         To pass, the p-value calculated from a chi-square test
                         of independence between the datasets should be greater
-                        than {self.threshold}% level of significance.
+                        than {self.threshold*100}% significance level.
                         """
         else:
             pass_desc = f"""

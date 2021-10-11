@@ -14,7 +14,7 @@
 
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import Literal, Dict
+from typing import Literal, Tuple
 import inspect
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -35,7 +35,7 @@ class SubgroupDisparity(ModelTest):
     If chi2 is used, the p-value calculated from a chi-square test of
     independence should be greater than the level of significance as specified
     by the threshold.
-
+    
     Args:
       attr: Column name of the protected attribute.
       metric: Type of performance metric for the test, choose from 'fpr' - false positive rate,
@@ -75,7 +75,7 @@ class SubgroupDisparity(ModelTest):
                 f"""
                To pass, the p-value calculated from a chi-square test of
                independence for {metric_name} across the subgroups should be
-               greater than {self.threshold}% level of significance.
+               greater than {self.threshold*100}% significance level.
                """
             )
         else:
@@ -89,7 +89,7 @@ class SubgroupDisparity(ModelTest):
 
         self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
 
-    def get_metric_dict(self, df: pd.DataFrame) -> dict[str, float]:
+    def get_metric_dict(self, df: pd.DataFrame) -> Tuple[dict, list]:
         """Calculate metric ratio / difference and size for each subgroup of the
         protected attribute on a given df.
 

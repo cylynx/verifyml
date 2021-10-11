@@ -16,7 +16,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 import inspect
 import matplotlib.pyplot as plt
-from pandas import DataFrame
+import pandas as pd
 
 from ..ModelTest import ModelTest
 from ..utils import plot_to_str
@@ -24,12 +24,23 @@ from ..utils import plot_to_str
 
 @dataclass
 class FeatureImportance(ModelTest):
-    """Ouput a dataframe consisting of protected attributes and its respective
-    ranking based on user-inputted feature importance values. To pass, subgroups
-    of protected attributes should not fall in the top n most important
+    """
+    Test if the subgroups of the protected attributes are the top
+    ranking important variables based on user-inputted feature 
+    importance values.
+    
+    To pass, subgroups should not fall in the top n most important
     variables.
-
-    :attrs: protected attributes :threshold: the top n features to be specified
+    
+    The test also stores a dataframe showing the results of each groups.
+    
+    Args:
+      attrs: List of protected attributes.
+      threshold: Threshold for the test. To pass, subgroups should not 
+         fall in the top n (threshold) most important variables.
+      test_name: Name of the test, default is 'Feature Importance Test'.
+      test_desc: Description of the test. If none is provided, an automatic description
+         will be generated based on the rest of the arguments passed in.
     """
 
     attrs: list[str]
@@ -49,10 +60,14 @@ class FeatureImportance(ModelTest):
 
         self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
 
-    def plot(self, df: DataFrame, show_n: int = 10, save_plots: bool = True):
-        """:df: A dataframe with 2 columns - first column of feature names and
-        second column of importance values :show_n: Show the top n important
-        features on the plot
+    def plot(self, df: pd.DataFrame, show_n: int = 10, save_plots: bool = True):
+        """
+        Plot the top n most important features based on their importance values.
+        
+        Args:
+          df: A dataframe with 2 columns - first column of feature names and
+             second column of importance values.
+          show_n: Show the top n important features on the plot.
         """
         title = "Feature Importance Plot"
         df_sorted = df.sort_values(df.columns[1], ascending=False)
@@ -67,13 +82,12 @@ class FeatureImportance(ModelTest):
         if save_plots:
             self.plots[title] = plot_to_str()
 
-    def get_result(self, df_importance) -> any:
-        """Output the protected attributes that are listed in the top specified
-        number of the features, using feature importance values inputted by the
-        user.
-
-        :df_importance: A dataframe with 2 columns - first column with feature
-        names and second column with importance values
+    def get_result(self, df_importance) -> pd.DataFrame:
+        """Output a dataframe containing the test results of the protected attributes. 
+        
+        Args:
+          df_importance: A dataframe with 2 columns - first column with feature
+             names and second column with importance values.
         """
         if df_importance.shape[1] != 2:
             raise AttributeError(
@@ -101,9 +115,10 @@ class FeatureImportance(ModelTest):
     def run(self, df_importance) -> bool:
         """Runs test by calculating result and evaluating if it passes a defined
         condition.
-
-        :df_importance: A dataframe with 2 columns - first column of feature
-        names and second column of importance values
+        
+        Args:
+          df_importance: A dataframe with 2 columns - first column of feature
+             names and second column of importance values.
         """
         self.result = self.get_result(df_importance)
         self.passed = False if False in list(self.result.passed) else True
