@@ -35,7 +35,7 @@ When creating a subclass from ModelTest, there are a few requirements for the te
    - Run your test and save the results into `self.result`
    - Update `self.passed`, a boolean indicating if the test result passes your defined condition
 2. If plots are to be displayed, the subclass also needs a method (e.g. `plot()`) that stores them in `self.plots` as base64-encoded strings
-3. Optionally, the subclass can overwrite the base class' `test_name` and `test_desc` to display that information in the model card as well
+3. The subclass should have `test_name` and `test_desc` attributes
 
 Refer to the Model Test [DEVELOPMENT.ipynb](verifyml/model_tests/DEVELOPMENT.ipynb) notebook to see a toy example of how this can be done.
 
