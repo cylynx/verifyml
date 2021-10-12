@@ -20,8 +20,6 @@ from dataclasses import dataclass, field
 class ModelTest(ABC):
     """Base class for all FEAT tests"""
 
-    test_name: str = field(init=False, default=None)
-    test_desc: str = field(init=False, default=None)
     result: any = field(init=False, default=None)
     passed: bool = field(init=False, default=None)
 
