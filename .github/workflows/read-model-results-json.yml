@@ -1,0 +1,59 @@
+# name: read-model-results-json
+
+# # Controls when the workflow will run
+# on: push
+
+# # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# jobs:
+#   model-card-comment:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/github-script@v5
+#         env:
+#           REPO: ${{ github.workspace }}
+#         id: read-result-json
+#         with:
+#           result-encoding: string
+#           script: |
+#             const { REPO } = process.env
+#             const data = require(`${REPO}/output/model_cards/model_card_results.json`);
+#             // console.log(data);
+
+#             let mdTemplate = `
+#             # Test Result Summary
+
+#             |Test Type|Passed|Failed|
+#             ----------|------|------
+#             `
+
+#             for (const [testType, results] of Object.entries(data)) {
+#               // populate result template
+#               mdTemplate += `|${testType}|${results.passed}|${results.failed}\n`
+
+#               if (results.failed !== 0) {
+#                 core.setFailed(`${results.failed} tests failed`);
+#               }
+#             }
+
+#             return mdTemplate
+
+#       - id: get-comment-body
+#         if: always()
+#         env:
+#             MD_TEMPLATE: ${{ steps.read-result-json.outputs.result }}
+#         run: |
+#           body=$MD_TEMPLATE
+#           body="${body//'%'/'%25'}"
+#           body="${body//$'\n'/'%0A'}"
+#           body="${body//$'\r'/'%0D'}"
+#           echo ::set-output name=body::$body
+
+#       - name: comment on commit
+#         uses: peter-evans/commit-comment@v1
+#         if: always()
+#         with:
+#           body: ${{ steps.get-comment-body.outputs.body }}
+
