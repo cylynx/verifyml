@@ -12,9 +12,9 @@ pip install . --force-reinstall
 
 ## Model Card Templates
 
-We use [Jinja](https://jinja.palletsprojects.com/en/3.0.x/) templates to create the HTML needed to display Model Cards. For details on how the templates are used, refer to the [templates' README](verifyml/model_card_toolkit/template/README.md).
+We use [Jinja](https://jinja.palletsprojects.com/en/3.0.x/) templates to create the HTML needed to display Model Cards. For details on how to create you own templates, refer to the [templates' README](verifyml/model_card_toolkit/template/README.md).
 
-If you've created new templates and would like them to be included in the output directory when `scaffold_assets()` is called, update the `_UI_TEMPLATES` variable in [model_card_toolkit.py](verifyml/model_card_toolkit/model_card_toolkit.py):
+If you've created new templates and would like them to be included as part of the official package output directory when `scaffold_assets()` is called, update the `_UI_TEMPLATES` variable in [model_card_toolkit.py](verifyml/model_card_toolkit/model_card_toolkit.py):
 
 ```python
 _UI_TEMPLATES = (

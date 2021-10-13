@@ -6,22 +6,26 @@ VerifyML is an opinionated, open-source toolkit and workflow to help companies i
 - Automatic generation of model cards - machine learning documents that provide context and transparency into a model's development and performance.
 - Model tests for validating performance of models across protected groups of interest, during development and in production.
 
-## Workflow
+## Components
 
-![](verifyml-workflow.png)
+![](verifyml-dataflow.png)
 
-The VerifyML workflow starts from model conceptualization, to model building and deployment. In a typical data science workflow, a model is developed by a data scientist with inputs from the business team. The model optimizes for business objectives without considerations of side effects, differential benefits and harms across groups, and performance degradation over time.
+At the core of the VerifyML workflow is a model card that captures 6 aspects of a model:
 
-The VerifyML workflow introduces these concepts and trade-offs as part of the model lifecycle. By bringing these questions to the fore, teams gain the following benefits:
+- Model details
+- Considerations
+- Model / data parameters
+- Quantitative analysis
+- Explainability analysis
+- Fairness analysis
 
-- Better clarity on of a model's outcome, potential side-effects, and areas of uncertanity
-- Faster alignment across model builders, product owners and internal auditors
-- Oversight and accountability
+It is adapted from Google's Model Card Toolkit and expanded to include broader considerations such as fairness and explainability.  
 
-These qualitative inputs then get translated to code (where possible) and act as modelling constraints or considerations. The model card captures and logs artifacts relevant in the model development phase and allow such information to be easily shared across the organization.  
+A web form - see [example form](https://tally.so/r/mR4Nlw), helps gather input and align stakeholders across product, data science, compliance.
 
-Tests relating to performance or fairness can also be included to ensure that the model meets the desired objective. This can be added to a CI/CD process where such tests are run on a regular basis to ensure that there is no unexpected drift in performance.
+Our Python toolkit supports data science workflows, and allows a custom model to be built and logged within the model card framework. The package also contains perfomance and fairness tests for model diagnostics, fairness and reliability checks.
 
+Being a standard protobuf format, the model card can be translated to various outputs including a model report, trade-off comparison and even tests results summary.  
 ## Installation
 
 The Model Card Toolkit is hosted on [PyPI](https://pypi.org/project/verifyml/), and can be installed with `pip install verifyml`.
@@ -77,6 +81,8 @@ Currently, VerifyML provides 5 classes of tests:
 
 The detailed [model tests readme](/verifyml/model_tests/README.md) contains more information on the tests.
 
+You can also easily create your own model tests by inheriting from the base model test class. See [DEVELOPMENT](DEVELOPMENT.md) for more details.  
+
 ### Example usage
 
 ```py
@@ -102,6 +108,10 @@ model_card.fairness_analysis.fairness_reports[0].tests = [mc_smt_test]
 
 Model cards are stored as a protobuf format. The reference model card protobuf schema can be found in the [proto directory](verifyml/model_card_toolkit/proto/model_card.proto). A translated copy in json schema format is also made available for convenience in the [schema folder](verifyml/model_card_toolkit/schema)
 
+## Templates
+
+Model cards can be rendered into various reports through the use of templates. The template folder contains two html templates - a default model report and a compare template, and a default markdown model report. 
+
 ## Contributions and Development
 
 Contributions are always welcome - check out [CONTRIBUTING](CONTRIBUTING.md)
@@ -110,7 +120,13 @@ The package and it's functionalities can be easily extended to meet the needs of
 
 ## Prior Art
 
-The model card in VerifyML is adapted from Google's [Model Card Toolkit](https://github.com/tensorflow/model-card-toolkit). It is backward compatible with v0.0.2 and expands on it by adding sections on explainability and fairness.  
+The model card in VerifyML is adapted from Google's [Model Card Toolkit](https://github.com/tensorflow/model-card-toolkit). It is backward compatible with v0.0.2 and expands on it by adding sections on explainability and fairness. You can specify the desired rendering template by specifying the `template_path` argument when calling the `mct.export_format` function. For example:
+
+```py
+mct.export_format(output_file="example.md", template_path="path_to_my_template")
+```
+
+View the [templates' README](verifyml/model_card_toolkit/template/README.md) for more information on creating your own jinja templates.
 
 ## References
 
