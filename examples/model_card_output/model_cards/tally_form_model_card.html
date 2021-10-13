@@ -33,9 +33,9 @@
     margin: 10px;
   }
   .card .card {
-    padding: 1em;
+    padding: 0.5em;
+    padding-bottom: 0em;
     border: none;
-    margin: 10px;
   }
   .img-container {
     display: flex;
@@ -84,11 +84,11 @@
           <h3>Owners</h3>
             
               
-                <li>Timothy</li>
+                <li>Timothy, Product Owner(s)</li>
               
-                <li>Swan</li>
+                <li>Swan, Model Developer(s)</li>
               
-                <li>Jason</li>
+                <li>Jason, Reviewer(s)</li>
               
             
           
@@ -96,7 +96,7 @@
           
           
           <h3>Regulatory requirements</h3>
-              MAS Fairness, Ethics, Accountability and Transparency (FEAT) principles Not applicable
+              MAS Fairness, Ethics, Accountability and Transparency (FEAT) principles
         </div>
       
       
@@ -134,7 +134,7 @@
                   <div><b>Group at risk:</b> race, age, gender</div>
                   <div><b>Benefits:</b> A more precise model will reduce the number of customers being mistakenly labelled as fraudulent in the existing rules based model, which takes 7 man-days to resolve before a credit card could be unfrozen.</div>
                   <div><b>Harms:</b> Customers who are in the false-positive category will have their credit card frozen and may be excluded from the financial services of the bank for up to 7 days.  </div>
-                  <div><b>Mitigation Strategy:</b> Because there is less data for certain demographic groups (e.g. the elderly), the model has higher false-positive rates for that segment. We will prioritize such cases after the initial model score to add a 2nd level of check and minimise disruption to the customer.</div>
+                  <div><b>Mitigation Strategy:</b> Because there is less data for certain demographic groups (e.g. youth, elderly), the model can have much higher/lower false-positive rates for that segment than that of others. We will prioritize such cases after the initial model score to add a 2nd level of check and minimise disruption to the customer.</div>
                 </li> </ul>
           
       </div>
@@ -228,8 +228,7 @@
     
       
 <div class="col card">
-  <h3>Recall </h3>
-  
+  <h3>Recall  </h3>
   
   
   
@@ -239,8 +238,7 @@
     
       
 <div class="col card">
-  <h3>Precision </h3>
-  
+  <h3>Precision  </h3>
   
   
   
@@ -262,8 +260,7 @@
     
       
 <div class="col card">
-  <h3>Minimum acceptable service </h3>
-  
+  <h3>Minimum acceptable service  </h3>
   
   <div>
     <b> Segment: </b>
@@ -273,7 +270,7 @@
   
   <div>
     <b> Description: </b>
-    False positive rate for the credit scoring model should be below 2% which is the existing average false positive rate of the rule based model 
+    False positive rate for the credit scoring model should be below 2.5% which is the existing average false positive rate of the rule based model 
   </div>
   
   
@@ -283,18 +280,17 @@
     
       
 <div class="col card">
-  <h3>Equal false positive rate  </h3>
-  
+  <h3>Equal false positive rate   </h3>
   
   <div>
     <b> Segment: </b>
-    Age 
+    Age and gender 
   </div>
   
   
   <div>
     <b> Description: </b>
-    False positive rate across age bins should not differ by more than 20% 
+    Disparity ratio of false positive rates of any 2 bins in the respective attribute should not be more than a factor of 1.5 
   </div>
   
   

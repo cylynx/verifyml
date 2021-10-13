@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC. All Rights Reserved.
+# Copyright 2021 Cylynx
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,4 +14,4 @@
 """Contains the version string of the Model Card Toolkit."""
 
 # Note that setup.py uses this version.
-__version__ = "1.1.1.dev"
+__version__ = "0.0.1.dev"

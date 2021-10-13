@@ -3,1535 +3,2519 @@
 # source: model_card_toolkit/proto/model_card.proto
 
 import sys
-_b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
+
+_b = sys.version_info[0] < 3 and (lambda x: x) or (lambda x: x.encode("latin1"))
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
+
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
 
 
-
-
 DESCRIPTOR = _descriptor.FileDescriptor(
-  name='model_card_toolkit/proto/model_card.proto',
-  package='model_card_toolkit.proto',
-  syntax='proto2',
-  serialized_options=None,
-  serialized_pb=_b('\n)model_card_toolkit/proto/model_card.proto\x12\x18model_card_toolkit.proto\"4\n\x05Owner\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontact\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t\"3\n\x07Version\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x0c\n\x04\x64iff\x18\x03 \x01(\t\">\n\x07License\x12\x14\n\nidentifier\x18\x01 \x01(\tH\x00\x12\x15\n\x0b\x63ustom_text\x18\x02 \x01(\tH\x00\x42\x06\n\x04type\"\x1e\n\tReference\x12\x11\n\treference\x18\x01 \x01(\t\"+\n\x08\x43itation\x12\r\n\x05style\x18\x01 \x01(\t\x12\x10\n\x08\x63itation\x18\x02 \x01(\t\"+\n\x15RegulatoryRequirement\x12\x12\n\nregulation\x18\x01 \x01(\t\"\xf0\x02\n\x0cModelDetails\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08overview\x18\x02 \x01(\t\x12\x15\n\rdocumentation\x18\x03 \x01(\t\x12/\n\x06owners\x18\x04 \x03(\x0b\x32\x1f.model_card_toolkit.proto.Owner\x12\x32\n\x07version\x18\x05 \x01(\x0b\x32!.model_card_toolkit.proto.Version\x12\x33\n\x08licenses\x18\x06 \x03(\x0b\x32!.model_card_toolkit.proto.License\x12\x37\n\nreferences\x18\x07 \x03(\x0b\x32#.model_card_toolkit.proto.Reference\x12\x35\n\tcitations\x18\x08 \x03(\x0b\x32\".model_card_toolkit.proto.Citation\x12\x1f\n\x17regulatory_requirements\x18\t \x01(\t\"&\n\x07Graphic\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05image\x18\x02 \x01(\t\"`\n\x12GraphicsCollection\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\x12\x35\n\ncollection\x18\x02 \x03(\x0b\x32!.model_card_toolkit.proto.Graphic\"[\n\rSensitiveData\x12\x16\n\x0esensitive_data\x18\x01 \x03(\t\x12\x1b\n\x13sensitive_data_used\x18\x02 \x03(\t\x12\x15\n\rjustification\x18\x03 \x01(\t\"\xb6\x01\n\x07\x44\x61taset\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04link\x18\x02 \x01(\t\x12:\n\tsensitive\x18\x03 \x01(\x0b\x32\'.model_card_toolkit.proto.SensitiveData\x12>\n\x08graphics\x18\x04 \x01(\x0b\x32,.model_card_toolkit.proto.GraphicsCollection\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\"\x8b\x01\n\x0fModelParameters\x12\x1a\n\x12model_architecture\x18\x01 \x01(\t\x12/\n\x04\x64\x61ta\x18\x02 \x03(\x0b\x32!.model_card_toolkit.proto.Dataset\x12\x14\n\x0cinput_format\x18\x03 \x01(\t\x12\x15\n\routput_format\x18\x04 \x01(\t\"\x9c\x01\n\x04Test\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x11\n\tthreshold\x18\x03 \x01(\t\x12\x0e\n\x06result\x18\x04 \x01(\t\x12\x0e\n\x06passed\x18\x05 \x01(\x08\x12>\n\x08graphics\x18\x06 \x01(\x0b\x32,.model_card_toolkit.proto.GraphicsCollection\"\xc3\x01\n\x11PerformanceMetric\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\x12\r\n\x05slice\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12>\n\x08graphics\x18\x05 \x01(\x0b\x32,.model_card_toolkit.proto.GraphicsCollection\x12-\n\x05tests\x18\x06 \x03(\x0b\x32\x1e.model_card_toolkit.proto.Test\"\xa0\x01\n\x14QuantitativeAnalysis\x12H\n\x13performance_metrics\x18\x01 \x03(\x0b\x32+.model_card_toolkit.proto.PerformanceMetric\x12>\n\x08graphics\x18\x02 \x01(\x0b\x32,.model_card_toolkit.proto.GraphicsCollection\"\xb7\x01\n\x14\x45xplainabilityReport\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\r\n\x05slice\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12>\n\x08graphics\x18\x04 \x01(\x0b\x32,.model_card_toolkit.proto.GraphicsCollection\x12-\n\x05tests\x18\x05 \x03(\x0b\x32\x1e.model_card_toolkit.proto.Test\"h\n\x16\x45xplainabilityAnalysis\x12N\n\x16\x65xplainability_reports\x18\x01 \x03(\x0b\x32..model_card_toolkit.proto.ExplainabilityReport\"\xc2\x01\n\x0e\x46\x61irnessReport\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\r\n\x05slice\x18\x02 \x01(\t\x12\x0f\n\x07segment\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12>\n\x08graphics\x18\x05 \x01(\x0b\x32,.model_card_toolkit.proto.GraphicsCollection\x12-\n\x05tests\x18\x06 \x03(\x0b\x32\x1e.model_card_toolkit.proto.Test\"V\n\x10\x46\x61irnessAnalysis\x12\x42\n\x10\x66\x61irness_reports\x18\x01 \x03(\x0b\x32(.model_card_toolkit.proto.FairnessReport\"\x1b\n\x04User\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\"\x1e\n\x07UseCase\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\"!\n\nLimitation\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\"\x1f\n\x08Tradeoff\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\"1\n\x04Risk\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x1b\n\x13mitigation_strategy\x18\x02 \x01(\t\"i\n\x12\x46\x61irnessAssessment\x12\x15\n\rgroup_at_risk\x18\x01 \x01(\t\x12\x10\n\x08\x62\x65nefits\x18\x02 \x01(\t\x12\r\n\x05harms\x18\x03 \x01(\t\x12\x1b\n\x13mitigation_strategy\x18\x04 \x01(\t\"\xf2\x02\n\x0e\x43onsiderations\x12-\n\x05users\x18\x01 \x03(\x0b\x32\x1e.model_card_toolkit.proto.User\x12\x34\n\tuse_cases\x18\x02 \x03(\x0b\x32!.model_card_toolkit.proto.UseCase\x12\x39\n\x0blimitations\x18\x03 \x03(\x0b\x32$.model_card_toolkit.proto.Limitation\x12\x35\n\ttradeoffs\x18\x04 \x03(\x0b\x32\".model_card_toolkit.proto.Tradeoff\x12>\n\x16\x65thical_considerations\x18\x05 \x03(\x0b\x32\x1e.model_card_toolkit.proto.Risk\x12I\n\x13\x66\x61irness_assessment\x18\x06 \x03(\x0b\x32,.model_card_toolkit.proto.FairnessAssessment\"\xba\x03\n\tModelCard\x12=\n\rmodel_details\x18\x01 \x01(\x0b\x32&.model_card_toolkit.proto.ModelDetails\x12\x43\n\x10model_parameters\x18\x02 \x01(\x0b\x32).model_card_toolkit.proto.ModelParameters\x12M\n\x15quantitative_analysis\x18\x03 \x01(\x0b\x32..model_card_toolkit.proto.QuantitativeAnalysis\x12@\n\x0e\x63onsiderations\x18\x04 \x01(\x0b\x32(.model_card_toolkit.proto.Considerations\x12Q\n\x17\x65xplainability_analysis\x18\x05 \x01(\x0b\x32\x30.model_card_toolkit.proto.ExplainabilityAnalysis\x12\x45\n\x11\x66\x61irness_analysis\x18\x06 \x01(\x0b\x32*.model_card_toolkit.proto.FairnessAnalysis')
+    name="model_card_toolkit/proto/model_card.proto",
+    package="model_card_toolkit.proto",
+    syntax="proto2",
+    serialized_options=None,
+    serialized_pb=_b(
+        '\n)model_card_toolkit/proto/model_card.proto\x12\x18model_card_toolkit.proto"4\n\x05Owner\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontact\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t"3\n\x07Version\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x0c\n\x04\x64iff\x18\x03 \x01(\t">\n\x07License\x12\x14\n\nidentifier\x18\x01 \x01(\tH\x00\x12\x15\n\x0b\x63ustom_text\x18\x02 \x01(\tH\x00\x42\x06\n\x04type"\x1e\n\tReference\x12\x11\n\treference\x18\x01 \x01(\t"+\n\x08\x43itation\x12\r\n\x05style\x18\x01 \x01(\t\x12\x10\n\x08\x63itation\x18\x02 \x01(\t"+\n\x15RegulatoryRequirement\x12\x12\n\nregulation\x18\x01 \x01(\t"\xf0\x02\n\x0cModelDetails\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08overview\x18\x02 \x01(\t\x12\x15\n\rdocumentation\x18\x03 \x01(\t\x12/\n\x06owners\x18\x04 \x03(\x0b\x32\x1f.model_card_toolkit.proto.Owner\x12\x32\n\x07version\x18\x05 \x01(\x0b\x32!.model_card_toolkit.proto.Version\x12\x33\n\x08licenses\x18\x06 \x03(\x0b\x32!.model_card_toolkit.proto.License\x12\x37\n\nreferences\x18\x07 \x03(\x0b\x32#.model_card_toolkit.proto.Reference\x12\x35\n\tcitations\x18\x08 \x03(\x0b\x32".model_card_toolkit.proto.Citation\x12\x1f\n\x17regulatory_requirements\x18\t \x01(\t"&\n\x07Graphic\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05image\x18\x02 \x01(\t"`\n\x12GraphicsCollection\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t\x12\x35\n\ncollection\x18\x02 \x03(\x0b\x32!.model_card_toolkit.proto.Graphic"[\n\rSensitiveData\x12\x16\n\x0esensitive_data\x18\x01 \x03(\t\x12\x1b\n\x13sensitive_data_used\x18\x02 \x03(\t\x12\x15\n\rjustification\x18\x03 \x01(\t"\xb6\x01\n\x07\x44\x61taset\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04link\x18\x02 \x01(\t\x12:\n\tsensitive\x18\x03 \x01(\x0b\x32\'.model_card_toolkit.proto.SensitiveData\x12>\n\x08graphics\x18\x04 \x01(\x0b\x32,.model_card_toolkit.proto.GraphicsCollection\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t"\x8b\x01\n\x0fModelParameters\x12\x1a\n\x12model_architecture\x18\x01 \x01(\t\x12/\n\x04\x64\x61ta\x18\x02 \x03(\x0b\x32!.model_card_toolkit.proto.Dataset\x12\x14\n\x0cinput_format\x18\x03 \x01(\t\x12\x15\n\routput_format\x18\x04 \x01(\t"\x9c\x01\n\x04Test\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x11\n\tthreshold\x18\x03 \x01(\t\x12\x0e\n\x06result\x18\x04 \x01(\t\x12\x0e\n\x06passed\x18\x05 \x01(\x08\x12>\n\x08graphics\x18\x06 \x01(\x0b\x32,.model_card_toolkit.proto.GraphicsCollection"\xc3\x01\n\x11PerformanceMetric\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\x12\r\n\x05slice\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12>\n\x08graphics\x18\x05 \x01(\x0b\x32,.model_card_toolkit.proto.GraphicsCollection\x12-\n\x05tests\x18\x06 \x03(\x0b\x32\x1e.model_card_toolkit.proto.Test"\xa0\x01\n\x14QuantitativeAnalysis\x12H\n\x13performance_metrics\x18\x01 \x03(\x0b\x32+.model_card_toolkit.proto.PerformanceMetric\x12>\n\x08graphics\x18\x02 \x01(\x0b\x32,.model_card_toolkit.proto.GraphicsCollection"\xb7\x01\n\x14\x45xplainabilityReport\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\r\n\x05slice\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12>\n\x08graphics\x18\x04 \x01(\x0b\x32,.model_card_toolkit.proto.GraphicsCollection\x12-\n\x05tests\x18\x05 \x03(\x0b\x32\x1e.model_card_toolkit.proto.Test"h\n\x16\x45xplainabilityAnalysis\x12N\n\x16\x65xplainability_reports\x18\x01 \x03(\x0b\x32..model_card_toolkit.proto.ExplainabilityReport"\xc2\x01\n\x0e\x46\x61irnessReport\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\r\n\x05slice\x18\x02 \x01(\t\x12\x0f\n\x07segment\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12>\n\x08graphics\x18\x05 \x01(\x0b\x32,.model_card_toolkit.proto.GraphicsCollection\x12-\n\x05tests\x18\x06 \x03(\x0b\x32\x1e.model_card_toolkit.proto.Test"V\n\x10\x46\x61irnessAnalysis\x12\x42\n\x10\x66\x61irness_reports\x18\x01 \x03(\x0b\x32(.model_card_toolkit.proto.FairnessReport"\x1b\n\x04User\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t"\x1e\n\x07UseCase\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t"!\n\nLimitation\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t"\x1f\n\x08Tradeoff\x12\x13\n\x0b\x64\x65scription\x18\x01 \x01(\t"1\n\x04Risk\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x1b\n\x13mitigation_strategy\x18\x02 \x01(\t"i\n\x12\x46\x61irnessAssessment\x12\x15\n\rgroup_at_risk\x18\x01 \x01(\t\x12\x10\n\x08\x62\x65nefits\x18\x02 \x01(\t\x12\r\n\x05harms\x18\x03 \x01(\t\x12\x1b\n\x13mitigation_strategy\x18\x04 \x01(\t"\xf2\x02\n\x0e\x43onsiderations\x12-\n\x05users\x18\x01 \x03(\x0b\x32\x1e.model_card_toolkit.proto.User\x12\x34\n\tuse_cases\x18\x02 \x03(\x0b\x32!.model_card_toolkit.proto.UseCase\x12\x39\n\x0blimitations\x18\x03 \x03(\x0b\x32$.model_card_toolkit.proto.Limitation\x12\x35\n\ttradeoffs\x18\x04 \x03(\x0b\x32".model_card_toolkit.proto.Tradeoff\x12>\n\x16\x65thical_considerations\x18\x05 \x03(\x0b\x32\x1e.model_card_toolkit.proto.Risk\x12I\n\x13\x66\x61irness_assessment\x18\x06 \x03(\x0b\x32,.model_card_toolkit.proto.FairnessAssessment"\xba\x03\n\tModelCard\x12=\n\rmodel_details\x18\x01 \x01(\x0b\x32&.model_card_toolkit.proto.ModelDetails\x12\x43\n\x10model_parameters\x18\x02 \x01(\x0b\x32).model_card_toolkit.proto.ModelParameters\x12M\n\x15quantitative_analysis\x18\x03 \x01(\x0b\x32..model_card_toolkit.proto.QuantitativeAnalysis\x12@\n\x0e\x63onsiderations\x18\x04 \x01(\x0b\x32(.model_card_toolkit.proto.Considerations\x12Q\n\x17\x65xplainability_analysis\x18\x05 \x01(\x0b\x32\x30.model_card_toolkit.proto.ExplainabilityAnalysis\x12\x45\n\x11\x66\x61irness_analysis\x18\x06 \x01(\x0b\x32*.model_card_toolkit.proto.FairnessAnalysis'
+    ),
 )
 
 
-
-
 _OWNER = _descriptor.Descriptor(
-  name='Owner',
-  full_name='model_card_toolkit.proto.Owner',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='model_card_toolkit.proto.Owner.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='contact', full_name='model_card_toolkit.proto.Owner.contact', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='role', full_name='model_card_toolkit.proto.Owner.role', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=71,
-  serialized_end=123,
+    name="Owner",
+    full_name="model_card_toolkit.proto.Owner",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="model_card_toolkit.proto.Owner.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="contact",
+            full_name="model_card_toolkit.proto.Owner.contact",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="role",
+            full_name="model_card_toolkit.proto.Owner.role",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=71,
+    serialized_end=123,
 )
 
 
 _VERSION = _descriptor.Descriptor(
-  name='Version',
-  full_name='model_card_toolkit.proto.Version',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='model_card_toolkit.proto.Version.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='date', full_name='model_card_toolkit.proto.Version.date', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='diff', full_name='model_card_toolkit.proto.Version.diff', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=125,
-  serialized_end=176,
+    name="Version",
+    full_name="model_card_toolkit.proto.Version",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="model_card_toolkit.proto.Version.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="date",
+            full_name="model_card_toolkit.proto.Version.date",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="diff",
+            full_name="model_card_toolkit.proto.Version.diff",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=125,
+    serialized_end=176,
 )
 
 
 _LICENSE = _descriptor.Descriptor(
-  name='License',
-  full_name='model_card_toolkit.proto.License',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='identifier', full_name='model_card_toolkit.proto.License.identifier', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='custom_text', full_name='model_card_toolkit.proto.License.custom_text', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-    _descriptor.OneofDescriptor(
-      name='type', full_name='model_card_toolkit.proto.License.type',
-      index=0, containing_type=None, fields=[]),
-  ],
-  serialized_start=178,
-  serialized_end=240,
+    name="License",
+    full_name="model_card_toolkit.proto.License",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="identifier",
+            full_name="model_card_toolkit.proto.License.identifier",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="custom_text",
+            full_name="model_card_toolkit.proto.License.custom_text",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[
+        _descriptor.OneofDescriptor(
+            name="type",
+            full_name="model_card_toolkit.proto.License.type",
+            index=0,
+            containing_type=None,
+            fields=[],
+        ),
+    ],
+    serialized_start=178,
+    serialized_end=240,
 )
 
 
 _REFERENCE = _descriptor.Descriptor(
-  name='Reference',
-  full_name='model_card_toolkit.proto.Reference',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='reference', full_name='model_card_toolkit.proto.Reference.reference', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=242,
-  serialized_end=272,
+    name="Reference",
+    full_name="model_card_toolkit.proto.Reference",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="reference",
+            full_name="model_card_toolkit.proto.Reference.reference",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=242,
+    serialized_end=272,
 )
 
 
 _CITATION = _descriptor.Descriptor(
-  name='Citation',
-  full_name='model_card_toolkit.proto.Citation',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='style', full_name='model_card_toolkit.proto.Citation.style', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='citation', full_name='model_card_toolkit.proto.Citation.citation', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=274,
-  serialized_end=317,
+    name="Citation",
+    full_name="model_card_toolkit.proto.Citation",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="style",
+            full_name="model_card_toolkit.proto.Citation.style",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="citation",
+            full_name="model_card_toolkit.proto.Citation.citation",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=274,
+    serialized_end=317,
 )
 
 
 _REGULATORYREQUIREMENT = _descriptor.Descriptor(
-  name='RegulatoryRequirement',
-  full_name='model_card_toolkit.proto.RegulatoryRequirement',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='regulation', full_name='model_card_toolkit.proto.RegulatoryRequirement.regulation', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=319,
-  serialized_end=362,
+    name="RegulatoryRequirement",
+    full_name="model_card_toolkit.proto.RegulatoryRequirement",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="regulation",
+            full_name="model_card_toolkit.proto.RegulatoryRequirement.regulation",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=319,
+    serialized_end=362,
 )
 
 
 _MODELDETAILS = _descriptor.Descriptor(
-  name='ModelDetails',
-  full_name='model_card_toolkit.proto.ModelDetails',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='model_card_toolkit.proto.ModelDetails.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='overview', full_name='model_card_toolkit.proto.ModelDetails.overview', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='documentation', full_name='model_card_toolkit.proto.ModelDetails.documentation', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='owners', full_name='model_card_toolkit.proto.ModelDetails.owners', index=3,
-      number=4, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='version', full_name='model_card_toolkit.proto.ModelDetails.version', index=4,
-      number=5, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='licenses', full_name='model_card_toolkit.proto.ModelDetails.licenses', index=5,
-      number=6, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='references', full_name='model_card_toolkit.proto.ModelDetails.references', index=6,
-      number=7, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='citations', full_name='model_card_toolkit.proto.ModelDetails.citations', index=7,
-      number=8, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='regulatory_requirements', full_name='model_card_toolkit.proto.ModelDetails.regulatory_requirements', index=8,
-      number=9, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=365,
-  serialized_end=733,
+    name="ModelDetails",
+    full_name="model_card_toolkit.proto.ModelDetails",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="model_card_toolkit.proto.ModelDetails.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="overview",
+            full_name="model_card_toolkit.proto.ModelDetails.overview",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="documentation",
+            full_name="model_card_toolkit.proto.ModelDetails.documentation",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="owners",
+            full_name="model_card_toolkit.proto.ModelDetails.owners",
+            index=3,
+            number=4,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="version",
+            full_name="model_card_toolkit.proto.ModelDetails.version",
+            index=4,
+            number=5,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="licenses",
+            full_name="model_card_toolkit.proto.ModelDetails.licenses",
+            index=5,
+            number=6,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="references",
+            full_name="model_card_toolkit.proto.ModelDetails.references",
+            index=6,
+            number=7,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="citations",
+            full_name="model_card_toolkit.proto.ModelDetails.citations",
+            index=7,
+            number=8,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="regulatory_requirements",
+            full_name="model_card_toolkit.proto.ModelDetails.regulatory_requirements",
+            index=8,
+            number=9,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=365,
+    serialized_end=733,
 )
 
 
 _GRAPHIC = _descriptor.Descriptor(
-  name='Graphic',
-  full_name='model_card_toolkit.proto.Graphic',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='model_card_toolkit.proto.Graphic.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='image', full_name='model_card_toolkit.proto.Graphic.image', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=735,
-  serialized_end=773,
+    name="Graphic",
+    full_name="model_card_toolkit.proto.Graphic",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="model_card_toolkit.proto.Graphic.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="image",
+            full_name="model_card_toolkit.proto.Graphic.image",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=735,
+    serialized_end=773,
 )
 
 
 _GRAPHICSCOLLECTION = _descriptor.Descriptor(
-  name='GraphicsCollection',
-  full_name='model_card_toolkit.proto.GraphicsCollection',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='description', full_name='model_card_toolkit.proto.GraphicsCollection.description', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='collection', full_name='model_card_toolkit.proto.GraphicsCollection.collection', index=1,
-      number=2, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=775,
-  serialized_end=871,
+    name="GraphicsCollection",
+    full_name="model_card_toolkit.proto.GraphicsCollection",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="description",
+            full_name="model_card_toolkit.proto.GraphicsCollection.description",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="collection",
+            full_name="model_card_toolkit.proto.GraphicsCollection.collection",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=775,
+    serialized_end=871,
 )
 
 
 _SENSITIVEDATA = _descriptor.Descriptor(
-  name='SensitiveData',
-  full_name='model_card_toolkit.proto.SensitiveData',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='sensitive_data', full_name='model_card_toolkit.proto.SensitiveData.sensitive_data', index=0,
-      number=1, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='sensitive_data_used', full_name='model_card_toolkit.proto.SensitiveData.sensitive_data_used', index=1,
-      number=2, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='justification', full_name='model_card_toolkit.proto.SensitiveData.justification', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=873,
-  serialized_end=964,
+    name="SensitiveData",
+    full_name="model_card_toolkit.proto.SensitiveData",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="sensitive_data",
+            full_name="model_card_toolkit.proto.SensitiveData.sensitive_data",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="sensitive_data_used",
+            full_name="model_card_toolkit.proto.SensitiveData.sensitive_data_used",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="justification",
+            full_name="model_card_toolkit.proto.SensitiveData.justification",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=873,
+    serialized_end=964,
 )
 
 
 _DATASET = _descriptor.Descriptor(
-  name='Dataset',
-  full_name='model_card_toolkit.proto.Dataset',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='model_card_toolkit.proto.Dataset.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='link', full_name='model_card_toolkit.proto.Dataset.link', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='sensitive', full_name='model_card_toolkit.proto.Dataset.sensitive', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='graphics', full_name='model_card_toolkit.proto.Dataset.graphics', index=3,
-      number=4, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='description', full_name='model_card_toolkit.proto.Dataset.description', index=4,
-      number=5, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=967,
-  serialized_end=1149,
+    name="Dataset",
+    full_name="model_card_toolkit.proto.Dataset",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="model_card_toolkit.proto.Dataset.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="link",
+            full_name="model_card_toolkit.proto.Dataset.link",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="sensitive",
+            full_name="model_card_toolkit.proto.Dataset.sensitive",
+            index=2,
+            number=3,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="graphics",
+            full_name="model_card_toolkit.proto.Dataset.graphics",
+            index=3,
+            number=4,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="description",
+            full_name="model_card_toolkit.proto.Dataset.description",
+            index=4,
+            number=5,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=967,
+    serialized_end=1149,
 )
 
 
 _MODELPARAMETERS = _descriptor.Descriptor(
-  name='ModelParameters',
-  full_name='model_card_toolkit.proto.ModelParameters',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='model_architecture', full_name='model_card_toolkit.proto.ModelParameters.model_architecture', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='data', full_name='model_card_toolkit.proto.ModelParameters.data', index=1,
-      number=2, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='input_format', full_name='model_card_toolkit.proto.ModelParameters.input_format', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='output_format', full_name='model_card_toolkit.proto.ModelParameters.output_format', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1152,
-  serialized_end=1291,
+    name="ModelParameters",
+    full_name="model_card_toolkit.proto.ModelParameters",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="model_architecture",
+            full_name="model_card_toolkit.proto.ModelParameters.model_architecture",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="data",
+            full_name="model_card_toolkit.proto.ModelParameters.data",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="input_format",
+            full_name="model_card_toolkit.proto.ModelParameters.input_format",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="output_format",
+            full_name="model_card_toolkit.proto.ModelParameters.output_format",
+            index=3,
+            number=4,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1152,
+    serialized_end=1291,
 )
 
 
 _TEST = _descriptor.Descriptor(
-  name='Test',
-  full_name='model_card_toolkit.proto.Test',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='model_card_toolkit.proto.Test.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='description', full_name='model_card_toolkit.proto.Test.description', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='threshold', full_name='model_card_toolkit.proto.Test.threshold', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='result', full_name='model_card_toolkit.proto.Test.result', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='passed', full_name='model_card_toolkit.proto.Test.passed', index=4,
-      number=5, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='graphics', full_name='model_card_toolkit.proto.Test.graphics', index=5,
-      number=6, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1294,
-  serialized_end=1450,
+    name="Test",
+    full_name="model_card_toolkit.proto.Test",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="model_card_toolkit.proto.Test.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="description",
+            full_name="model_card_toolkit.proto.Test.description",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="threshold",
+            full_name="model_card_toolkit.proto.Test.threshold",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="result",
+            full_name="model_card_toolkit.proto.Test.result",
+            index=3,
+            number=4,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="passed",
+            full_name="model_card_toolkit.proto.Test.passed",
+            index=4,
+            number=5,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="graphics",
+            full_name="model_card_toolkit.proto.Test.graphics",
+            index=5,
+            number=6,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1294,
+    serialized_end=1450,
 )
 
 
 _PERFORMANCEMETRIC = _descriptor.Descriptor(
-  name='PerformanceMetric',
-  full_name='model_card_toolkit.proto.PerformanceMetric',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='type', full_name='model_card_toolkit.proto.PerformanceMetric.type', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='value', full_name='model_card_toolkit.proto.PerformanceMetric.value', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='slice', full_name='model_card_toolkit.proto.PerformanceMetric.slice', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='description', full_name='model_card_toolkit.proto.PerformanceMetric.description', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='graphics', full_name='model_card_toolkit.proto.PerformanceMetric.graphics', index=4,
-      number=5, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='tests', full_name='model_card_toolkit.proto.PerformanceMetric.tests', index=5,
-      number=6, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1453,
-  serialized_end=1648,
+    name="PerformanceMetric",
+    full_name="model_card_toolkit.proto.PerformanceMetric",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="type",
+            full_name="model_card_toolkit.proto.PerformanceMetric.type",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="value",
+            full_name="model_card_toolkit.proto.PerformanceMetric.value",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="slice",
+            full_name="model_card_toolkit.proto.PerformanceMetric.slice",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="description",
+            full_name="model_card_toolkit.proto.PerformanceMetric.description",
+            index=3,
+            number=4,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="graphics",
+            full_name="model_card_toolkit.proto.PerformanceMetric.graphics",
+            index=4,
+            number=5,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="tests",
+            full_name="model_card_toolkit.proto.PerformanceMetric.tests",
+            index=5,
+            number=6,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1453,
+    serialized_end=1648,
 )
 
 
 _QUANTITATIVEANALYSIS = _descriptor.Descriptor(
-  name='QuantitativeAnalysis',
-  full_name='model_card_toolkit.proto.QuantitativeAnalysis',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='performance_metrics', full_name='model_card_toolkit.proto.QuantitativeAnalysis.performance_metrics', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='graphics', full_name='model_card_toolkit.proto.QuantitativeAnalysis.graphics', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1651,
-  serialized_end=1811,
+    name="QuantitativeAnalysis",
+    full_name="model_card_toolkit.proto.QuantitativeAnalysis",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="performance_metrics",
+            full_name="model_card_toolkit.proto.QuantitativeAnalysis.performance_metrics",
+            index=0,
+            number=1,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="graphics",
+            full_name="model_card_toolkit.proto.QuantitativeAnalysis.graphics",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1651,
+    serialized_end=1811,
 )
 
 
 _EXPLAINABILITYREPORT = _descriptor.Descriptor(
-  name='ExplainabilityReport',
-  full_name='model_card_toolkit.proto.ExplainabilityReport',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='type', full_name='model_card_toolkit.proto.ExplainabilityReport.type', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='slice', full_name='model_card_toolkit.proto.ExplainabilityReport.slice', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='description', full_name='model_card_toolkit.proto.ExplainabilityReport.description', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='graphics', full_name='model_card_toolkit.proto.ExplainabilityReport.graphics', index=3,
-      number=4, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='tests', full_name='model_card_toolkit.proto.ExplainabilityReport.tests', index=4,
-      number=5, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1814,
-  serialized_end=1997,
+    name="ExplainabilityReport",
+    full_name="model_card_toolkit.proto.ExplainabilityReport",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="type",
+            full_name="model_card_toolkit.proto.ExplainabilityReport.type",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="slice",
+            full_name="model_card_toolkit.proto.ExplainabilityReport.slice",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="description",
+            full_name="model_card_toolkit.proto.ExplainabilityReport.description",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="graphics",
+            full_name="model_card_toolkit.proto.ExplainabilityReport.graphics",
+            index=3,
+            number=4,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="tests",
+            full_name="model_card_toolkit.proto.ExplainabilityReport.tests",
+            index=4,
+            number=5,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1814,
+    serialized_end=1997,
 )
 
 
 _EXPLAINABILITYANALYSIS = _descriptor.Descriptor(
-  name='ExplainabilityAnalysis',
-  full_name='model_card_toolkit.proto.ExplainabilityAnalysis',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='explainability_reports', full_name='model_card_toolkit.proto.ExplainabilityAnalysis.explainability_reports', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1999,
-  serialized_end=2103,
+    name="ExplainabilityAnalysis",
+    full_name="model_card_toolkit.proto.ExplainabilityAnalysis",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="explainability_reports",
+            full_name="model_card_toolkit.proto.ExplainabilityAnalysis.explainability_reports",
+            index=0,
+            number=1,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1999,
+    serialized_end=2103,
 )
 
 
 _FAIRNESSREPORT = _descriptor.Descriptor(
-  name='FairnessReport',
-  full_name='model_card_toolkit.proto.FairnessReport',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='type', full_name='model_card_toolkit.proto.FairnessReport.type', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='slice', full_name='model_card_toolkit.proto.FairnessReport.slice', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='segment', full_name='model_card_toolkit.proto.FairnessReport.segment', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='description', full_name='model_card_toolkit.proto.FairnessReport.description', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='graphics', full_name='model_card_toolkit.proto.FairnessReport.graphics', index=4,
-      number=5, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='tests', full_name='model_card_toolkit.proto.FairnessReport.tests', index=5,
-      number=6, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2106,
-  serialized_end=2300,
+    name="FairnessReport",
+    full_name="model_card_toolkit.proto.FairnessReport",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="type",
+            full_name="model_card_toolkit.proto.FairnessReport.type",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="slice",
+            full_name="model_card_toolkit.proto.FairnessReport.slice",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="segment",
+            full_name="model_card_toolkit.proto.FairnessReport.segment",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="description",
+            full_name="model_card_toolkit.proto.FairnessReport.description",
+            index=3,
+            number=4,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="graphics",
+            full_name="model_card_toolkit.proto.FairnessReport.graphics",
+            index=4,
+            number=5,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="tests",
+            full_name="model_card_toolkit.proto.FairnessReport.tests",
+            index=5,
+            number=6,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2106,
+    serialized_end=2300,
 )
 
 
 _FAIRNESSANALYSIS = _descriptor.Descriptor(
-  name='FairnessAnalysis',
-  full_name='model_card_toolkit.proto.FairnessAnalysis',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='fairness_reports', full_name='model_card_toolkit.proto.FairnessAnalysis.fairness_reports', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2302,
-  serialized_end=2388,
+    name="FairnessAnalysis",
+    full_name="model_card_toolkit.proto.FairnessAnalysis",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="fairness_reports",
+            full_name="model_card_toolkit.proto.FairnessAnalysis.fairness_reports",
+            index=0,
+            number=1,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2302,
+    serialized_end=2388,
 )
 
 
 _USER = _descriptor.Descriptor(
-  name='User',
-  full_name='model_card_toolkit.proto.User',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='description', full_name='model_card_toolkit.proto.User.description', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2390,
-  serialized_end=2417,
+    name="User",
+    full_name="model_card_toolkit.proto.User",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="description",
+            full_name="model_card_toolkit.proto.User.description",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2390,
+    serialized_end=2417,
 )
 
 
 _USECASE = _descriptor.Descriptor(
-  name='UseCase',
-  full_name='model_card_toolkit.proto.UseCase',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='description', full_name='model_card_toolkit.proto.UseCase.description', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2419,
-  serialized_end=2449,
+    name="UseCase",
+    full_name="model_card_toolkit.proto.UseCase",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="description",
+            full_name="model_card_toolkit.proto.UseCase.description",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2419,
+    serialized_end=2449,
 )
 
 
 _LIMITATION = _descriptor.Descriptor(
-  name='Limitation',
-  full_name='model_card_toolkit.proto.Limitation',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='description', full_name='model_card_toolkit.proto.Limitation.description', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2451,
-  serialized_end=2484,
+    name="Limitation",
+    full_name="model_card_toolkit.proto.Limitation",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="description",
+            full_name="model_card_toolkit.proto.Limitation.description",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2451,
+    serialized_end=2484,
 )
 
 
 _TRADEOFF = _descriptor.Descriptor(
-  name='Tradeoff',
-  full_name='model_card_toolkit.proto.Tradeoff',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='description', full_name='model_card_toolkit.proto.Tradeoff.description', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2486,
-  serialized_end=2517,
+    name="Tradeoff",
+    full_name="model_card_toolkit.proto.Tradeoff",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="description",
+            full_name="model_card_toolkit.proto.Tradeoff.description",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2486,
+    serialized_end=2517,
 )
 
 
 _RISK = _descriptor.Descriptor(
-  name='Risk',
-  full_name='model_card_toolkit.proto.Risk',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='model_card_toolkit.proto.Risk.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='mitigation_strategy', full_name='model_card_toolkit.proto.Risk.mitigation_strategy', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2519,
-  serialized_end=2568,
+    name="Risk",
+    full_name="model_card_toolkit.proto.Risk",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="model_card_toolkit.proto.Risk.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="mitigation_strategy",
+            full_name="model_card_toolkit.proto.Risk.mitigation_strategy",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2519,
+    serialized_end=2568,
 )
 
 
 _FAIRNESSASSESSMENT = _descriptor.Descriptor(
-  name='FairnessAssessment',
-  full_name='model_card_toolkit.proto.FairnessAssessment',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='group_at_risk', full_name='model_card_toolkit.proto.FairnessAssessment.group_at_risk', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='benefits', full_name='model_card_toolkit.proto.FairnessAssessment.benefits', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='harms', full_name='model_card_toolkit.proto.FairnessAssessment.harms', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='mitigation_strategy', full_name='model_card_toolkit.proto.FairnessAssessment.mitigation_strategy', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2570,
-  serialized_end=2675,
+    name="FairnessAssessment",
+    full_name="model_card_toolkit.proto.FairnessAssessment",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="group_at_risk",
+            full_name="model_card_toolkit.proto.FairnessAssessment.group_at_risk",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="benefits",
+            full_name="model_card_toolkit.proto.FairnessAssessment.benefits",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="harms",
+            full_name="model_card_toolkit.proto.FairnessAssessment.harms",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="mitigation_strategy",
+            full_name="model_card_toolkit.proto.FairnessAssessment.mitigation_strategy",
+            index=3,
+            number=4,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=_b("").decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2570,
+    serialized_end=2675,
 )
 
 
 _CONSIDERATIONS = _descriptor.Descriptor(
-  name='Considerations',
-  full_name='model_card_toolkit.proto.Considerations',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='users', full_name='model_card_toolkit.proto.Considerations.users', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='use_cases', full_name='model_card_toolkit.proto.Considerations.use_cases', index=1,
-      number=2, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='limitations', full_name='model_card_toolkit.proto.Considerations.limitations', index=2,
-      number=3, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='tradeoffs', full_name='model_card_toolkit.proto.Considerations.tradeoffs', index=3,
-      number=4, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='ethical_considerations', full_name='model_card_toolkit.proto.Considerations.ethical_considerations', index=4,
-      number=5, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='fairness_assessment', full_name='model_card_toolkit.proto.Considerations.fairness_assessment', index=5,
-      number=6, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2678,
-  serialized_end=3048,
+    name="Considerations",
+    full_name="model_card_toolkit.proto.Considerations",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="users",
+            full_name="model_card_toolkit.proto.Considerations.users",
+            index=0,
+            number=1,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="use_cases",
+            full_name="model_card_toolkit.proto.Considerations.use_cases",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="limitations",
+            full_name="model_card_toolkit.proto.Considerations.limitations",
+            index=2,
+            number=3,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="tradeoffs",
+            full_name="model_card_toolkit.proto.Considerations.tradeoffs",
+            index=3,
+            number=4,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="ethical_considerations",
+            full_name="model_card_toolkit.proto.Considerations.ethical_considerations",
+            index=4,
+            number=5,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="fairness_assessment",
+            full_name="model_card_toolkit.proto.Considerations.fairness_assessment",
+            index=5,
+            number=6,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2678,
+    serialized_end=3048,
 )
 
 
 _MODELCARD = _descriptor.Descriptor(
-  name='ModelCard',
-  full_name='model_card_toolkit.proto.ModelCard',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='model_details', full_name='model_card_toolkit.proto.ModelCard.model_details', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='model_parameters', full_name='model_card_toolkit.proto.ModelCard.model_parameters', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='quantitative_analysis', full_name='model_card_toolkit.proto.ModelCard.quantitative_analysis', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='considerations', full_name='model_card_toolkit.proto.ModelCard.considerations', index=3,
-      number=4, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='explainability_analysis', full_name='model_card_toolkit.proto.ModelCard.explainability_analysis', index=4,
-      number=5, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='fairness_analysis', full_name='model_card_toolkit.proto.ModelCard.fairness_analysis', index=5,
-      number=6, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=3051,
-  serialized_end=3493,
+    name="ModelCard",
+    full_name="model_card_toolkit.proto.ModelCard",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="model_details",
+            full_name="model_card_toolkit.proto.ModelCard.model_details",
+            index=0,
+            number=1,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="model_parameters",
+            full_name="model_card_toolkit.proto.ModelCard.model_parameters",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="quantitative_analysis",
+            full_name="model_card_toolkit.proto.ModelCard.quantitative_analysis",
+            index=2,
+            number=3,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="considerations",
+            full_name="model_card_toolkit.proto.ModelCard.considerations",
+            index=3,
+            number=4,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="explainability_analysis",
+            full_name="model_card_toolkit.proto.ModelCard.explainability_analysis",
+            index=4,
+            number=5,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="fairness_analysis",
+            full_name="model_card_toolkit.proto.ModelCard.fairness_analysis",
+            index=5,
+            number=6,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto2",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=3051,
+    serialized_end=3493,
 )
 
-_LICENSE.oneofs_by_name['type'].fields.append(
-  _LICENSE.fields_by_name['identifier'])
-_LICENSE.fields_by_name['identifier'].containing_oneof = _LICENSE.oneofs_by_name['type']
-_LICENSE.oneofs_by_name['type'].fields.append(
-  _LICENSE.fields_by_name['custom_text'])
-_LICENSE.fields_by_name['custom_text'].containing_oneof = _LICENSE.oneofs_by_name['type']
-_MODELDETAILS.fields_by_name['owners'].message_type = _OWNER
-_MODELDETAILS.fields_by_name['version'].message_type = _VERSION
-_MODELDETAILS.fields_by_name['licenses'].message_type = _LICENSE
-_MODELDETAILS.fields_by_name['references'].message_type = _REFERENCE
-_MODELDETAILS.fields_by_name['citations'].message_type = _CITATION
-_GRAPHICSCOLLECTION.fields_by_name['collection'].message_type = _GRAPHIC
-_DATASET.fields_by_name['sensitive'].message_type = _SENSITIVEDATA
-_DATASET.fields_by_name['graphics'].message_type = _GRAPHICSCOLLECTION
-_MODELPARAMETERS.fields_by_name['data'].message_type = _DATASET
-_TEST.fields_by_name['graphics'].message_type = _GRAPHICSCOLLECTION
-_PERFORMANCEMETRIC.fields_by_name['graphics'].message_type = _GRAPHICSCOLLECTION
-_PERFORMANCEMETRIC.fields_by_name['tests'].message_type = _TEST
-_QUANTITATIVEANALYSIS.fields_by_name['performance_metrics'].message_type = _PERFORMANCEMETRIC
-_QUANTITATIVEANALYSIS.fields_by_name['graphics'].message_type = _GRAPHICSCOLLECTION
-_EXPLAINABILITYREPORT.fields_by_name['graphics'].message_type = _GRAPHICSCOLLECTION
-_EXPLAINABILITYREPORT.fields_by_name['tests'].message_type = _TEST
-_EXPLAINABILITYANALYSIS.fields_by_name['explainability_reports'].message_type = _EXPLAINABILITYREPORT
-_FAIRNESSREPORT.fields_by_name['graphics'].message_type = _GRAPHICSCOLLECTION
-_FAIRNESSREPORT.fields_by_name['tests'].message_type = _TEST
-_FAIRNESSANALYSIS.fields_by_name['fairness_reports'].message_type = _FAIRNESSREPORT
-_CONSIDERATIONS.fields_by_name['users'].message_type = _USER
-_CONSIDERATIONS.fields_by_name['use_cases'].message_type = _USECASE
-_CONSIDERATIONS.fields_by_name['limitations'].message_type = _LIMITATION
-_CONSIDERATIONS.fields_by_name['tradeoffs'].message_type = _TRADEOFF
-_CONSIDERATIONS.fields_by_name['ethical_considerations'].message_type = _RISK
-_CONSIDERATIONS.fields_by_name['fairness_assessment'].message_type = _FAIRNESSASSESSMENT
-_MODELCARD.fields_by_name['model_details'].message_type = _MODELDETAILS
-_MODELCARD.fields_by_name['model_parameters'].message_type = _MODELPARAMETERS
-_MODELCARD.fields_by_name['quantitative_analysis'].message_type = _QUANTITATIVEANALYSIS
-_MODELCARD.fields_by_name['considerations'].message_type = _CONSIDERATIONS
-_MODELCARD.fields_by_name['explainability_analysis'].message_type = _EXPLAINABILITYANALYSIS
-_MODELCARD.fields_by_name['fairness_analysis'].message_type = _FAIRNESSANALYSIS
-DESCRIPTOR.message_types_by_name['Owner'] = _OWNER
-DESCRIPTOR.message_types_by_name['Version'] = _VERSION
-DESCRIPTOR.message_types_by_name['License'] = _LICENSE
-DESCRIPTOR.message_types_by_name['Reference'] = _REFERENCE
-DESCRIPTOR.message_types_by_name['Citation'] = _CITATION
-DESCRIPTOR.message_types_by_name['RegulatoryRequirement'] = _REGULATORYREQUIREMENT
-DESCRIPTOR.message_types_by_name['ModelDetails'] = _MODELDETAILS
-DESCRIPTOR.message_types_by_name['Graphic'] = _GRAPHIC
-DESCRIPTOR.message_types_by_name['GraphicsCollection'] = _GRAPHICSCOLLECTION
-DESCRIPTOR.message_types_by_name['SensitiveData'] = _SENSITIVEDATA
-DESCRIPTOR.message_types_by_name['Dataset'] = _DATASET
-DESCRIPTOR.message_types_by_name['ModelParameters'] = _MODELPARAMETERS
-DESCRIPTOR.message_types_by_name['Test'] = _TEST
-DESCRIPTOR.message_types_by_name['PerformanceMetric'] = _PERFORMANCEMETRIC
-DESCRIPTOR.message_types_by_name['QuantitativeAnalysis'] = _QUANTITATIVEANALYSIS
-DESCRIPTOR.message_types_by_name['ExplainabilityReport'] = _EXPLAINABILITYREPORT
-DESCRIPTOR.message_types_by_name['ExplainabilityAnalysis'] = _EXPLAINABILITYANALYSIS
-DESCRIPTOR.message_types_by_name['FairnessReport'] = _FAIRNESSREPORT
-DESCRIPTOR.message_types_by_name['FairnessAnalysis'] = _FAIRNESSANALYSIS
-DESCRIPTOR.message_types_by_name['User'] = _USER
-DESCRIPTOR.message_types_by_name['UseCase'] = _USECASE
-DESCRIPTOR.message_types_by_name['Limitation'] = _LIMITATION
-DESCRIPTOR.message_types_by_name['Tradeoff'] = _TRADEOFF
-DESCRIPTOR.message_types_by_name['Risk'] = _RISK
-DESCRIPTOR.message_types_by_name['FairnessAssessment'] = _FAIRNESSASSESSMENT
-DESCRIPTOR.message_types_by_name['Considerations'] = _CONSIDERATIONS
-DESCRIPTOR.message_types_by_name['ModelCard'] = _MODELCARD
+_LICENSE.oneofs_by_name["type"].fields.append(_LICENSE.fields_by_name["identifier"])
+_LICENSE.fields_by_name["identifier"].containing_oneof = _LICENSE.oneofs_by_name["type"]
+_LICENSE.oneofs_by_name["type"].fields.append(_LICENSE.fields_by_name["custom_text"])
+_LICENSE.fields_by_name["custom_text"].containing_oneof = _LICENSE.oneofs_by_name[
+    "type"
+]
+_MODELDETAILS.fields_by_name["owners"].message_type = _OWNER
+_MODELDETAILS.fields_by_name["version"].message_type = _VERSION
+_MODELDETAILS.fields_by_name["licenses"].message_type = _LICENSE
+_MODELDETAILS.fields_by_name["references"].message_type = _REFERENCE
+_MODELDETAILS.fields_by_name["citations"].message_type = _CITATION
+_GRAPHICSCOLLECTION.fields_by_name["collection"].message_type = _GRAPHIC
+_DATASET.fields_by_name["sensitive"].message_type = _SENSITIVEDATA
+_DATASET.fields_by_name["graphics"].message_type = _GRAPHICSCOLLECTION
+_MODELPARAMETERS.fields_by_name["data"].message_type = _DATASET
+_TEST.fields_by_name["graphics"].message_type = _GRAPHICSCOLLECTION
+_PERFORMANCEMETRIC.fields_by_name["graphics"].message_type = _GRAPHICSCOLLECTION
+_PERFORMANCEMETRIC.fields_by_name["tests"].message_type = _TEST
+_QUANTITATIVEANALYSIS.fields_by_name[
+    "performance_metrics"
+].message_type = _PERFORMANCEMETRIC
+_QUANTITATIVEANALYSIS.fields_by_name["graphics"].message_type = _GRAPHICSCOLLECTION
+_EXPLAINABILITYREPORT.fields_by_name["graphics"].message_type = _GRAPHICSCOLLECTION
+_EXPLAINABILITYREPORT.fields_by_name["tests"].message_type = _TEST
+_EXPLAINABILITYANALYSIS.fields_by_name[
+    "explainability_reports"
+].message_type = _EXPLAINABILITYREPORT
+_FAIRNESSREPORT.fields_by_name["graphics"].message_type = _GRAPHICSCOLLECTION
+_FAIRNESSREPORT.fields_by_name["tests"].message_type = _TEST
+_FAIRNESSANALYSIS.fields_by_name["fairness_reports"].message_type = _FAIRNESSREPORT
+_CONSIDERATIONS.fields_by_name["users"].message_type = _USER
+_CONSIDERATIONS.fields_by_name["use_cases"].message_type = _USECASE
+_CONSIDERATIONS.fields_by_name["limitations"].message_type = _LIMITATION
+_CONSIDERATIONS.fields_by_name["tradeoffs"].message_type = _TRADEOFF
+_CONSIDERATIONS.fields_by_name["ethical_considerations"].message_type = _RISK
+_CONSIDERATIONS.fields_by_name["fairness_assessment"].message_type = _FAIRNESSASSESSMENT
+_MODELCARD.fields_by_name["model_details"].message_type = _MODELDETAILS
+_MODELCARD.fields_by_name["model_parameters"].message_type = _MODELPARAMETERS
+_MODELCARD.fields_by_name["quantitative_analysis"].message_type = _QUANTITATIVEANALYSIS
+_MODELCARD.fields_by_name["considerations"].message_type = _CONSIDERATIONS
+_MODELCARD.fields_by_name[
+    "explainability_analysis"
+].message_type = _EXPLAINABILITYANALYSIS
+_MODELCARD.fields_by_name["fairness_analysis"].message_type = _FAIRNESSANALYSIS
+DESCRIPTOR.message_types_by_name["Owner"] = _OWNER
+DESCRIPTOR.message_types_by_name["Version"] = _VERSION
+DESCRIPTOR.message_types_by_name["License"] = _LICENSE
+DESCRIPTOR.message_types_by_name["Reference"] = _REFERENCE
+DESCRIPTOR.message_types_by_name["Citation"] = _CITATION
+DESCRIPTOR.message_types_by_name["RegulatoryRequirement"] = _REGULATORYREQUIREMENT
+DESCRIPTOR.message_types_by_name["ModelDetails"] = _MODELDETAILS
+DESCRIPTOR.message_types_by_name["Graphic"] = _GRAPHIC
+DESCRIPTOR.message_types_by_name["GraphicsCollection"] = _GRAPHICSCOLLECTION
+DESCRIPTOR.message_types_by_name["SensitiveData"] = _SENSITIVEDATA
+DESCRIPTOR.message_types_by_name["Dataset"] = _DATASET
+DESCRIPTOR.message_types_by_name["ModelParameters"] = _MODELPARAMETERS
+DESCRIPTOR.message_types_by_name["Test"] = _TEST
+DESCRIPTOR.message_types_by_name["PerformanceMetric"] = _PERFORMANCEMETRIC
+DESCRIPTOR.message_types_by_name["QuantitativeAnalysis"] = _QUANTITATIVEANALYSIS
+DESCRIPTOR.message_types_by_name["ExplainabilityReport"] = _EXPLAINABILITYREPORT
+DESCRIPTOR.message_types_by_name["ExplainabilityAnalysis"] = _EXPLAINABILITYANALYSIS
+DESCRIPTOR.message_types_by_name["FairnessReport"] = _FAIRNESSREPORT
+DESCRIPTOR.message_types_by_name["FairnessAnalysis"] = _FAIRNESSANALYSIS
+DESCRIPTOR.message_types_by_name["User"] = _USER
+DESCRIPTOR.message_types_by_name["UseCase"] = _USECASE
+DESCRIPTOR.message_types_by_name["Limitation"] = _LIMITATION
+DESCRIPTOR.message_types_by_name["Tradeoff"] = _TRADEOFF
+DESCRIPTOR.message_types_by_name["Risk"] = _RISK
+DESCRIPTOR.message_types_by_name["FairnessAssessment"] = _FAIRNESSASSESSMENT
+DESCRIPTOR.message_types_by_name["Considerations"] = _CONSIDERATIONS
+DESCRIPTOR.message_types_by_name["ModelCard"] = _MODELCARD
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-Owner = _reflection.GeneratedProtocolMessageType('Owner', (_message.Message,), {
-  'DESCRIPTOR' : _OWNER,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Owner)
-  })
+Owner = _reflection.GeneratedProtocolMessageType(
+    "Owner",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _OWNER,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Owner)
+    },
+)
 _sym_db.RegisterMessage(Owner)
 
-Version = _reflection.GeneratedProtocolMessageType('Version', (_message.Message,), {
-  'DESCRIPTOR' : _VERSION,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Version)
-  })
+Version = _reflection.GeneratedProtocolMessageType(
+    "Version",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _VERSION,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Version)
+    },
+)
 _sym_db.RegisterMessage(Version)
 
-License = _reflection.GeneratedProtocolMessageType('License', (_message.Message,), {
-  'DESCRIPTOR' : _LICENSE,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.License)
-  })
+License = _reflection.GeneratedProtocolMessageType(
+    "License",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LICENSE,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.License)
+    },
+)
 _sym_db.RegisterMessage(License)
 
-Reference = _reflection.GeneratedProtocolMessageType('Reference', (_message.Message,), {
-  'DESCRIPTOR' : _REFERENCE,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Reference)
-  })
+Reference = _reflection.GeneratedProtocolMessageType(
+    "Reference",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _REFERENCE,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Reference)
+    },
+)
 _sym_db.RegisterMessage(Reference)
 
-Citation = _reflection.GeneratedProtocolMessageType('Citation', (_message.Message,), {
-  'DESCRIPTOR' : _CITATION,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Citation)
-  })
+Citation = _reflection.GeneratedProtocolMessageType(
+    "Citation",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _CITATION,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Citation)
+    },
+)
 _sym_db.RegisterMessage(Citation)
 
-RegulatoryRequirement = _reflection.GeneratedProtocolMessageType('RegulatoryRequirement', (_message.Message,), {
-  'DESCRIPTOR' : _REGULATORYREQUIREMENT,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.RegulatoryRequirement)
-  })
+RegulatoryRequirement = _reflection.GeneratedProtocolMessageType(
+    "RegulatoryRequirement",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _REGULATORYREQUIREMENT,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.RegulatoryRequirement)
+    },
+)
 _sym_db.RegisterMessage(RegulatoryRequirement)
 
-ModelDetails = _reflection.GeneratedProtocolMessageType('ModelDetails', (_message.Message,), {
-  'DESCRIPTOR' : _MODELDETAILS,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.ModelDetails)
-  })
+ModelDetails = _reflection.GeneratedProtocolMessageType(
+    "ModelDetails",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _MODELDETAILS,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.ModelDetails)
+    },
+)
 _sym_db.RegisterMessage(ModelDetails)
 
-Graphic = _reflection.GeneratedProtocolMessageType('Graphic', (_message.Message,), {
-  'DESCRIPTOR' : _GRAPHIC,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Graphic)
-  })
+Graphic = _reflection.GeneratedProtocolMessageType(
+    "Graphic",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _GRAPHIC,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Graphic)
+    },
+)
 _sym_db.RegisterMessage(Graphic)
 
-GraphicsCollection = _reflection.GeneratedProtocolMessageType('GraphicsCollection', (_message.Message,), {
-  'DESCRIPTOR' : _GRAPHICSCOLLECTION,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.GraphicsCollection)
-  })
+GraphicsCollection = _reflection.GeneratedProtocolMessageType(
+    "GraphicsCollection",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _GRAPHICSCOLLECTION,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.GraphicsCollection)
+    },
+)
 _sym_db.RegisterMessage(GraphicsCollection)
 
-SensitiveData = _reflection.GeneratedProtocolMessageType('SensitiveData', (_message.Message,), {
-  'DESCRIPTOR' : _SENSITIVEDATA,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.SensitiveData)
-  })
+SensitiveData = _reflection.GeneratedProtocolMessageType(
+    "SensitiveData",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _SENSITIVEDATA,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.SensitiveData)
+    },
+)
 _sym_db.RegisterMessage(SensitiveData)
 
-Dataset = _reflection.GeneratedProtocolMessageType('Dataset', (_message.Message,), {
-  'DESCRIPTOR' : _DATASET,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Dataset)
-  })
+Dataset = _reflection.GeneratedProtocolMessageType(
+    "Dataset",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _DATASET,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Dataset)
+    },
+)
 _sym_db.RegisterMessage(Dataset)
 
-ModelParameters = _reflection.GeneratedProtocolMessageType('ModelParameters', (_message.Message,), {
-  'DESCRIPTOR' : _MODELPARAMETERS,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.ModelParameters)
-  })
+ModelParameters = _reflection.GeneratedProtocolMessageType(
+    "ModelParameters",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _MODELPARAMETERS,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.ModelParameters)
+    },
+)
 _sym_db.RegisterMessage(ModelParameters)
 
-Test = _reflection.GeneratedProtocolMessageType('Test', (_message.Message,), {
-  'DESCRIPTOR' : _TEST,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Test)
-  })
+Test = _reflection.GeneratedProtocolMessageType(
+    "Test",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _TEST,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Test)
+    },
+)
 _sym_db.RegisterMessage(Test)
 
-PerformanceMetric = _reflection.GeneratedProtocolMessageType('PerformanceMetric', (_message.Message,), {
-  'DESCRIPTOR' : _PERFORMANCEMETRIC,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.PerformanceMetric)
-  })
+PerformanceMetric = _reflection.GeneratedProtocolMessageType(
+    "PerformanceMetric",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _PERFORMANCEMETRIC,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.PerformanceMetric)
+    },
+)
 _sym_db.RegisterMessage(PerformanceMetric)
 
-QuantitativeAnalysis = _reflection.GeneratedProtocolMessageType('QuantitativeAnalysis', (_message.Message,), {
-  'DESCRIPTOR' : _QUANTITATIVEANALYSIS,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.QuantitativeAnalysis)
-  })
+QuantitativeAnalysis = _reflection.GeneratedProtocolMessageType(
+    "QuantitativeAnalysis",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _QUANTITATIVEANALYSIS,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.QuantitativeAnalysis)
+    },
+)
 _sym_db.RegisterMessage(QuantitativeAnalysis)
 
-ExplainabilityReport = _reflection.GeneratedProtocolMessageType('ExplainabilityReport', (_message.Message,), {
-  'DESCRIPTOR' : _EXPLAINABILITYREPORT,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.ExplainabilityReport)
-  })
+ExplainabilityReport = _reflection.GeneratedProtocolMessageType(
+    "ExplainabilityReport",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _EXPLAINABILITYREPORT,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.ExplainabilityReport)
+    },
+)
 _sym_db.RegisterMessage(ExplainabilityReport)
 
-ExplainabilityAnalysis = _reflection.GeneratedProtocolMessageType('ExplainabilityAnalysis', (_message.Message,), {
-  'DESCRIPTOR' : _EXPLAINABILITYANALYSIS,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.ExplainabilityAnalysis)
-  })
+ExplainabilityAnalysis = _reflection.GeneratedProtocolMessageType(
+    "ExplainabilityAnalysis",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _EXPLAINABILITYANALYSIS,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.ExplainabilityAnalysis)
+    },
+)
 _sym_db.RegisterMessage(ExplainabilityAnalysis)
 
-FairnessReport = _reflection.GeneratedProtocolMessageType('FairnessReport', (_message.Message,), {
-  'DESCRIPTOR' : _FAIRNESSREPORT,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.FairnessReport)
-  })
+FairnessReport = _reflection.GeneratedProtocolMessageType(
+    "FairnessReport",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _FAIRNESSREPORT,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.FairnessReport)
+    },
+)
 _sym_db.RegisterMessage(FairnessReport)
 
-FairnessAnalysis = _reflection.GeneratedProtocolMessageType('FairnessAnalysis', (_message.Message,), {
-  'DESCRIPTOR' : _FAIRNESSANALYSIS,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.FairnessAnalysis)
-  })
+FairnessAnalysis = _reflection.GeneratedProtocolMessageType(
+    "FairnessAnalysis",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _FAIRNESSANALYSIS,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.FairnessAnalysis)
+    },
+)
 _sym_db.RegisterMessage(FairnessAnalysis)
 
-User = _reflection.GeneratedProtocolMessageType('User', (_message.Message,), {
-  'DESCRIPTOR' : _USER,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.User)
-  })
+User = _reflection.GeneratedProtocolMessageType(
+    "User",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _USER,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.User)
+    },
+)
 _sym_db.RegisterMessage(User)
 
-UseCase = _reflection.GeneratedProtocolMessageType('UseCase', (_message.Message,), {
-  'DESCRIPTOR' : _USECASE,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.UseCase)
-  })
+UseCase = _reflection.GeneratedProtocolMessageType(
+    "UseCase",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _USECASE,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.UseCase)
+    },
+)
 _sym_db.RegisterMessage(UseCase)
 
-Limitation = _reflection.GeneratedProtocolMessageType('Limitation', (_message.Message,), {
-  'DESCRIPTOR' : _LIMITATION,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Limitation)
-  })
+Limitation = _reflection.GeneratedProtocolMessageType(
+    "Limitation",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LIMITATION,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Limitation)
+    },
+)
 _sym_db.RegisterMessage(Limitation)
 
-Tradeoff = _reflection.GeneratedProtocolMessageType('Tradeoff', (_message.Message,), {
-  'DESCRIPTOR' : _TRADEOFF,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Tradeoff)
-  })
+Tradeoff = _reflection.GeneratedProtocolMessageType(
+    "Tradeoff",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _TRADEOFF,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Tradeoff)
+    },
+)
 _sym_db.RegisterMessage(Tradeoff)
 
-Risk = _reflection.GeneratedProtocolMessageType('Risk', (_message.Message,), {
-  'DESCRIPTOR' : _RISK,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Risk)
-  })
+Risk = _reflection.GeneratedProtocolMessageType(
+    "Risk",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _RISK,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Risk)
+    },
+)
 _sym_db.RegisterMessage(Risk)
 
-FairnessAssessment = _reflection.GeneratedProtocolMessageType('FairnessAssessment', (_message.Message,), {
-  'DESCRIPTOR' : _FAIRNESSASSESSMENT,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.FairnessAssessment)
-  })
+FairnessAssessment = _reflection.GeneratedProtocolMessageType(
+    "FairnessAssessment",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _FAIRNESSASSESSMENT,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.FairnessAssessment)
+    },
+)
 _sym_db.RegisterMessage(FairnessAssessment)
 
-Considerations = _reflection.GeneratedProtocolMessageType('Considerations', (_message.Message,), {
-  'DESCRIPTOR' : _CONSIDERATIONS,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Considerations)
-  })
+Considerations = _reflection.GeneratedProtocolMessageType(
+    "Considerations",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _CONSIDERATIONS,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.Considerations)
+    },
+)
 _sym_db.RegisterMessage(Considerations)
 
-ModelCard = _reflection.GeneratedProtocolMessageType('ModelCard', (_message.Message,), {
-  'DESCRIPTOR' : _MODELCARD,
-  '__module__' : 'model_card_toolkit.proto.model_card_pb2'
-  # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.ModelCard)
-  })
+ModelCard = _reflection.GeneratedProtocolMessageType(
+    "ModelCard",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _MODELCARD,
+        "__module__": "model_card_toolkit.proto.model_card_pb2"
+        # @@protoc_insertion_point(class_scope:model_card_toolkit.proto.ModelCard)
+    },
+)
 _sym_db.RegisterMessage(ModelCard)
 
 
