@@ -6,7 +6,7 @@ import numpy as np
 import category_encoders as ce
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import ConfusionMatrixDisplay, plot_confusion_matrix, plot_roc_curve, precision_score, recall_score
+from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay, precision_score, recall_score
 from sklearn.pipeline import Pipeline
 
 # parent directory to work with dev
@@ -79,15 +79,15 @@ df_importance = pd.DataFrame(
 ## Get confusion matrix and ROC curve on train/test set
 
 # Train set
-plot_confusion_matrix(estimator, x_train, y_train)
+ConfusionMatrixDisplay.from_estimator(estimator, x_train, y_train)
 confusion_matrix_train = plot_to_str()
-plot_roc_curve(estimator, x_train, y_train)
+RocCurveDisplay.from_estimator(estimator, x_train, y_train)
 roc_curve_train = plot_to_str()
 
 # Test set
-plot_confusion_matrix(estimator, x_test, y_test)
+ConfusionMatrixDisplay.from_estimator(estimator, x_test, y_test)
 confusion_matrix_test = plot_to_str()
-plot_roc_curve(estimator, x_test, y_test)
+RocCurveDisplay.from_estimator(estimator, x_test, y_test)
 roc_curve_test = plot_to_str()
 
 
