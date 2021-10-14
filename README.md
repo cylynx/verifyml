@@ -8,7 +8,7 @@ VerifyML is an opinionated, open-source toolkit and workflow to help companies i
 
 ## Components
 
-![](verifyml-dataflow.png)
+![](https://github.com/cylynx/verifyml/blob/main/verifyml-dataflow.png)
 
 At the core of the VerifyML workflow is a model card that captures 6 aspects of a model:
 
@@ -19,13 +19,14 @@ At the core of the VerifyML workflow is a model card that captures 6 aspects of 
 - Explainability analysis
 - Fairness analysis
 
-It is adapted from Google's Model Card Toolkit and expanded to include broader considerations such as fairness and explainability.  
+It is adapted from Google's Model Card Toolkit and expanded to include broader considerations such as fairness and explainability.
 
 A web form - see [example form](https://tally.so/r/mR4Nlw), helps gather input and align stakeholders across product, data science, compliance.
 
 Our Python toolkit supports data science workflows, and allows a custom model to be built and logged within the model card framework. The package also contains perfomance and fairness tests for model diagnostics, fairness and reliability checks.
 
-Being a standard protobuf format, the model card can be translated to various outputs including a model report, trade-off comparison and even tests results summary.  
+Being a standard protobuf format, the model card can be translated to various outputs including a model report, trade-off comparison and even tests results summary.
+
 ## Installation
 
 The Model Card Toolkit is hosted on [PyPI](https://pypi.org/project/verifyml/), and can be installed with `pip install verifyml`.
@@ -73,15 +74,15 @@ Model tests provides an out of the box way to conduct checks and analysis on per
 
 Currently, VerifyML provides 5 classes of tests:
 
-1) __Subgroup Disparity Test__ - For a given metric, assert that the difference between the best and worst performing group is less than a specified threshold
-2) __Min/Max Metric Threshold Test__ - For a given metric, assert that all groups should be below / above a specified threshold
-3) __Perturbation Test__ - Assert that a given metric does not change significantly after perturbing on a specified input variable
-4) __Feature Importance Test__ - Assert that certain specified variables are not included as the top n most important features  
-5) __Data Shift Test__ - Assert that the distributions of specified attributes are similar across two given datasets of interest
+1. **Subgroup Disparity Test** - For a given metric, assert that the difference between the best and worst performing group is less than a specified threshold
+2. **Min/Max Metric Threshold Test** - For a given metric, assert that all groups should be below / above a specified threshold
+3. **Perturbation Test** - Assert that a given metric does not change significantly after perturbing on a specified input variable
+4. **Feature Importance Test** - Assert that certain specified variables are not included as the top n most important features
+5. **Data Shift Test** - Assert that the distributions of specified attributes are similar across two given datasets of interest
 
-The detailed [model tests readme](/verifyml/model_tests/README.md) contains more information on the tests.
+The detailed [model tests readme](https://github.com/cylynx/verifyml/blob/main/verifyml/model_tests/README.md) contains more information on the tests.
 
-You can also easily create your own model tests by inheriting from the base model test class. See [DEVELOPMENT](DEVELOPMENT.md) for more details.  
+You can also easily create your own model tests by inheriting from the base model test class. See [DEVELOPMENT](https://github.com/cylynx/verifyml/blob/main/DEVELOPMENT.md) for more details.
 
 ### Example usage
 
@@ -106,17 +107,17 @@ model_card.fairness_analysis.fairness_reports[0].tests = [mc_smt_test]
 
 ## Schema
 
-Model cards are stored as a protobuf format. The reference model card protobuf schema can be found in the [proto directory](verifyml/model_card_toolkit/proto/model_card.proto). A translated copy in json schema format is also made available for convenience in the [schema folder](verifyml/model_card_toolkit/schema)
+Model cards are stored as a protobuf format. The reference model card protobuf schema can be found in the [proto directory](https://github.com/cylynx/verifyml/tree/main/verifyml/model_card_toolkit/proto). A translated copy in json schema format is also made available for convenience in the [schema folder](https://github.com/cylynx/verifyml/tree/main/verifyml/model_card_toolkit/schema)
 
 ## Templates
 
-Model cards can be rendered into various reports through the use of templates. The template folder contains two html templates - a default model report and a compare template, and a default markdown model report. 
+Model cards can be rendered into various reports through the use of templates. The template folder contains two html templates - a default model report and a compare template, and a default markdown model report.
 
 ## Contributions and Development
 
-Contributions are always welcome - check out [CONTRIBUTING](CONTRIBUTING.md)
+Contributions are always welcome - check out [CONTRIBUTING](https://github.com/cylynx/verifyml/blob/main/CONTRIBUTING.md)
 
-The package and it's functionalities can be easily extended to meet the needs of a team. Check out [DEVELOPMENT](DEVELOPMENT.md) for more info.
+The package and it's functionalities can be easily extended to meet the needs of a team. Check out [DEVELOPMENT](https://github.com/cylynx/verifyml/blob/main/DEVELOPMENT.md) for more info.
 
 ## Prior Art
 
@@ -126,7 +127,7 @@ The model card in VerifyML is adapted from Google's [Model Card Toolkit](https:/
 mct.export_format(output_file="example.md", template_path="path_to_my_template")
 ```
 
-View the [templates' README](verifyml/model_card_toolkit/template/README.md) for more information on creating your own jinja templates.
+View the [templates' README](https://github.com/cylynx/verifyml/blob/main/verifyml/model_card_toolkit/template/README.md) for more information on creating your own jinja templates.
 
 ## References
 
@@ -134,4 +135,4 @@ View the [templates' README](verifyml/model_card_toolkit/template/README.md) for
 
 ## License
 
-VerifyML is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE.md) for the full license text.
+VerifyML is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/cylynx/verifyml/blob/main/LICENSE) for the full license text.
