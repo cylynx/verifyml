@@ -4,6 +4,4 @@ prune verifyml/model_card_toolkit/template/html/test/
 prune verifyml/model_card_toolkit/template/md/test/
 prune verifyml/model_card_toolkit/template/test/
 prune verifyml/model_card_toolkit/utils/testdata/
-prune verifyml/data/
-prune verifyml/examples/
-prune verifyml/external/
+prune verifyml/bazel*
