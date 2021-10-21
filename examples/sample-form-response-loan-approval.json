@@ -19,19 +19,19 @@
         "key": "question_waO1Wy",
         "label": "Overview",
         "type": "TEXTAREA",
-        "value": "Sample example of a credit assessment of a loan approval model. Binary prediction problem (approved or rejected). Customers assessed with healthy credit score will be passed to internal team for follow-up."
+        "value": "The company wants to automate the loan eligibility process based on customer details provided during the online application process. Binary prediction problem (approved or rejected). Customers assessed with healthy credit score will be passed to internal team for follow-up."
       },
       {
         "key": "question_3X5jBY",
         "label": "Intended Users",
         "type": "INPUT_TEXT",
-        "value": "Loan assessment team and loanees"
+        "value": "Loan assessment team and customers taking out a loan"
       },
       {
         "key": "question_w8N9pP",
         "label": "Intended Use Cases",
         "type": "TEXTAREA",
-        "value": "Increase accuracy of predicting potential loan defaulters over the existing rule-based model, saving the bank time and avoiding monetary harm from false negative (wrongly approved) cases."
+        "value": "Save time in customer screening and reduce the rate of loan defaults."
       },
       {
         "key": "question_m6DYq5",
@@ -114,7 +114,7 @@
         "key": "question_wM10jE",
         "label": "Description of dataset",
         "type": "TEXTAREA",
-        "value": "Standard loan assessment dataset "
+        "value": "Loan assessment taken from https://datahack.analyticsvidhya.com/contest/practice-problem-loan-prediction-iii"
       },
       {
         "key": "question_wzEVQ0",
@@ -132,37 +132,37 @@
         "key": "question_3Eqpo2",
         "label": "Justification of use of protected attributes",
         "type": "TEXTAREA",
-        "value": "Gender and marital status is an important predictor of credit card fraud"
+        "value": "We improve model fairness by using a different threshold depending on gender and marital status"
       },
       {
         "key": "question_wdb72K",
         "label": "Name of dataset 2",
         "type": "INPUT_TEXT",
-        "value": "CRM"
+        "value": null
       },
       {
         "key": "question_mJ1yEz",
         "label": "Description of dataset 2",
         "type": "TEXTAREA",
-        "value": "Customer information database"
+        "value": null
       },
       {
         "key": "question_mYj2zJ",
         "label": "Protected attributes in dataset 2",
         "type": "TEXTAREA",
-        "value": "age, gender, race, religion, marital status"
+        "value": null
       },
       {
         "key": "question_mDqLvZ",
         "label": "Protected attributes in production (dataset 2)",
         "type": "TEXTAREA",
-        "value": "Gender, marital status"
+        "value": null
       },
       {
         "key": "question_3jeK8Y",
         "label": "Justification of use of protected attributes (dataset 2)",
         "type": "TEXTAREA",
-        "value": "Gender and marital status is an important predictor of credit card fraud"
+        "value": null
       },
       {
         "key": "question_3laplv",
@@ -216,19 +216,19 @@
         "key": "question_mKp4dz",
         "label": "Who are the individuals and groups that are considered to be at-risk of being systematically disadvantaged by the system?",
         "type": "TEXTAREA",
-        "value": "race, age, marital status"
+        "value": "gender and marital status"
       },
       {
         "key": "question_31WYq4",
         "label": "Expected Benefits",
         "type": "TEXTAREA",
-        "value": "A more precise model will reduce the number of potential defaulters being mistakenly given loan approval in the existing rules based model, which can harm the monetary objectives of the business."
+        "value": "Customers can get quicker loan approvals. A more accurate model than current business rules will also enable more customers to apply for loans."
       },
       {
         "key": "question_nGeMBk",
         "label": "Expected Harms",
         "type": "TEXTAREA",
-        "value": "Customers who are in the false-positive (falsely rejected) category will not be given loan and harbour negative image towards the bank.  "
+        "value": "Customers who are falsely rejected (false-positive) will be denied access to loans."
       },
       {
         "key": "question_mJ1r5z",
@@ -240,7 +240,7 @@
         "key": "question_nPRoBe",
         "label": "Type of fairness analysis conducted",
         "type": "INPUT_TEXT",
-        "value": "Minimum acceptable service"
+        "value": "Equal false positive rate"
       },
       {
         "key": "question_3Eqpbr",
@@ -252,25 +252,25 @@
         "key": "question_nrDXrR",
         "label": "Description of fairness analysis",
         "type": "TEXTAREA",
-        "value": "True positive rate for the credit scoring model should be greater than 40% which is the existing average false positive rate of the rule based model"
+        "value": "Disparity ratio of false positive rates of any 2 bins in the respective attribute should not be more than a factor of 1.8"
       },
       {
         "key": "question_w4aZNY",
         "label": "Type of fairness analysis conducted 2",
         "type": "INPUT_TEXT",
-        "value": "Equal false positive rate "
+        "value": null
       },
       {
         "key": "question_3jeK94",
         "label": "Segment of analysis 2",
         "type": "INPUT_TEXT",
-        "value": "Gender and maritial status"
+        "value": null
       },
       {
         "key": "question_w2j2x9",
         "label": "Description of fairness analysis 2",
         "type": "TEXTAREA",
-        "value": "Disparity ratio of false positive rates of any 2 bins in the respective attribute should not be more than a factor of 1.8"
+        "value": null
       },
       {
         "key": "question_3xVGN5",
