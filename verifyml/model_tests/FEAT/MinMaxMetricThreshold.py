@@ -40,9 +40,7 @@ class MinMaxMetricThreshold(ModelTest):
         'tpr' - true positive rate, 'fnr' - false negative rate, 'tnr' - true negative rate.
       threshold: Threshold for the test. To pass, fpr / fnr has to be lower than the threshold or tpr/tnr
         has to be greater than the threshold.
-      proba_thresholds: An optional dictionary object with keys as the attribute groups and the values
-        as the thresholds for the output to be classified as 1. By default the thresholds for each group
-        is assumed to be 0.5.
+      proba_threshold: Probability threshold for the output to be classified as 1. By default, it is 0.5.
       test_name: Name of the test, default is 'ROC/Min Max Threshold Test'.
       test_desc: Description of the test. If none is provided, an automatic description
          will be generated based on the rest of the arguments passed in.
@@ -51,7 +49,7 @@ class MinMaxMetricThreshold(ModelTest):
     attr: str
     metric: Literal["fpr", "tpr", "fnr", "tnr"]
     threshold: float
-    proba_thresholds: dict = None
+    proba_threshold: float = 0.5
     plots: dict[str, str] = field(repr=False, default_factory=dict)
     test_name: str = "ROC/Min Max Threshold Test"
     test_desc: str = None
@@ -105,19 +103,13 @@ class MinMaxMetricThreshold(ModelTest):
                 output_sub["truth"], output_sub["prediction_probas"]
             )
 
-            if self.proba_thresholds and isinstance(self.proba_thresholds, dict):
-                proba_threshold = self.proba_thresholds[value]
-            else:
-                # if threshold dict is not specified, show the markers for default probability threshold = 0.5
-                proba_threshold = 0.5
-
-            tmp = [i for i in thresholds_lst - proba_threshold if i > 0]
+            tmp = [i for i in thresholds_lst - self.proba_threshold if i > 0]
             idx = tmp.index(tmp[-1])
 
             self.fpr[value] = fpr
             self.tpr[value] = tpr
             self.thresholds_lst[value] = thresholds_lst
-            self.thresholds[value] = proba_threshold
+            self.thresholds[value] = self.proba_threshold
             self.idx[value] = idx
 
             if self.metric in ["fpr", "tnr"]:

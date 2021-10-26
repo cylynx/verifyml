@@ -34,7 +34,7 @@ y = df["Loan_Status"]
 
 # Train-Test data Split
 x_train, x_test, y_train, y_test = train_test_split(
-    x, y, test_size=0.5, random_state=912738
+    x, y, test_size=0.5, random_state=771
 ) 
 
 
@@ -42,7 +42,7 @@ x_train, x_test, y_train, y_test = train_test_split(
 
 # Apply one hot encoding to categorical columns (auto-detect object columns) and random forest model in the pipeline
 estimator = Pipeline(steps=[('onehot', ce.OneHotEncoder(use_cat_names=True)),
-                      ('classifier', RandomForestClassifier(n_estimators=12, max_depth=10, random_state=28)
+                      ('classifier', RandomForestClassifier(n_estimators=12, max_depth=10, random_state=123)
                       )])
 
 
@@ -51,8 +51,8 @@ estimator.fit(x_train, y_train)
 
 output = x_test.copy() # x_test df with output columns, to be appended later
 y_probas = estimator.predict_proba(x_test)[::, 1]
-y_pred = (y_probas > 0.55).astype(int)
-train_pred = (estimator.predict_proba(x_train)[::, 1] > 0.55)
+y_pred = (y_probas > 0.45).astype(int)
+train_pred = (estimator.predict_proba(x_train)[::, 1] > 0.45)
 
 precision_train = round(precision_score(y_train, train_pred),3)
 recall_train = round(recall_score(y_train, train_pred), 3)
@@ -97,45 +97,45 @@ roc_curve_test = plot_to_str()
 ## Run some FEAT Tests on the data
 
 # ROC/Min Max Threshold Test
-smt_test = MinMaxMetricThreshold(
+tpr_threshold_test_gender = MinMaxMetricThreshold(
     #test_name="",        # Default test name and description will be used accordingly if not specified
     #test_desc="",
     attr="Gender",
     metric="tpr",
-    threshold=0.4,
-    proba_thresholds = {'Male':0.55,'Female':0.55,} # Custom probability threshold, default at 0.5
+    threshold=0.45,
+    proba_threshold = 0.45 # Custom probability threshold, default at 0.5
 )
-smt_test.run(df_test_with_output=output)
-smt_test.plot()
+tpr_threshold_test_gender.run(df_test_with_output=output)
+tpr_threshold_test_gender.plot()
 
-smt_test2 = MinMaxMetricThreshold(
+tpr_threshold_test_married = MinMaxMetricThreshold(
     attr="Married",
     metric="tpr",
-    threshold=0.4,
-    proba_thresholds = {'Yes':0.55,'No':0.55,} # Custom probability threshold, default at 0.5
+    threshold=0.45,
+    proba_threshold = 0.45 # Custom probability threshold, default at 0.5
 )
-smt_test2.run(df_test_with_output=output)
-smt_test2.plot()
+tpr_threshold_test_married.run(df_test_with_output=output)
+tpr_threshold_test_married.plot()
 
 # Subgroup Disparity Test
 
-sgd_test = SubgroupDisparity(
+sgd_test_married = SubgroupDisparity(
     attr='Married',
     metric='fpr',
     method='ratio',
     threshold=1.5,
 )
-sgd_test.run(output)
-sgd_test.plot(alpha=0.05)     # default alpha argument shows 95% C.I bands
+sgd_test_married.run(output)
+sgd_test_married.plot(alpha=0.05)     # default alpha argument shows 95% C.I bands
 
-sgd_test2 = SubgroupDisparity(
+sgd_test_gender = SubgroupDisparity(
     attr='Gender',
     metric='fpr',
     method='ratio',
     threshold=1.5,
 )
-sgd_test2.run(output)
-sgd_test2.plot(alpha=0.05)    # default alpha argument shows 95% C.I bands
+sgd_test_gender.run(output)
+sgd_test_gender.plot(alpha=0.05)    # default alpha argument shows 95% C.I bands
 
 # User inputted Feature importance test
 
@@ -165,23 +165,21 @@ mc2 = mct2.scaffold_assets(proto=pb)
 
 
 # init model card test objects
-mc_smt_test = mctlib.Test()
-mc_smt_test2 = mctlib.Test()
-mc_sgd_test = mctlib.Test()
-mc_sgd_test2 = mctlib.Test()
-mc_imp_test = mctlib.Test()
+mc_tpr_threshold_test_gender = mctlib.Test()
+mc_tpr_threshold_test_married = mctlib.Test()
+mc_sgd_test_married = mctlib.Test()
+mc_sgd_test_gender = mctlib.Test()
 
 # assign tests to them
-mc_smt_test.read_model_test(smt_test)
-mc_smt_test2.read_model_test(smt_test2)
-mc_sgd_test.read_model_test(sgd_test)
-mc_sgd_test2.read_model_test(sgd_test2)
-mc_imp_test.read_model_test(imp_test)
+mc_tpr_threshold_test_gender.read_model_test(tpr_threshold_test_gender)
+mc_tpr_threshold_test_married.read_model_test(tpr_threshold_test_married)
+mc_sgd_test_married.read_model_test(sgd_test_married)
+mc_sgd_test_gender.read_model_test(sgd_test_gender)
 
 # Add quantitative analysis
 
 # Create 4 PerformanceMetric to store our results
-mc2.quantitative_analysis.performance_metrics = [mctlib.PerformanceMetric() for i in range(0, 4)]
+mc2.quantitative_analysis.performance_metrics = [mctlib.PerformanceMetric() for i in range(0, 5)]
 mc2.quantitative_analysis.performance_metrics[0].type = "Recall"
 mc2.quantitative_analysis.performance_metrics[0].value = str(recall_train)
 mc2.quantitative_analysis.performance_metrics[0].slice = "Training Set"
@@ -207,22 +205,15 @@ mc2.quantitative_analysis.performance_metrics[3].graphics.description = (
 mc2.quantitative_analysis.performance_metrics[3].graphics.collection = [
     mctlib.Graphic(image=confusion_matrix_test), mctlib.Graphic(image=roc_curve_test)
 ]
+mc2.quantitative_analysis.performance_metrics[4].type = "True positive rate"
+mc2.quantitative_analysis.performance_metrics[4].tests = [mc_tpr_threshold_test_gender, mc_tpr_threshold_test_married]
 
-# You can add the components of a test (e.g. on explainability) in a report
-mc2.explainability_analysis.explainability_reports = [
-    mctlib.ExplainabilityReport(
-        type="Top 10 most important features", graphics=mctlib.GraphicsCollection(
-            collection = [mctlib.Graphic(name=n, image=i) for n, i in imp_test.plots.items()]
-        )
-    )
-]
 
 # The bootstrap template comes with two requirements on fairness analysis:
 # Minimum acceptable service and Equal false positive rate
 # We add the relevant tests associated with it
-mc2.fairness_analysis.fairness_reports[0].tests = [mc_smt_test,mc_smt_test2]
-mc2.fairness_analysis.fairness_reports[1].tests = [mc_sgd_test,mc_sgd_test2]
+mc2.fairness_analysis.fairness_reports[0].tests = [mc_sgd_test_married, mc_sgd_test_gender]
 
 mct2.update_model_card(mc2)
-mc2.model_details.name = "Loan Approval Model, outcome probability threshold = 0.55"
+mc2.model_details.name = "Loan Approval Model, outcome probability threshold = 0.45"
 

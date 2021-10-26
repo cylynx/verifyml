@@ -48,6 +48,7 @@ class Perturbation(ModelTest):
       method: Type of method for the test, choose from 'ratio' or 'diff'.
       threshold: Threshold for the test. To pass, ratio/difference of fpr / fnr has 
          to be lower than the threshold.
+      proba_threshold: Probability threshold for the output to be classified as 1. By default, it is 0.5.
       test_name: Name of the test, default is 'Subgroup Perturbation Test'.
       test_desc: Description of the test. If none is provided, an automatic description
          will be generated based on the rest of the arguments passed in.
@@ -57,6 +58,7 @@ class Perturbation(ModelTest):
     metric: Literal["fpr", "fnr", "pr"]
     method: Literal["ratio", "diff"]
     threshold: float
+    proba_threshold: float = 0.5
     plots: dict[str, str] = field(repr=False, default_factory=dict)
     test_name: str = "Subgroup Perturbation Test"
     test_desc: str = None
@@ -87,8 +89,7 @@ class Perturbation(ModelTest):
 
         self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
 
-    @staticmethod
-    def add_predictions_to_df(df: pd.DataFrame, model, encoder) -> pd.DataFrame:
+    def add_predictions_to_df(self, df: pd.DataFrame, model, encoder) -> pd.DataFrame:
         """ 
         Predict a set of dataset using the given model, and output the predictions 
         together with the df. Before predicting, encode the categorical features 
@@ -102,7 +103,7 @@ class Perturbation(ModelTest):
              must contain transform() function.
         """
         df = df.copy()
-        y_pred = model.predict(encoder.transform(df))
+        y_pred = model.predict_proba(encoder.transform(df))[::, 1] > self.proba_threshold
         df["prediction"] = y_pred
         return df
 

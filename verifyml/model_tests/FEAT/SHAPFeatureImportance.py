@@ -78,15 +78,16 @@ class SHAPFeatureImportance(ModelTest):
                 model_output="margin",
                 feature_perturbation="tree_path_dependent",
             )
+            self.shap_values = explainer.shap_values(x_test_encoded)[1]
         elif model_type == "others":
-            explainer = shap.PermutationExplainer(
-                model=model.predict_proba, data=x_train_encoded
+            explainer = shap.Explainer(
+                model=model.predict_proba,
+                masker=x_train_encoded
             )
+            self.shap_values = explainer.shap_values(x_test_encoded)
         else:
             raise ValueError("model_type should be 'trees' or 'others'")
-
-        self.shap_values = explainer.shap_values(x_test_encoded)
-
+        
         return self.shap_values
 
     def shap_summary_plot(self, x_test_encoded, save_plots: bool = True):
@@ -98,7 +99,7 @@ class SHAPFeatureImportance(ModelTest):
           save_plots: if True, saves the plots to the class instance
         """
         shap.summary_plot(
-            shap_values=self.shap_values[1],
+            shap_values=self.shap_values,
             features=x_test_encoded,
             max_display=20,
             plot_type="dot",
@@ -137,7 +138,7 @@ class SHAPFeatureImportance(ModelTest):
 
         # Take the mean of the absolute shapely values to get the aggregated shapely importance for each features
         agg_shap_df = pd.DataFrame(
-            pd.DataFrame(shap_values[1], columns=x_test_encoded.columns).abs().mean()
+            pd.DataFrame(shap_values, columns=x_test_encoded.columns).abs().mean()
         ).sort_values(0, ascending=False)
         agg_shap_df["feature_rank"] = agg_shap_df[0].rank(ascending=False)
         agg_shap_df.drop(0, axis=1, inplace=True)
@@ -173,7 +174,7 @@ class SHAPFeatureImportance(ModelTest):
         for r in attrs_to_show:
             shap.dependence_plot(
                 r,
-                shap_values=self.shap_values[1],
+                shap_values=self.shap_values,
                 features=x_test_encoded,
                 interaction_index=None,
                 show=False,

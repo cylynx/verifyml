@@ -100,7 +100,7 @@ smt_test = MinMaxMetricThreshold(
     attr="gender",
     metric="fpr",
     threshold=0.025,
-    # proba_thresholds = {'<=17':0.5,'>=40':0.6,'18-25':0.4,'26-39':0.3}  # Custom probability threshold, default at 0.5
+    # proba_threshold = 0.6  # Custom probability threshold, default at 0.5
 )
 smt_test.run(df_test_with_output=output)
 smt_test.plot()
