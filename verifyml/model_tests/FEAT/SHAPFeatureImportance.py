@@ -82,9 +82,7 @@ class SHAPFeatureImportance(ModelTest):
             )
             self.shap_values = explainer.shap_values(x_test_encoded)[1]
         elif model_type == "others":
-            explainer = shap.Explainer(
-                model=model.predict_proba, masker=x_train_encoded
-            )
+            explainer = shap.Explainer(model=model, masker=x_train_encoded)
             self.shap_values = explainer.shap_values(x_test_encoded)
         else:
             raise ValueError("model_type should be 'trees' or 'others'")
