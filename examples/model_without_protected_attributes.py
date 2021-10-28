@@ -151,6 +151,9 @@ mct2 = mctlib.ModelCardToolkit(
     output_dir="model_card_output", file_name="credit_card_fraud_example"
 )
 mc2 = mct2.scaffold_assets(proto=pb)
+mc2.model_details.name = (
+    "Credit Card Fraud Model, without protected attributes as model features"
+)
 
 
 ## Convert test objects to a model-card-compatible format
@@ -220,6 +223,3 @@ mc2.fairness_analysis.fairness_reports[1].tests = [mc_sgd_test, mc_sgd_test2]
 
 
 mct2.update_model_card(mc2)
-mc2.model_details.name = (
-    "Credit Card Fraud Model, without protected attributes as model features"
-)

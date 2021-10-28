@@ -163,7 +163,7 @@ mct2 = mctlib.ModelCardToolkit(
     output_dir="model_card_output", file_name="loan_approval_example"
 )
 mc2 = mct2.scaffold_assets(proto=pb)
-
+mc2.model_details.name = "Loan Approval Model, outcome probability threshold = 0.45"
 
 # ## Convert test objects to a model-card-compatible format
 
@@ -233,4 +233,3 @@ mc2.fairness_analysis.fairness_reports[0].tests = [
 ]
 
 mct2.update_model_card(mc2)
-mc2.model_details.name = "Loan Approval Model, outcome probability threshold = 0.45"
