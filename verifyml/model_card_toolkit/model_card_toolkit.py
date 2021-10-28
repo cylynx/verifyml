@@ -352,20 +352,24 @@ class ModelCardToolkit:
             for ts in common_type_slices
         }
 
-        # dont need type+slice info for now so just return list of tuples
-        common_reports = []
-        for list_of_report_tuples in common_reports_dict.values():
-            common_reports += list_of_report_tuples
+        # maintain type slice sort order as specified in type_slice_a
+        type_slice_indices = {
+            type_slice: index for index, type_slice in enumerate(type_slice_a.keys())
+        }
 
-        # ideal order: train-recall, train-precision, test-recall, test-precision
-        # each list element is a tuple of (report A, report B)
-        return sorted(
-            common_reports,
-            key=lambda x: (
-                0 if x[0].slice is not None and "train" in x[0].slice.lower() else 1,
-                0 if x[0].type is not None and "recall" in x[0].type.lower() else 1,
-            ),
+        # use indices as sort key for common_reports_dict
+        sorted_dict = dict(
+            sorted(
+                common_reports_dict.items(),
+                key=lambda x: type_slice_indices[x[0]],  # x[0] is type_slice
+            )
         )
+
+        # dont need type+slice info for now so just return flat list of tuples.
+        # each tuple: (report_a, report_b)
+        return [
+            tup for common_reports in sorted_dict.values() for tup in common_reports
+        ]
 
     def compare_model_cards(
         self, card_a: ModelCard, card_b: ModelCard, export_path: Optional[str] = None
