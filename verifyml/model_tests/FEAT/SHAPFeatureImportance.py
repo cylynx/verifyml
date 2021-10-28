@@ -61,8 +61,10 @@ class SHAPFeatureImportance(ModelTest):
 
         self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
 
-    def get_shap_values(self, model, model_type, x_train_encoded, x_test_encoded) -> list:
-        '''
+    def get_shap_values(
+        self, model, model_type, x_train_encoded, x_test_encoded
+    ) -> list:
+        """
         Get SHAP values for a set of test samples.
         
         Args:
@@ -71,21 +73,19 @@ class SHAPFeatureImportance(ModelTest):
           x_train_encoded: Training data features, categorical features have to be encoded.
           x_test_encoded: Test data to be used for shapely explanations, categorical features have
              to be encoded.
-        '''
+        """
         if model_type == "trees":
             explainer = shap.TreeExplainer(
                 model=model,
                 model_output="margin",
                 feature_perturbation="tree_path_dependent",
             )
+            self.shap_values = explainer.shap_values(x_test_encoded)[1]
         elif model_type == "others":
-            explainer = shap.PermutationExplainer(
-                model=model.predict_proba, data=x_train_encoded
-            )
+            explainer = shap.Explainer(model=model, masker=x_train_encoded)
+            self.shap_values = explainer.shap_values(x_test_encoded)
         else:
             raise ValueError("model_type should be 'trees' or 'others'")
-
-        self.shap_values = explainer.shap_values(x_test_encoded)
 
         return self.shap_values
 
@@ -98,7 +98,7 @@ class SHAPFeatureImportance(ModelTest):
           save_plots: if True, saves the plots to the class instance
         """
         shap.summary_plot(
-            shap_values=self.shap_values[1],
+            shap_values=self.shap_values,
             features=x_test_encoded,
             max_display=20,
             plot_type="dot",
@@ -137,7 +137,7 @@ class SHAPFeatureImportance(ModelTest):
 
         # Take the mean of the absolute shapely values to get the aggregated shapely importance for each features
         agg_shap_df = pd.DataFrame(
-            pd.DataFrame(shap_values[1], columns=x_test_encoded.columns).abs().mean()
+            pd.DataFrame(shap_values, columns=x_test_encoded.columns).abs().mean()
         ).sort_values(0, ascending=False)
         agg_shap_df["feature_rank"] = agg_shap_df[0].rank(ascending=False)
         agg_shap_df.drop(0, axis=1, inplace=True)
@@ -173,7 +173,7 @@ class SHAPFeatureImportance(ModelTest):
         for r in attrs_to_show:
             shap.dependence_plot(
                 r,
-                shap_values=self.shap_values[1],
+                shap_values=self.shap_values,
                 features=x_test_encoded,
                 interaction_index=None,
                 show=False,
