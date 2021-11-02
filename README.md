@@ -159,7 +159,7 @@ By default, this serves the docs at `localhost:8000`.
 To build the HTML files into a `_build/html/` dir, run
 
 ```bash
-pydoc-markdown --build --site-dir "$PWD/_build/html"
+pydoc-markdown --build --site-dir "$PWD/build/html"
 ```
 
 Full command-line arguments can be found [here](https://pydoc-markdown.readthedocs.io/en/latest/api-documentation/cli/).
