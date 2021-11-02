@@ -13,6 +13,9 @@ renderer:
     - title: Contributing
       name: contributing
       source: CONTRIBUTING.md
+    - title: Development
+      name: development
+      source: DEVELOPMENT.md
     - title: API Documentation
       children:
         - title: Model Card Toolkit

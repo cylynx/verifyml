@@ -12,9 +12,9 @@ pip install . --force-reinstall
 
 ## Model Card Templates
 
-We use [Jinja](https://jinja.palletsprojects.com/en/3.0.x/) templates to create the HTML needed to display Model Cards. For details on how to create you own templates, refer to the [templates' README](verifyml/model_card_toolkit/template/README.md).
+We use [Jinja](https://jinja.palletsprojects.com/en/3.0.x/) templates to create the HTML needed to display Model Cards. For details on how to create you own templates, refer to the [templates' README](https://github.com/cylynx/verifyml/blob/main/verifyml/model_card_toolkit/template/README.md).
 
-If you've created new templates and would like them to be included as part of the official package output directory when `scaffold_assets()` is called, update the `_UI_TEMPLATES` variable in [model_card_toolkit.py](verifyml/model_card_toolkit/model_card_toolkit.py):
+If you've created new templates and would like them to be included as part of the official package output directory when `scaffold_assets()` is called, update the `_UI_TEMPLATES` variable in [model_card_toolkit.py](https://github.com/cylynx/verifyml/blob/main/verifyml/model_card_toolkit/model_card_toolkit.py):
 
 ```python
 _UI_TEMPLATES = (
@@ -27,7 +27,7 @@ _UI_TEMPLATES = (
 
 ## Model Tests
 
-If the [provided model tests](verifyml/model_tests) are insufficient, you can easily create your own by extending the [ModelTest](verifyml/model_tests/ModelTest.py) abstract base class.
+If the [provided model tests](https://github.com/cylynx/verifyml/blob/main/verifyml/model_tests) are insufficient, you can easily create your own by extending the [ModelTest](https://github.com/cylynx/verifyml/blob/main/verifyml/model_tests/ModelTest.py) abstract base class.
 
 When creating a subclass from ModelTest, there are a few requirements for the test to render properly on a Model Card:
 
@@ -37,11 +37,11 @@ When creating a subclass from ModelTest, there are a few requirements for the te
 2. If plots are to be displayed, the subclass also needs a method (e.g. `plot()`) that stores them in `self.plots` as base64-encoded strings
 3. The subclass should have `test_name` and `test_desc` attributes, which will be used as headers for the test in the Model Card
 
-Refer to the Model Test [DEVELOPMENT.ipynb](verifyml/model_tests/DEVELOPMENT.ipynb) notebook to see a toy example of how this can be done.
+Refer to the Model Test [DEVELOPMENT.ipynb](https://github.com/cylynx/verifyml/blob/main/verifyml/model_tests/DEVELOPMENT.ipynb) notebook to see a toy example of how this can be done.
 
 ## Model Card Protobuf Schema
 
-The protobuf schema is located [here](verifyml/model_card_toolkit/proto/model_card.proto), and is used to convert model card data saved in protobuf format to and from a Python-usable format. If there is a need to modify it, it is recommended to add new protobuf fields instead of overwriting existing ones, to preserve backward compatibility.
+The protobuf schema is located [here](https://github.com/cylynx/verifyml/blob/main/verifyml/model_card_toolkit/proto/model_card.proto), and is used to convert model card data saved in protobuf format to and from a Python-usable format. If there is a need to modify it, it is recommended to add new protobuf fields instead of overwriting existing ones, to preserve backward compatibility.
 
 To use it, you need to first install [`bazel`](https://docs.bazel.build/versions/4.2.1/install.html).
 
@@ -51,7 +51,7 @@ After that, run this from the `verifyml` folder:
 bazel run //model_card_toolkit:move_generated_files
 ```
 
-This will read the protobuf schema and create a [`model_card_pb2.py` file](verifyml/model_card_toolkit/proto/model_card_pb2.py) that can be imported and used in Python.
+This will read the protobuf schema and create a [`model_card_pb2.py` file](https://github.com/cylynx/verifyml/blob/main/verifyml/model_card_toolkit/proto/model_card_pb2.py) that can be imported and used in Python.
 
 For example, this is what the schema looks like for defining model owners:
 
@@ -72,7 +72,7 @@ message Owner {
 }
 ```
 
-Running the `bazel` command will create a `model_card_pb2.py` file that contains this information. A [corresponding Python class](verifyml/model_card_toolkit/model_card.py) can use the definition like this:
+Running the `bazel` command will create a `model_card_pb2.py` file that contains this information. A [corresponding Python class](https://github.com/cylynx/verifyml/blob/main/verifyml/model_card_toolkit/model_card.py) can use the definition like this:
 
 ```python
 import dataclasses
