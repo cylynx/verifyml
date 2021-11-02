@@ -136,3 +136,22 @@ View the [templates' README](https://github.com/cylynx/verifyml/blob/main/verify
 ## License
 
 VerifyML is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/cylynx/verifyml/blob/main/LICENSE) for the full license text.
+
+## Generating Docs
+
+Docs are generated using [pydoc-markdown](https://github.com/NiklasRosenstein/pydoc-markdown), and the configuration is specified in `pydoc-markdown.yml`.
+
+To preview the docs locally, run
+
+```bash
+pydoc-markdown --server --open
+
+# or
+pydoc-markdown -s -o
+```
+
+To build the HTML files, run
+
+```bash
+pydoc-markdown --build --site-dir "$PWD/_build/html"
+```
