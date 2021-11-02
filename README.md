@@ -153,5 +153,5 @@ pydoc-markdown -s -o
 To build the HTML files, run
 
 ```bash
-pydoc-markdown --build --site-dir "$PWD/_build/html"
+pydoc-markdown --build --site-dir "$PWD/build/html"
 ```
