@@ -141,6 +141,8 @@ VerifyML is licensed under the Apache License, Version 2.0. See [LICENSE](https:
 
 Docs are generated using [pydoc-markdown](https://github.com/NiklasRosenstein/pydoc-markdown), and the configuration is specified in `pydoc-markdown.yml`.
 
+### Preview
+
 To preview the docs locally, run
 
 ```bash
@@ -150,8 +152,14 @@ pydoc-markdown --server --open
 pydoc-markdown -s -o
 ```
 
-To build the HTML files, run
+By default, this serves the docs at `localhost:8000`.
+
+### Build
+
+To build the HTML files into a `_build/html/` dir, run
 
 ```bash
 pydoc-markdown --build --site-dir "$PWD/build/html"
 ```
+
+Full command-line arguments can be found [here](https://pydoc-markdown.readthedocs.io/en/latest/api-documentation/cli/).
