@@ -7,4 +7,4 @@ amazon-linux-extras install python3.8
 alias python3=python3.8
 
 # install requirements
-pip3.8 install -r requirements.txt
+python3 -m pip install -r requirements.txt
