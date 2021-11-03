@@ -139,27 +139,36 @@ VerifyML is licensed under the Apache License, Version 2.0. See [LICENSE](https:
 
 ## Generating Docs
 
-Docs are generated using [pydoc-markdown](https://github.com/NiklasRosenstein/pydoc-markdown), and the configuration is specified in `pydoc-markdown.yml`.
+Docs are generated using [pydoc-markdown](https://github.com/NiklasRosenstein/pydoc-markdown), and our configuration is specified in `pydoc-markdown.yml`. The package reads the yml file, then converts the referenced READMEs and code files into corresponding [mkdocs](https://www.mkdocs.org/) markdown files, together with a `mkdocs.yml` config file. These converted files can be found in a `build/docs` directory, which will appear after the commands below are run.
 
 ### Preview
 
 To preview the docs locally, run
 
 ```bash
-pydoc-markdown --server --open
-
-# or
-pydoc-markdown -s -o
+./docs.sh serve
 ```
 
-By default, this serves the docs at `localhost:8000`.
+This creates doc files in `build/docs/`, then serves them at `localhost:8000`.
 
 ### Build
 
-To build the HTML files into a `build/html/` dir, run
+To build the HTML files, run
 
 ```bash
-pydoc-markdown --build --site-dir "$PWD/build/html"
+./docs.sh build
 ```
 
-Full command-line arguments can be found [here](https://pydoc-markdown.readthedocs.io/en/latest/api-documentation/cli/).
+This creates doc files in `build/docs/`, then creates their HTML equivalents in `build/html/`.
+
+### Details
+
+To render Jupyter Notebooks in the docs, we use the [`mkdocs-jupyter`](https://github.com/danielfrg/mkdocs-jupyter) plugin, and reference the notebooks in `pydoc-markdown.yml` (e.g. `source: example.ipynb` in one of the entries).
+
+However, because `pydoc-markdown` converts everything to Markdown files by default, only the notebook text would show up by default. Thus, some intermediate steps (/ hacks) are required for the notebook to render correctly:
+
+1. Build the docs, converting the notebook text into a Markdown file (e.g. `build/docs/example.md`)
+2. Rename the built file's extension from Markdown back into a notebook format (e.g. `mv example.md example.ipynb` in bash)
+3. Edit the built `mkdocs.yml` file such that the notebook's entry points to the renamed file in step 2 (this is done by `convert_md_to_ipynb.py`)
+
+`./docs.sh` handles these steps.

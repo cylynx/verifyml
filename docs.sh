@@ -27,7 +27,7 @@ case $1 in
 
   build)
     printf "\nBuilding HTML docs...\n\n"
-    mkdocs build -f $DOCS/mkdocs.yml -d html
+    mkdocs build -f $DOCS/mkdocs.yml -d ../html
     ;;
 
   *)
