@@ -3,9 +3,6 @@
 
 amazon-linux-extras install python3.8
 
-# docs.sh uses python3
-alias python3=python3.8
-
 # install and activate virtual env
 pip3.8 install virtualenv
 virtualenv venv
