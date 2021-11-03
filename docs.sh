@@ -17,7 +17,7 @@ mv $NB.md $NB.ipynb
 
 # edit mkdocs.yml to reference the notebook files
 printf "\nEditing mkdocs.yml to point to notebooks...\n"
-python3.8 convert_md_to_ipynb.py
+python3 convert_md_to_ipynb.py
 
 # serve or build HTML files, depending on argument $1
 case $1 in
