@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# exit script upon error
+set -e
+
 # variables
 DOCS=build/docs
 NB=$DOCS/content/fairness/credit-card-fraud-example-notebook

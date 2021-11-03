@@ -4,3 +4,4 @@ pydoc-markdown
 mkdocs
 mkdocs-jupyter
 mkdocs-material
+PyYAML==5.3.0
