@@ -7,9 +7,12 @@ renderer:
     - title: Home
       name: index
       source: README.md
-    - title: Fairness Assessments
-      name: fairness
-      source: verifyml/model_tests/README.md
+    - title: Fairness
+      children:
+        - title: Fairness Assessment
+          source: verifyml/model_tests/README.md
+        - title: Credit Card Fraud Example Notebook
+          source: examples/credit_card_fraud_example.ipynb
     - title: Contributing
       name: contributing
       source: CONTRIBUTING.md
@@ -24,8 +27,6 @@ renderer:
               contents: [model_card_toolkit.model_card.*]
             - title: Model Card Toolkit
               contents: [model_card_toolkit.model_card_toolkit.*]
-
-          # nested children are automatically expanded?
         - title: Model Tests
           children:
             - title: ModelTest
@@ -46,5 +47,14 @@ renderer:
                   contents: [model_tests.FEAT.SubgroupDisparity.*]
   mkdocs_config:
     site_name: VerifyML
-    theme: readthedocs
+    theme:
+      # nested children are automatically expanded on readthedocs theme
+      name: material
+      palette:
+        primary: teal
     repo_url: https://github.com/cylynx/verifyml
+    markdown_extensions:
+      - toc:
+          permalink: True
+    plugins:
+      - mkdocs-jupyter

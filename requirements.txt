@@ -2,3 +2,5 @@ pre-commit==2.15.0
 black==21.9b0
 pydoc-markdown>=3.0.0,<4.0.0
 mkdocs
+mkdocs-jupyter
+mkdocs-material
