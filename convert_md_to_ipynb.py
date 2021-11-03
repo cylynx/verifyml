@@ -20,12 +20,13 @@ with open(MKDOCS_YML_PATH) as f:
 curr = y['nav'][1]['Fairness'][1]['Credit Card Fraud Example Notebook']
 
 if curr.endswith('.ipynb'):
+    print('File already in notebook format')
     pass
 elif curr.endswith('.md'):
     y['nav'][1]['Fairness'][1]['Credit Card Fraud Example Notebook'] = curr[:-3] + '.ipynb'
+    
+    # write it back to the file
+    with open(MKDOCS_YML_PATH, 'w') as f:
+        yaml.safe_dump(y, f, default_flow_style=False)
 else:
     print('Unrecognised file extension')
-
-# write it back to the file
-with open(MKDOCS_YML_PATH, 'w') as f:
-    yaml.safe_dump(y, f, default_flow_style=False)

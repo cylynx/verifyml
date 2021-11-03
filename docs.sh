@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# serves documentation locally at localhost:8000
 
 # variables
 DOCS=build/docs
