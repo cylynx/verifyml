@@ -1,50 +1,60 @@
 loaders:
   - type: python
-processors:
-  - type: filter
-  - type: smart
-  - type: crossref
+    search_path: [verifyml]
 renderer:
   type: mkdocs
   pages:
     - title: Home
       name: index
       source: README.md
-    - title: Fairness Assessments
-      name: fairness
-      source: verifyml/model_tests/README.md
+    - title: Fairness
+      children:
+        - title: Fairness Assessment
+          source: verifyml/model_tests/README.md
+        - title: Credit Card Fraud Example Notebook
+          source: examples/credit_card_fraud_example.ipynb
     - title: Contributing
       name: contributing
       source: CONTRIBUTING.md
+    - title: Development
+      name: development
+      source: DEVELOPMENT.md
     - title: API Documentation
       children:
         - title: Model Card Toolkit
           children:
             - title: Model Card
-              contents: [verifyml.model_card_toolkit.model_card.*]
+              contents: [model_card_toolkit.model_card.*]
             - title: Model Card Toolkit
-              contents: [verifyml.model_card_toolkit.model_card_toolkit.*]
-
-          # nested children are automatically expanded?
+              contents: [model_card_toolkit.model_card_toolkit.*]
         - title: Model Tests
           children:
             - title: ModelTest
-              contents: [verifyml.model_tests.ModelTest.*]
+              contents: [model_tests.ModelTest.*]
             - title: FEAT
               children:
                 - title: DataShift
-                  contents: [verifyml.model_tests.FEAT.DataShift.*]
+                  contents: [model_tests.FEAT.DataShift.*]
                 - title: FeatureImportance
-                  contents: [verifyml.model_tests.FEAT.FeatureImportance.*]
+                  contents: [model_tests.FEAT.FeatureImportance.*]
                 - title: MinMaxMetricThreshold
-                  contents: [verifyml.model_tests.FEAT.MinMaxMetricThreshold.*]
+                  contents: [model_tests.FEAT.MinMaxMetricThreshold.*]
                 - title: Perturbation
-                  contents: [verifyml.model_tests.FEAT.Perturbation.*]
+                  contents: [model_tests.FEAT.Perturbation.*]
                 - title: SHAPFeatureImportance
-                  contents: [verifyml.model_tests.FEAT.SHAPFeatureImportance.*]
+                  contents: [model_tests.FEAT.SHAPFeatureImportance.*]
                 - title: SubgroupDisparity
-                  contents: [verifyml.model_tests.FEAT.SubgroupDisparity.*]
+                  contents: [model_tests.FEAT.SubgroupDisparity.*]
   mkdocs_config:
     site_name: VerifyML
-    theme: readthedocs
+    theme:
+      # nested children are automatically expanded on readthedocs theme
+      name: material
+      palette:
+        primary: teal
     repo_url: https://github.com/cylynx/verifyml
+    markdown_extensions:
+      - toc:
+          permalink: True
+    plugins:
+      - mkdocs-jupyter
