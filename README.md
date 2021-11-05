@@ -8,7 +8,7 @@ VerifyML is an opinionated, open-source toolkit and workflow to help companies i
 
 ## Components
 
-![](https://github.com/cylynx/verifyml/blob/main/verifyml-dataflow.png)
+![](https://github.com/cylynx/verifyml/raw/main/verifyml-dataflow.png)
 
 At the core of the VerifyML workflow is a model card that captures 6 aspects of a model:
 
