@@ -20,8 +20,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.metrics import confusion_matrix
-from scipy.stats import norm
+from sklearn.metrics import confusion_matrix, mean_squared_error
+from sklearn.base import is_classifier
+from scipy.stats import norm, chi2
 
 from ..ModelTest import ModelTest
 from ..utils import plot_to_str
@@ -43,19 +44,22 @@ class Perturbation(ModelTest):
     
     Args:
       attr: Column name of the protected attribute.
-      metric: Type of performance metric for the test, choose from 'fpr' - false positive rate,
-        'fnr' - false negative rate, 'pr' - positive rate.
+      metric: Type of performance metric for the test, 
+         For classification problem, choose from 'fpr' - false positive rate,
+         'fnr' - false negative rate, 'pr' - positive rate.
+         For regression problem, choose from 'mse' - mean squared error.
       method: Type of method for the test, choose from 'ratio' or 'diff'.
-      threshold: Threshold for the test. To pass, ratio/difference of fpr / fnr has 
+      threshold: Threshold for the test. To pass, ratio/difference of chosen metric has 
          to be lower than the threshold.
-      proba_threshold: Probability threshold for the output to be classified as 1. By default, it is 0.5.
+      proba_threshold: Arg for classification problem, probability threshold for the output to be classified as 1. 
+         By default, it is 0.5.
       test_name: Name of the test, default is 'Subgroup Perturbation Test'.
       test_desc: Description of the test. If none is provided, an automatic description
          will be generated based on the rest of the arguments passed in.
     """
 
     attr: str
-    metric: Literal["fpr", "fnr", "pr"]
+    metric: Literal["fpr", "fnr", "pr", "mse"]
     method: Literal["ratio", "diff"]
     threshold: float
     proba_threshold: float = 0.5
@@ -68,6 +72,7 @@ class Perturbation(ModelTest):
             "fpr": "false postive rate",
             "fnr": "false negative rate",
             "pr": "positive rate",
+            "mse": "mean squared error",
         }
         if self.metric not in metrics:
             raise AttributeError(f"metric should be one of {metrics}.")
@@ -103,23 +108,22 @@ class Perturbation(ModelTest):
              must contain transform() function.
         """
         df = df.copy()
-        y_pred = (
-            model.predict_proba(encoder.transform(df))[::, 1] > self.proba_threshold
-        )
+        if not is_classifier(model):
+            y_pred = model.predict(encoder.transform(df))
+        else:
+            y_pred = (
+                model.predict_proba(encoder.transform(df))[::, 1] > self.proba_threshold
+            )
         df["prediction"] = y_pred
         return df
 
-    def get_metric_dict(
-        self, metric: Literal["fpr", "fnr", "pr"], df: pd.DataFrame
-    ) -> Tuple[dict, list]:
+    def get_metric_dict(self, df: pd.DataFrame) -> Tuple[dict, list]:
         """
         Output a dictionary containing the metrics and a list of the 
         metric's sample size for each subgroup of protected attribute, 
         from a dataframe containing 'truth' and 'prediction' columns.
         
         Args:
-          metric: Type of performance metric for the test, choose from 'fpr' - false positive rate,
-             'fnr' - false negative rate, 'pr' - positive rate.
           df: Dataframe containing 'truth' and 'prediction' columns.
         """
         metric_dict = {}
@@ -127,17 +131,23 @@ class Perturbation(ModelTest):
 
         for i in sorted(df[self.attr].unique()):
             tmp = df[df[self.attr] == i]
-            cm = confusion_matrix(tmp.truth, tmp.prediction)
 
-            if metric == "fpr":
+            if self.metric not in ["mse"]:
+                cm = confusion_matrix(tmp.truth, tmp.prediction)
+            if self.metric == "fpr":
                 metric_dict[f"{self.attr}_{i}"] = cm[0][1] / cm[0].sum()
                 size_list.append(cm[0].sum())
-            elif metric == "fnr":
+            elif self.metric == "fnr":
                 metric_dict[f"{self.attr}_{i}"] = cm[1][0] / cm[1].sum()
                 size_list.append(cm[1].sum())
-            elif metric == "pr":
+            elif self.metric == "pr":
                 metric_dict[f"{self.attr}_{i}"] = (cm[1][1] + cm[0][1]) / cm.sum()
                 size_list.append(cm.sum())
+            elif self.metric == "mse":
+                metric_dict[f"{self.attr}_{i}"] = mean_squared_error(
+                    tmp["truth"], tmp["prediction"]
+                )
+                size_list.append(len(tmp) - 1)
 
         return metric_dict, size_list
 
@@ -172,7 +182,7 @@ class Perturbation(ModelTest):
         df_original["truth"] = y_test
 
         self.metric_dict_original, self.size_list_original = self.get_metric_dict(
-            self.metric, df_original
+            df_original
         )
 
         return self.metric_dict_original
@@ -195,13 +205,13 @@ class Perturbation(ModelTest):
         df_perturbed["truth"] = y_test
 
         self.metric_dict_perturbed, self.size_list_perturbed = self.get_metric_dict(
-            self.metric, df_perturbed
+            df_perturbed
         )
 
         return self.metric_dict_perturbed
 
     def get_result(
-        self, x_test: pd.DataFrame, y_test: Series, model, encoder
+        self, x_test: pd.DataFrame, y_test: pd.Series, model, encoder
     ) -> pd.DataFrame:
         """
         Output a dataframe showing the test result of each groups. 
@@ -220,6 +230,10 @@ class Perturbation(ModelTest):
         if not self.attr in set(x_test.columns):
             raise KeyError(
                 f"Protected attribute {self.attr} column is not in given df, and ensure it is not encoded."
+            )
+        if (not is_classifier(model)) and (self.metric not in ["mse"]):
+            raise ValueError(
+                f"Classification metrics is not applicable with regression problem. Try metric = 'mse' "
             )
 
         md_original = self.get_metric_dict_original(x_test, y_test, model, encoder)
@@ -258,23 +272,49 @@ class Perturbation(ModelTest):
             [f"{self.metric} of original data", f"{self.metric} of perturbed data"]
         ]
 
-        z_value = norm.ppf(1 - alpha / 2)
-        original_tmp = df_plot[f"{self.metric} of original data"].values
-        original_ci = (
-            z_value
-            * np.divide(
-                np.multiply(original_tmp, 1 - original_tmp), self.size_list_original
+        if self.metric in ["mse"]:
+            lower_list = []
+            upper_list = []
+            for i in range(len(self.size_list_original)):
+                dof = self.size_list_original[i]
+                mse = df_plot[f"{self.metric} of original data"].values[i]
+                lower = mse * dof / chi2.ppf(1 - alpha / 2, df=dof)
+                lower_list.append(mse - lower)
+                upper = mse * dof / chi2.ppf(alpha / 2, df=dof)
+                upper_list.append(upper - mse)
+            original_ci = [lower_list, upper_list]
+        else:
+            z_value = norm.ppf(1 - alpha / 2)
+            original_tmp = df_plot[f"{self.metric} of original data"].values
+            original_ci = (
+                z_value
+                * np.divide(
+                    np.multiply(original_tmp, 1 - original_tmp), self.size_list_original
+                )
+                ** 0.5
             )
-            ** 0.5
-        )
-        perturbed_tmp = df_plot[f"{self.metric} of perturbed data"].values
-        perturbed_ci = (
-            z_value
-            * np.divide(
-                np.multiply(perturbed_tmp, 1 - perturbed_tmp), self.size_list_perturbed
+
+        if self.metric in ["mse"]:
+            lower_list = []
+            upper_list = []
+            for i in range(len(self.size_list_perturbed)):
+                dof = self.size_list_perturbed[i]
+                mse = df_plot[f"{self.metric} of original data"].values[i]
+                lower = mse * dof / chi2.ppf(1 - alpha / 2, df=dof)
+                lower_list.append(mse - lower)
+                upper = mse * dof / chi2.ppf(alpha / 2, df=dof)
+                upper_list.append(upper - mse)
+            perturbed_ci = [lower_list, upper_list]
+        else:
+            perturbed_tmp = df_plot[f"{self.metric} of perturbed data"].values
+            perturbed_ci = (
+                z_value
+                * np.divide(
+                    np.multiply(perturbed_tmp, 1 - perturbed_tmp),
+                    self.size_list_perturbed,
+                )
+                ** 0.5
             )
-            ** 0.5
-        )
 
         df_plot.plot.bar(yerr=[original_ci, perturbed_ci], rot=0, figsize=(12, 6))
         plt.axis([None, None, 0, None])
@@ -283,6 +323,7 @@ class Perturbation(ModelTest):
             "fpr": "False Positive Rates",
             "fnr": "False Negative Rates",
             "pr": "Predicted Positive Rates",
+            "mse": "Mean Squared Error",
         }
         title = f"{title_dict[self.metric]} across {self.attr} subgroups"
         plt.title(title)

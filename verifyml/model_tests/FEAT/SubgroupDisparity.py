@@ -19,8 +19,8 @@ import inspect
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from sklearn.metrics import confusion_matrix
-from scipy.stats import chi2_contingency, norm
+from sklearn.metrics import confusion_matrix, mean_squared_error
+from scipy.stats import chi2_contingency, norm, chi2
 
 from ..ModelTest import ModelTest
 from ..utils import plot_to_str
@@ -38,8 +38,10 @@ class SubgroupDisparity(ModelTest):
     
     Args:
       attr: Column name of the protected attribute.
-      metric: Type of performance metric for the test, choose from 'fpr' - false positive rate,
+      metric: Type of performance metric for the test, 
+        For classification problem, choose from 'fpr' - false positive rate,
         'fnr' - false negative rate, 'pr' - positive rate.
+        For regression problem, choose from 'mse' - mean squared error.
       method: Type of method for the test, choose from 'chi2', 'ratio' or 'diff'.
       threshold: Threshold for maximum difference / ratio, or the significance level of chi-sq test.
       test_name: Name of the test, default is 'Subgroup Disparity Test'.
@@ -48,7 +50,7 @@ class SubgroupDisparity(ModelTest):
     """
 
     attr: str
-    metric: Literal["fpr", "fnr", "pr"]
+    metric: Literal["fpr", "fnr", "pr", "mse"]
     method: Literal["chi2", "ratio", "diff"]
     threshold: float
     plots: dict[str, str] = field(repr=False, default_factory=dict)
@@ -60,6 +62,7 @@ class SubgroupDisparity(ModelTest):
             "fpr": "false postive rate",
             "fnr": "false negative rate",
             "pr": "positive rate",
+            "mse": "mean squared error",
         }
         if self.metric not in metrics:
             raise ValueError(f"metric should be one of {metrics}.")
@@ -102,10 +105,11 @@ class SubgroupDisparity(ModelTest):
         metric_dict = {}
         size_list = []
 
-        for value in df[self.attr].unique():
+        for value in sorted(df[self.attr].unique()):
             tmp = df[df[self.attr] == value]
-            cm = confusion_matrix(tmp.truth, tmp.prediction)
 
+            if self.metric not in ["mse"]:
+                cm = confusion_matrix(tmp.truth, tmp.prediction)
             if self.metric == "fnr":
                 metric_dict[value] = cm[1][0] / cm[1].sum()
                 size_list.append(cm[1].sum())
@@ -115,6 +119,9 @@ class SubgroupDisparity(ModelTest):
             elif self.metric == "pr":
                 metric_dict[value] = (cm[1][1] + cm[0][1]) / cm.sum()
                 size_list.append(cm.sum())
+            elif self.metric == "mse":
+                metric_dict[value] = mean_squared_error(tmp["truth"], tmp["prediction"])
+                size_list.append(len(tmp) - 1)
 
         return metric_dict, size_list
 
@@ -151,10 +158,21 @@ class SubgroupDisparity(ModelTest):
           alpha: Significance level for confidence interval. Calculated based on the binomial proportion approximation formula.
           save_plots: If True, saves the plots to the class instance.
         """
-
-        z_value = norm.ppf(1 - alpha / 2)
-        tmp = np.array(list(self.metric_dict.values()))
-        ci = z_value * np.divide(np.multiply(tmp, 1 - tmp), self.size_list) ** 0.5
+        if self.metric in ["mse"]:
+            lower_list = []
+            upper_list = []
+            for i in range(len(self.size_list)):
+                dof = self.size_list[i]
+                mse = list(self.metric_dict.values())[i]
+                lower = mse * dof / chi2.ppf(1 - alpha / 2, df=dof)
+                lower_list.append(mse - lower)
+                upper = mse * dof / chi2.ppf(alpha / 2, df=dof)
+                upper_list.append(upper - mse)
+            ci = [lower_list, upper_list]
+        else:
+            z_value = norm.ppf(1 - alpha / 2)
+            tmp = np.array(list(self.metric_dict.values()))
+            ci = z_value * np.divide(np.multiply(tmp, 1 - tmp), self.size_list) ** 0.5
 
         plt.figure(figsize=(12, 6))
         plt.bar(list(self.metric_dict.keys()), list(self.metric_dict.values()), yerr=ci)
@@ -164,6 +182,7 @@ class SubgroupDisparity(ModelTest):
             "fpr": "False Positive Rates",
             "fnr": "False Negative Rates",
             "pr": "Predicted Positive Rates",
+            "mse": "Mean Squared Error",
         }
         title = f"{title_dict[self.metric]} across {self.attr} subgroups"
         plt.title(title)
@@ -179,7 +198,7 @@ class SubgroupDisparity(ModelTest):
             return f"{self.attr}_{self.metric}_max_{self.method}"
 
     def get_result(self, df_test_with_output: pd.DataFrame) -> Dict[str, float]:
-        """Calculate maximum ratio / diff or chi-sq test for any 2 subgroups on a
+        """Calculate maximum ratio / diff or chi-sq test for any 2 subgroups' metrics on a
         given df.
 
         Args:
@@ -191,6 +210,10 @@ class SubgroupDisparity(ModelTest):
             raise KeyError(
                 f"Protected attribute {self.attr} column is not in given df, or is not encoded."
             )
+        if (df_test_with_output.truth.nunique() != 2) and (self.metric not in ["mse"]):
+            raise ValueError(
+                f"Classification metrics is not applicable with regression problem. Try metric = 'mse' "
+            )
 
         if self.method == "ratio":
             self.metric_dict, self.size_list = self.get_metric_dict(df_test_with_output)
@@ -199,6 +222,10 @@ class SubgroupDisparity(ModelTest):
             self.metric_dict, self.size_list = self.get_metric_dict(df_test_with_output)
             result = max(self.metric_dict.values()) - min(self.metric_dict.values())
         elif self.method == "chi2":
+            if self.metric == "mse":
+                raise ValueError(
+                    f"Chi-square test is not applicable for mean squared error, try method = 'ratio'. "
+                )
             table = self.get_contingency_table(df_test_with_output)
             _, result, _, _ = chi2_contingency(table)
 

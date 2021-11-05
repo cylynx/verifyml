@@ -15,6 +15,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Literal
+from sklearn.base import is_classifier
 import inspect
 import pandas as pd
 import shap
@@ -80,7 +81,10 @@ class SHAPFeatureImportance(ModelTest):
                 model_output="margin",
                 feature_perturbation="tree_path_dependent",
             )
-            self.shap_values = explainer.shap_values(x_test_encoded)[1]
+            if is_classifier(model):
+                self.shap_values = explainer.shap_values(x_test_encoded)[1]
+            else:
+                self.shap_values = explainer.shap_values(x_test_encoded)
         elif model_type == "others":
             explainer = shap.Explainer(model=model, masker=x_train_encoded)
             self.shap_values = explainer.shap_values(x_test_encoded)

@@ -13,3 +13,7 @@ pip install verifyml
 2) `tally_form_example.ipynb` - Takes a response generated from our [tally web form](https://tally.so/r/mR4Nlw) and converts it to a model card in 3 lines of code. It uses `sample-form-response.json` which is a sample response from the web form.
 
 3) `credit_card_fraud_example.ipynb` - A more detailed example of how the model card can be used to assess fairness objectives and compare performance across models. This notebook also introduces some of the fairness, ethics, accountability and transparency tests that is part of the `verifyml` package and integrates in the model card. The example is modelled after a hypothetical credit card fraud classification model based on mock transactional data.
+
+4) `loan_approval_example.ipynb` - The example is modelled after a hypothetical loan approval classification model based on real transactional data.
+
+5) `credit_risk_regression_example.ipynb` - The example is modelled after a hypothetical credit risk (regression problem) model based on real transactional data.

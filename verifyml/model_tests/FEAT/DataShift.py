@@ -179,11 +179,7 @@ class DataShift(ModelTest):
           alpha: Significance level for confidence interval.
           save_plots: If True, saves the plots to the class instance.
         """
-        fig, axs = plt.subplots(
-            1,
-            len(self.protected_attr),
-            figsize=(18, 6),
-        )
+        fig, axs = plt.subplots(1, len(self.protected_attr), figsize=(18, 6),)
         num = 0
         for pa in self.protected_attr:
             df_plot = self.result[["training_distribution", "eval_distribution"]]
