@@ -210,7 +210,7 @@ class SubgroupDisparity(ModelTest):
             raise KeyError(
                 f"Protected attribute {self.attr} column is not in given df, or is not encoded."
             )
-        if (df_test_with_output.truth.nunique() != 2) and (self.metric not in ["mse"]):
+        if df_test_with_output.truth.nunique() != 2 and self.metric not in ["mse"]:
             raise ValueError(
                 f"Classification metrics is not applicable with regression problem. Try metric = 'mse' "
             )

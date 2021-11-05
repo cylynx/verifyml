@@ -231,7 +231,7 @@ class Perturbation(ModelTest):
             raise KeyError(
                 f"Protected attribute {self.attr} column is not in given df, and ensure it is not encoded."
             )
-        if (not is_classifier(model)) and (self.metric not in ["mse"]):
+        if not is_classifier(model) and self.metric not in ["mse"]:
             raise ValueError(
                 f"Classification metrics is not applicable with regression problem. Try metric = 'mse' "
             )
