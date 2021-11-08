@@ -133,13 +133,19 @@ tpr_threshold_test_married.plot()
 # Subgroup Disparity Test
 
 sgd_test_married = SubgroupDisparity(
-    attr="Married", metric="fpr", method="ratio", threshold=1.5,
+    attr="Married",
+    metric="fpr",
+    method="ratio",
+    threshold=1.5,
 )
 sgd_test_married.run(output)
 sgd_test_married.plot(alpha=0.05)  # default alpha argument shows 95% C.I bands
 
 sgd_test_gender = SubgroupDisparity(
-    attr="Gender", metric="fpr", method="ratio", threshold=1.5,
+    attr="Gender",
+    metric="fpr",
+    method="ratio",
+    threshold=1.5,
 )
 sgd_test_gender.run(output)
 sgd_test_gender.plot(alpha=0.05)  # default alpha argument shows 95% C.I bands

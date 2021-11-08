@@ -119,18 +119,30 @@ smt_test = MinMaxMetricThreshold(
 smt_test.run(df_test_with_output=output)
 smt_test.plot()
 
-smt_test2 = MinMaxMetricThreshold(attr="age", metric="fpr", threshold=0.025,)
+smt_test2 = MinMaxMetricThreshold(
+    attr="age",
+    metric="fpr",
+    threshold=0.025,
+)
 smt_test2.run(df_test_with_output=output)
 smt_test2.plot()
 
 
 # Subgroup Disparity Test
-sgd_test = SubgroupDisparity(attr="age", metric="fpr", method="ratio", threshold=1.5,)
+sgd_test = SubgroupDisparity(
+    attr="age",
+    metric="fpr",
+    method="ratio",
+    threshold=1.5,
+)
 sgd_test.run(output)
 sgd_test.plot(alpha=0.05)  # default alpha argument shows 95% C.I bands
 
 sgd_test2 = SubgroupDisparity(
-    attr="gender", metric="fpr", method="ratio", threshold=1.5,
+    attr="gender",
+    metric="fpr",
+    method="ratio",
+    threshold=1.5,
 )
 sgd_test2.run(output)
 sgd_test2.plot(alpha=0.05)  # default alpha argument shows 95% C.I bands

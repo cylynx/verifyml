@@ -26,17 +26,17 @@ from ..utils import plot_to_str
 class FeatureImportance(ModelTest):
     """
     Test if the subgroups of the protected attributes are the top
-    ranking important variables based on user-inputted feature 
+    ranking important variables based on user-inputted feature
     importance values.
-    
+
     To pass, subgroups should not fall in the top n most important
     variables.
-    
+
     The test also stores a dataframe showing the results of each groups.
-    
+
     Args:
       attrs: List of protected attributes.
-      threshold: Threshold for the test. To pass, subgroups should not 
+      threshold: Threshold for the test. To pass, subgroups should not
          fall in the top n (threshold) most important variables.
       test_name: Name of the test, default is 'Feature Importance Test'.
       test_desc: Description of the test. If none is provided, an automatic description
@@ -63,7 +63,7 @@ class FeatureImportance(ModelTest):
     def plot(self, df: pd.DataFrame, show_n: int = 10, save_plots: bool = True):
         """
         Plot the top n most important features based on their importance values.
-        
+
         Args:
           df: A dataframe with 2 columns - first column of feature names and
              second column of importance values.
@@ -83,8 +83,8 @@ class FeatureImportance(ModelTest):
             self.plots[title] = plot_to_str()
 
     def get_result(self, df_importance) -> pd.DataFrame:
-        """Output a dataframe containing the test results of the protected attributes. 
-        
+        """Output a dataframe containing the test results of the protected attributes.
+
         Args:
           df_importance: A dataframe with 2 columns - first column with feature
              names and second column with importance values.
@@ -115,7 +115,7 @@ class FeatureImportance(ModelTest):
     def run(self, df_importance) -> bool:
         """Runs test by calculating result and evaluating if it passes a defined
         condition.
-        
+
         Args:
           df_importance: A dataframe with 2 columns - first column of feature
              names and second column of importance values.

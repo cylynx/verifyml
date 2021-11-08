@@ -28,21 +28,20 @@ from ..utils import plot_to_str
 
 @dataclass
 class MinMaxMetricThreshold(ModelTest):
-    """Test if all the subgroups for a given attribute meets a certain level of expected,
-    performance.
+    """Test if all the subgroups for a given attribute meets a certain level of expected performance.
 
     The test also stores a dataframe showing the results of each groups and ROC curve plots
     (for classification problem) for every subgroup along with the points which maximises tpr-fpr.
 
     Args:
       attr: Column name of the protected attribute.
-      metric: Type of performance metric for the test, 
+      metric: Type of performance metric for the test,
          For classification problem, choose from 'fpr' - false positive rate,
          'tpr' - true positive rate, 'fnr' - false negative rate, 'tnr' - true negative rate.
          For regression problem, choose from 'mse' - mean squared error.
       threshold: Threshold for the test. To pass, fpr/fnr/mse has to be lower than the threshold or tpr/tnr
          has to be greater than the threshold.
-      proba_threshold: Arg for classification problem, probability threshold for the output to be classified as 1. 
+      proba_threshold: Arg for classification problem, probability threshold for the output to be classified as 1.
          By default, it is 0.5.
       test_name: Name of the test, default is 'Min Max Threshold Test'.
       test_desc: Description of the test. If none is provided, an automatic description
@@ -82,7 +81,7 @@ class MinMaxMetricThreshold(ModelTest):
         Args:
           df_test_with_output: Dataframe containing protected attributes with
             "prediction" and "truth" column.
-        
+
         Returns:
           Dataframe with the results of each group.
         """
@@ -104,7 +103,11 @@ class MinMaxMetricThreshold(ModelTest):
             )
             self.dof_list.append(len(output_sub) - 1)
 
-        result = pd.DataFrame.from_dict(result, orient="index", columns=[self.metric],)
+        result = pd.DataFrame.from_dict(
+            result,
+            orient="index",
+            columns=[self.metric],
+        )
 
         result["passed"] = result.iloc[:, 0].apply(lambda x: x < self.threshold)
         result = result.round(3)
@@ -121,7 +124,7 @@ class MinMaxMetricThreshold(ModelTest):
         Args:
           df_test_with_output: Dataframe containing protected attributes with
             "prediction_probas" and "truth" column.
-        
+
         Returns:
           Dataframe with the results of each group.
         """
@@ -186,13 +189,13 @@ class MinMaxMetricThreshold(ModelTest):
         return result
 
     def plot(self, alpha: float = 0.05, save_plots: bool = True):
-        """For classification problem, plot ROC curve for every group in the attribute 
+        """For classification problem, plot ROC curve for every group in the attribute
         and mark the optimal probability threshold, the point which maximises tpr-fpr.
-        For regression problem, plot the metric of interest across the attribute subgroups, 
+        For regression problem, plot the metric of interest across the attribute subgroups,
         and their confidence interval bands.
 
         Args:
-          alpha: For regression problem, significance level for confidence interval of standard error/variance. 
+          alpha: For regression problem, significance level for confidence interval of standard error/variance.
           save_plots: If True, saves the plots to the class instance.
         """
         if self.result is None:

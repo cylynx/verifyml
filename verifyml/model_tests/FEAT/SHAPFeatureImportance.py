@@ -28,16 +28,16 @@ from ..utils import plot_to_str
 class SHAPFeatureImportance(ModelTest):
     """
     Test if the subgroups of the protected attributes are the top
-    ranking important variables under shapely feature importance value. 
-    
+    ranking important variables under shapely feature importance value.
+
     To pass, subgroups should not fall in the top n most important
     variables.
-    
+
     The test also stores a dataframe showing the results of each groups.
-    
+
     Args:
       attrs: List of protected attributes.
-      threshold: Threshold for the test. To pass, subgroups should not 
+      threshold: Threshold for the test. To pass, subgroups should not
          fall in the top n (threshold) most important variables.
       test_name: Name of the test, default is 'Shapely Feature Importance Test'.
       test_desc: Description of the test. If none is provided, an automatic description
@@ -67,10 +67,10 @@ class SHAPFeatureImportance(ModelTest):
     ) -> list:
         """
         Get SHAP values for a set of test samples.
-        
+
         Args:
           model: Trained model object.
-          model_type: type of model algorithm, choose from 'trees' or 'others' 
+          model_type: type of model algorithm, choose from 'trees' or 'others'
           x_train_encoded: Training data features, categorical features have to be encoded.
           x_test_encoded: Test data to be used for shapely explanations, categorical features have
              to be encoded.
@@ -95,10 +95,10 @@ class SHAPFeatureImportance(ModelTest):
 
     def shap_summary_plot(self, x_test_encoded, save_plots: bool = True):
         """Make a shap summary plot.
-        
+
         Args:
           x_test_encoded: Data to be used for shapely explanations, categorical
-             features have to be encoded 
+             features have to be encoded
           save_plots: if True, saves the plots to the class instance
         """
         shap.summary_plot(
@@ -121,11 +121,11 @@ class SHAPFeatureImportance(ModelTest):
         x_train_encoded: pd.DataFrame,
         x_test_encoded: pd.DataFrame,
     ) -> pd.DataFrame:
-        """Output a dataframe containing the test results of the protected attributes. 
- 
+        """Output a dataframe containing the test results of the protected attributes.
+
         Args:
           model: Trained model object.
-          model_type: type of model algorithm, choose from 'trees' or 'others' 
+          model_type: type of model algorithm, choose from 'trees' or 'others'
           x_train_encoded: Training data features, categorical features have to be encoded.
           x_test_encoded: Test data to be used for shapely explanations, categorical features have
              to be encoded.
@@ -161,7 +161,7 @@ class SHAPFeatureImportance(ModelTest):
         """
         Create a SHAP partial dependence plot to show the effect of the
         individual subgroups on shapely value.
-        
+
         Args:
           x_test_encoded: Test data to be used for shapely explanations, categorical
              features have to be encoded.
@@ -197,10 +197,10 @@ class SHAPFeatureImportance(ModelTest):
     ) -> bool:
         """Runs test by calculating result and evaluating if it passes a defined
         condition.
-        
+
         Args:
           model: Trained model object.
-          model_type: type of model algorithm, choose from 'trees' or 'others' 
+          model_type: type of model algorithm, choose from 'trees' or 'others'
           x_train_encoded: Training data features, categorical features have to be encoded.
           x_test_encoded: Test data to be used for shapely explanations, categorical features have
              to be encoded.

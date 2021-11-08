@@ -35,10 +35,10 @@ class SubgroupDisparity(ModelTest):
     If chi2 is used, the p-value calculated from a chi-square test of
     independence should be greater than the level of significance as specified
     by the threshold.
-    
+
     Args:
       attr: Column name of the protected attribute.
-      metric: Type of performance metric for the test, 
+      metric: Type of performance metric for the test,
         For classification problem, choose from 'fpr' - false positive rate,
         'fnr' - false negative rate, 'pr' - positive rate.
         For regression problem, choose from 'mse' - mean squared error.

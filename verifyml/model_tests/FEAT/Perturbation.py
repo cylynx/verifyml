@@ -33,25 +33,25 @@ class Perturbation(ModelTest):
     """
     Test if the specified metric of specified attribute subgroups of original
     dataset is worse than that of perturbed dataset by a specified threshold.
-    
-    To pass, if ratio is used, the ratio (with metric of perturbed data as denominator) 
+
+    To pass, if ratio is used, the ratio (with metric of perturbed data as denominator)
     of the respective subgroups metrics of the datasets should not exceed the threshold.
 
-    If diff is used, the difference (with metric of perturbed data as subtrahend) 
+    If diff is used, the difference (with metric of perturbed data as subtrahend)
     of the respective subgroups metric of the datasets should not exceed the threshold.
-    
+
     The test also stores a dataframe showing the results of each groups.
-    
+
     Args:
       attr: Column name of the protected attribute.
-      metric: Type of performance metric for the test, 
+      metric: Type of performance metric for the test,
          For classification problem, choose from 'fpr' - false positive rate,
          'fnr' - false negative rate, 'pr' - positive rate.
          For regression problem, choose from 'mse' - mean squared error.
       method: Type of method for the test, choose from 'ratio' or 'diff'.
-      threshold: Threshold for the test. To pass, ratio/difference of chosen metric has 
+      threshold: Threshold for the test. To pass, ratio/difference of chosen metric has
          to be lower than the threshold.
-      proba_threshold: Arg for classification problem, probability threshold for the output to be classified as 1. 
+      proba_threshold: Arg for classification problem, probability threshold for the output to be classified as 1.
          By default, it is 0.5.
       test_name: Name of the test, default is 'Subgroup Perturbation Test'.
       test_desc: Description of the test. If none is provided, an automatic description
@@ -95,14 +95,14 @@ class Perturbation(ModelTest):
         self.test_desc = default_test_desc if self.test_desc is None else self.test_desc
 
     def add_predictions_to_df(self, df: pd.DataFrame, model, encoder) -> pd.DataFrame:
-        """ 
-        Predict a set of dataset using the given model, and output the predictions 
-        together with the df. Before predicting, encode the categorical features 
+        """
+        Predict a set of dataset using the given model, and output the predictions
+        together with the df. Before predicting, encode the categorical features
         in the dataset with the encoder object.
-        
+
         Args:
           df: Dataset to be predicted by the model, protected attributes not
-             to be encoded 
+             to be encoded
           model: Model class object, preferably Sklearn class.
           encoder: One hot encoder class object for protected, preferably Sklearn class,
              must contain transform() function.
@@ -119,10 +119,10 @@ class Perturbation(ModelTest):
 
     def get_metric_dict(self, df: pd.DataFrame) -> Tuple[dict, list]:
         """
-        Output a dictionary containing the metrics and a list of the 
-        metric's sample size for each subgroup of protected attribute, 
+        Output a dictionary containing the metrics and a list of the
+        metric's sample size for each subgroup of protected attribute,
         from a dataframe containing 'truth' and 'prediction' columns.
-        
+
         Args:
           df: Dataframe containing 'truth' and 'prediction' columns.
         """
@@ -154,9 +154,9 @@ class Perturbation(ModelTest):
     @staticmethod
     def perturb_df(attr: str, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Perturb (by shuffling) the protected attribute column values of a 
+        Perturb (by shuffling) the protected attribute column values of a
         given df and and output a new dataframe.
-        
+
         Args:
           attr: Column name of the protected attribute to be perturbed.
           df: Dataframe containing the protected attribute.
@@ -169,10 +169,10 @@ class Perturbation(ModelTest):
         self, x_test: pd.DataFrame, y_test: pd.Series, model, encoder
     ) -> dict[str]:
         """Get metric dict for original dataset.
-        
+
         Args:
           x_test: Test dataset to be predicted by the model, protected attributes not
-             to be encoded 
+             to be encoded
           y_test: Series/array/list containing the truth outcome of x_test
           model: Model class object, preferably Sklearn class.
           encoder: One hot encoder class object for protected, preferably Sklearn class,
@@ -191,10 +191,10 @@ class Perturbation(ModelTest):
         self, x_test: pd.DataFrame, y_test: pd.Series, model, encoder
     ) -> dict[str]:
         """Get metric dict for perturbed dataset.
-        
+
         Args:
-          x_test: Test dataset to be perturbed and predicted by the model, 
-             protected attributes not to be encoded 
+          x_test: Test dataset to be perturbed and predicted by the model,
+             protected attributes not to be encoded
           y_test: Series/array/list containing the truth outcome of x_test
           model: Model class object, preferably Sklearn class.
           encoder: One hot encoder class object for protected, preferably Sklearn class,
@@ -214,17 +214,17 @@ class Perturbation(ModelTest):
         self, x_test: pd.DataFrame, y_test: pd.Series, model, encoder
     ) -> pd.DataFrame:
         """
-        Output a dataframe showing the test result of each groups. 
+        Output a dataframe showing the test result of each groups.
         For an example in 'gender' attribute, male subgroup fail the test if
             FPR of male group in original data - (or division) FPR of male group in
             perturbed gender data > threshold.
-            
+
         Args:
           x_test: Test df to be inputted into the model, protected attributes not
-             to be encoded 
+             to be encoded
           y_test: Series/array/list containing the truth of x_test
-          model: Model class object, preferably Sklearn class 
-          encoder: One hot encoder class object, preferably Sklearn class 
+          model: Model class object, preferably Sklearn class
+          encoder: One hot encoder class object, preferably Sklearn class
              attributes, must contain transform() function
         """
         if not self.attr in set(x_test.columns):
@@ -260,10 +260,10 @@ class Perturbation(ModelTest):
 
     def plot(self, alpha: float = 0.05, save_plots: bool = True):
         """
-        Plot the metrics of the attribute subgroups resulting from the 
+        Plot the metrics of the attribute subgroups resulting from the
         original and perturbed data respectively, also include the
         confidence interval bands.
-        
+
         Args:
           alpha: Significance level for confidence interval.
           save_plots: If True, saves the plots to the class instance.
@@ -334,13 +334,13 @@ class Perturbation(ModelTest):
     def run(self, x_test: pd.DataFrame, y_test: pd.Series, model, encoder) -> bool:
         """Runs test by calculating result and evaluating if it passes a defined
         condition.
-        
+
         Args:
           x_test: Test df to be inputted into the model, protected attributes not
-             to be encoded 
+             to be encoded
           y_test: Series/array/list containing the truth of x_test
-          model: Model class object, preferably Sklearn class 
-          encoder: One hot encoder class object, preferably Sklearn class 
+          model: Model class object, preferably Sklearn class
+          encoder: One hot encoder class object, preferably Sklearn class
              attributes, must contain transform() function
         """
         self.result = self.get_result(x_test, y_test, model, encoder)
