@@ -20,7 +20,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.metrics import confusion_matrix, mean_squared_error
+from sklearn.metrics import confusion_matrix, mean_squared_error, mean_absolute_error
 from sklearn.base import is_classifier
 from scipy.stats import norm, chi2
 
@@ -47,7 +47,7 @@ class Perturbation(ModelTest):
       metric: Type of performance metric for the test,
          For classification problem, choose from 'fpr' - false positive rate,
          'fnr' - false negative rate, 'pr' - positive rate.
-         For regression problem, choose from 'mse' - mean squared error.
+         For regression problem, choose from 'mse' - mean squared error, 'mae' - mean absolute error.
       method: Type of method for the test, choose from 'ratio' or 'diff'.
       threshold: Threshold for the test. To pass, ratio/difference of chosen metric has
          to be lower than the threshold.
@@ -59,7 +59,7 @@ class Perturbation(ModelTest):
     """
 
     attr: str
-    metric: Literal["fpr", "fnr", "pr", "mse"]
+    metric: Literal["fpr", "fnr", "pr", "mse", "mae"]
     method: Literal["ratio", "diff"]
     threshold: float
     proba_threshold: float = 0.5
@@ -73,6 +73,7 @@ class Perturbation(ModelTest):
             "fnr": "false negative rate",
             "pr": "positive rate",
             "mse": "mean squared error",
+            "mae": "mean absolute error",
         }
         if self.metric not in metrics:
             raise AttributeError(f"metric should be one of {metrics}.")
@@ -132,7 +133,7 @@ class Perturbation(ModelTest):
         for i in sorted(df[self.attr].unique()):
             tmp = df[df[self.attr] == i]
 
-            if self.metric not in ["mse"]:
+            if self.metric in ["fpr", "fnr", "pr"]:
                 cm = confusion_matrix(tmp.truth, tmp.prediction)
             if self.metric == "fpr":
                 metric_dict[f"{self.attr}_{i}"] = cm[0][1] / cm[0].sum()
@@ -145,6 +146,11 @@ class Perturbation(ModelTest):
                 size_list.append(cm.sum())
             elif self.metric == "mse":
                 metric_dict[f"{self.attr}_{i}"] = mean_squared_error(
+                    tmp["truth"], tmp["prediction"]
+                )
+                size_list.append(len(tmp) - 1)
+            elif self.metric == "mae":
+                metric_dict[f"{self.attr}_{i}"] = mean_absolute_error(
                     tmp["truth"], tmp["prediction"]
                 )
                 size_list.append(len(tmp) - 1)
@@ -231,7 +237,7 @@ class Perturbation(ModelTest):
             raise KeyError(
                 f"Protected attribute {self.attr} column is not in given df, and ensure it is not encoded."
             )
-        if not is_classifier(model) and self.metric not in ["mse"]:
+        if not is_classifier(model) and self.metric not in ["mse", "mae"]:
             raise ValueError(
                 f"Classification metrics is not applicable with regression problem. Try metric = 'mse' "
             )
@@ -272,16 +278,23 @@ class Perturbation(ModelTest):
             [f"{self.metric} of original data", f"{self.metric} of perturbed data"]
         ]
 
-        if self.metric in ["mse"]:
+        if self.metric in ["mse", "mae"]:
+            # Get approximate CI bounds for the metrics
             lower_list = []
             upper_list = []
             for i in range(len(self.size_list_original)):
                 dof = self.size_list_original[i]
-                mse = df_plot[f"{self.metric} of original data"].values[i]
-                lower = mse * dof / chi2.ppf(1 - alpha / 2, df=dof)
-                lower_list.append(mse - lower)
-                upper = mse * dof / chi2.ppf(alpha / 2, df=dof)
-                upper_list.append(upper - mse)
+                metric = df_plot[f"{self.metric} of original data"].values[i]
+                if self.metric == "mse":  # mse is an unbiased estimator of sigma^2
+                    tmp_lower = dof / chi2.ppf(1 - alpha / 2, df=dof)
+                    tmp_higher = dof / chi2.ppf(alpha / 2, df=dof)
+                elif self.metric == "mae":  # let mae be biased estimator of sigma
+                    tmp_lower = np.sqrt(dof / chi2.ppf(1 - alpha / 2, df=dof))
+                    tmp_higher = np.sqrt(dof / chi2.ppf(alpha / 2, df=dof))
+                lower = metric * tmp_lower
+                upper = metric * tmp_higher
+                lower_list.append(metric - lower)
+                upper_list.append(upper - metric)
             original_ci = [lower_list, upper_list]
         else:
             z_value = norm.ppf(1 - alpha / 2)
@@ -294,16 +307,23 @@ class Perturbation(ModelTest):
                 ** 0.5
             )
 
-        if self.metric in ["mse"]:
+        if self.metric in ["mse", "mae"]:
+            # Get approximate CI bounds for the metrics
             lower_list = []
             upper_list = []
             for i in range(len(self.size_list_perturbed)):
                 dof = self.size_list_perturbed[i]
-                mse = df_plot[f"{self.metric} of original data"].values[i]
-                lower = mse * dof / chi2.ppf(1 - alpha / 2, df=dof)
-                lower_list.append(mse - lower)
-                upper = mse * dof / chi2.ppf(alpha / 2, df=dof)
-                upper_list.append(upper - mse)
+                metric = df_plot[f"{self.metric} of original data"].values[i]
+                if self.metric == "mse":  # mse is an unbiased estimator of sigma^2
+                    tmp_lower = dof / chi2.ppf(1 - alpha / 2, df=dof)
+                    tmp_higher = dof / chi2.ppf(alpha / 2, df=dof)
+                elif self.metric == "mae":  # let mae be biased estimator of sigma
+                    tmp_lower = np.sqrt(dof / chi2.ppf(1 - alpha / 2, df=dof))
+                    tmp_higher = np.sqrt(dof / chi2.ppf(alpha / 2, df=dof))
+                lower = metric * tmp_lower
+                upper = metric * tmp_higher
+                lower_list.append(metric - lower)
+                upper_list.append(upper - metric)
             perturbed_ci = [lower_list, upper_list]
         else:
             perturbed_tmp = df_plot[f"{self.metric} of perturbed data"].values
@@ -324,6 +344,7 @@ class Perturbation(ModelTest):
             "fnr": "False Negative Rates",
             "pr": "Predicted Positive Rates",
             "mse": "Mean Squared Error",
+            "mae": "Mean Absolute Error",
         }
         title = f"{title_dict[self.metric]} across {self.attr} subgroups"
         plt.title(title)

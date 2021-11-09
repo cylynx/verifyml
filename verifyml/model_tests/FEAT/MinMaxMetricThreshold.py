@@ -19,7 +19,7 @@ import inspect
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import roc_curve, mean_squared_error
+from sklearn.metrics import roc_curve, mean_squared_error, mean_absolute_error
 from scipy.stats import chi2
 
 from ..ModelTest import ModelTest
@@ -30,16 +30,16 @@ from ..utils import plot_to_str
 class MinMaxMetricThreshold(ModelTest):
     """Test if all the subgroups for a given attribute meets a certain level of expected performance.
 
-    The test also stores a dataframe showing the results of each groups and ROC curve plots
-    (for classification problem) for every subgroup along with the points which maximises tpr-fpr.
+    The test also stores a dataframe showing the results of each groups. ROC curve plots
+    For classification problem, plot ROC curves for every subgroup along with the points which maximises tpr-fpr.
 
     Args:
       attr: Column name of the protected attribute.
       metric: Type of performance metric for the test,
          For classification problem, choose from 'fpr' - false positive rate,
          'tpr' - true positive rate, 'fnr' - false negative rate, 'tnr' - true negative rate.
-         For regression problem, choose from 'mse' - mean squared error.
-      threshold: Threshold for the test. To pass, fpr/fnr/mse has to be lower than the threshold or tpr/tnr
+         For regression problem, choose from 'mse' - mean squared error, 'mae' - mean absolute error.
+      threshold: Threshold for the test. To pass, fpr/fnr/mse/mae has to be lower than the threshold. tpr/tnr
          has to be greater than the threshold.
       proba_threshold: Arg for classification problem, probability threshold for the output to be classified as 1.
          By default, it is 0.5.
@@ -49,7 +49,7 @@ class MinMaxMetricThreshold(ModelTest):
     """
 
     attr: str
-    metric: Literal["fpr", "tpr", "fnr", "tnr", "mse"]
+    metric: Literal["fpr", "tpr", "fnr", "tnr", "mse", "mae"]
     threshold: float
     proba_threshold: float = 0.5
     plots: dict[str, str] = field(repr=False, default_factory=dict)
@@ -58,7 +58,7 @@ class MinMaxMetricThreshold(ModelTest):
 
     def __post_init__(self):
 
-        lower_req_metrics = {"fpr", "fnr", "mse"}
+        lower_req_metrics = {"fpr", "fnr", "mse", "mae"}
         higher_req_metrics = {"tpr", "tnr"}
 
         if self.metric not in lower_req_metrics | higher_req_metrics:
@@ -98,16 +98,17 @@ class MinMaxMetricThreshold(ModelTest):
         self.dof_list = []
         for value in sorted(df_test_with_output[self.attr].unique()):
             output_sub = df_test_with_output[df_test_with_output[self.attr] == value]
-            result[f"{self.attr}_{value}"] = mean_squared_error(
-                output_sub["truth"], output_sub["prediction"]
-            )
+            if self.metric == "mse":
+                result[f"{self.attr}_{value}"] = mean_squared_error(
+                    output_sub["truth"], output_sub["prediction"]
+                )
+            elif self.metric == "mae":
+                result[f"{self.attr}_{value}"] = mean_absolute_error(
+                    output_sub["truth"], output_sub["prediction"]
+                )
             self.dof_list.append(len(output_sub) - 1)
 
-        result = pd.DataFrame.from_dict(
-            result,
-            orient="index",
-            columns=[self.metric],
-        )
+        result = pd.DataFrame.from_dict(result, orient="index", columns=[self.metric],)
 
         result["passed"] = result.iloc[:, 0].apply(lambda x: x < self.threshold)
         result = result.round(3)
@@ -195,31 +196,37 @@ class MinMaxMetricThreshold(ModelTest):
         and their confidence interval bands.
 
         Args:
-          alpha: For regression problem, significance level for confidence interval of standard error/variance.
+          alpha: Significance level for confidence interval plot. Only applicable for regression problem.
           save_plots: If True, saves the plots to the class instance.
         """
         if self.result is None:
             raise AttributeError("Cannot plot before obtaining results.")
 
-        lower_list = []
-        upper_list = []
-        if self.metric in ["mse"]:
-            for i in range(len(self.dof_list)):
-                dof = self.dof_list[i]
-                lower = self.result.iloc[i, 0] * dof / chi2.ppf(1 - alpha / 2, df=dof)
-                lower_list.append(self.result.iloc[i, 0] - lower)
-                upper = self.result.iloc[i, 0] * dof / chi2.ppf(alpha / 2, df=dof)
-                upper_list.append(upper - self.result.iloc[i, 0])
-            ci = [lower_list, upper_list]
-
+        if self.metric in ["mse", "mae"]:
+            # Get approximate CI bounds for the metrics
+            lower_list = []
+            upper_list = []
             plt.figure(figsize=(12, 6))
+            for i in range(len(self.dof_list)):
+                metric = self.result.iloc[i, 0]
+                dof = self.dof_list[i]
+                if self.metric == "mse":  # mse is an unbiased estimator of sigma^2
+                    tmp_lower = dof / chi2.ppf(1 - alpha / 2, df=dof)
+                    tmp_higher = dof / chi2.ppf(alpha / 2, df=dof)
+                elif self.metric == "mae":  # let mae be biased estimator of sigma
+                    tmp_lower = np.sqrt(dof / chi2.ppf(1 - alpha / 2, df=dof))
+                    tmp_higher = np.sqrt(dof / chi2.ppf(alpha / 2, df=dof))
+                lower = metric * tmp_lower
+                upper = metric * tmp_higher
+                lower_list.append(metric - lower)
+                upper_list.append(upper - metric)
+            ci = [lower_list, upper_list]
             plt.bar(self.result.index, self.result.iloc[:, 0], yerr=ci)
+
             plt.axhline(y=self.threshold, linestyle="--", color="red")
             plt.axis([None, None, 0, None])
 
-            title_dict = {
-                "mse": "Mean Squared Error",
-            }
+            title_dict = {"mse": "Mean Squared Error", "mae": "Mean Absolute Error"}
             title = f"{title_dict[self.metric]} across {self.attr} subgroups"
             plt.title(title)
 

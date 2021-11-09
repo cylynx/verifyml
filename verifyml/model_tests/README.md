@@ -19,19 +19,19 @@ Currently, we provide 5 different tests. Each test comes with an outcome, being 
 
 This test checks if there is disparity (over a specified threshold) in the fairness metrics between the best and worst performing subgroups of the sensitive attribute. The test ensures one group is not given too much privilege/handicap over another. Depending on the context and justifications, test arguments like threshold and fairness metric have to be carefully selected by the end-user. 
 
-For classification problem, choices for fairness metrics include false negative rate, false negative rate, predicted positive rate. For regression problem, choices for fairness metrics include mean squared error. Choices for method of disparity measure includes ratio, difference and chi-square test (only for classification).
+For classification problem, choices for fairness metrics include false negative rate, false negative rate, predicted positive rate. For regression problem, choices for fairness metrics include mean squared error, mean absolute error. Choices for method of disparity measure includes ratio, difference and chi-square test (only for classification).
 
 #### 2) Min/Max Metric Threshold Test
 
 This test checks if the fairness metric of the subgroups passes the mininum/maximum threshold specified. For example, a reasonably fair maximum threshold for false positive rate in the case of fraud detection can be 2.5%, where any value greater can be detrimental to the business and is best avoided. In contrast to the above disparity test, disparity among the subgroups are not considered in this test as long as their metrics pass the threshold. This is crucial as it may not be ethical and justified to worsen one of the subgroup's metric to reduce the fairness disparity among subgroups.
 
-For classification problem, ROC curve will be plotted to visualise the trade-off between business and fairness objective and choices for fairness metrics include false negative rate, false negative rate, true positive rate, true negative rate. For regression problem, choices for fairness metrics include mean squared error.
+For classification problem, ROC curve will be plotted to visualise the trade-off between business and fairness objective and choices for fairness metrics include false negative rate, false negative rate, true positive rate, true negative rate. For regression problem, choices for fairness metrics include mean squared error, mean absolute error.
 
 #### 3) Perturbation Test
 
 This test checks if the fairness metrics of the subgroups in the original data are not worse than that of the perturbed data by a specified threshold. In the perturbed data, the values in the sensitive attribute column will be randomly shuffled while keeping all other features unchanged. This renders the attribute insignificant in explaining the model, providing a what-if scenario on the fairness metrics performance if the sensitive attribute were to be completely removed from the model.
 
-For classification problem, choices for fairness metrics include false negative rate, false negative rate, predicted positive rate. For regression problem, choices for fairness metrics include mean squared error. Choices for method of disparity measure includes ratio and difference.
+For classification problem, choices for fairness metrics include false negative rate, false negative rate, predicted positive rate. For regression problem, choices for fairness metrics include mean squared error, mean absolute error. Choices for method of disparity measure includes ratio and difference.
 
 
 #### 4) Feature Importance Test
