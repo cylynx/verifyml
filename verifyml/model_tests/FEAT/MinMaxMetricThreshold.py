@@ -62,7 +62,9 @@ class MinMaxMetricThreshold(ModelTest):
         higher_req_metrics = {"tpr", "tnr"}
 
         if self.metric not in lower_req_metrics | higher_req_metrics:
-            raise ValueError(f"metric should be one of {metrics}.")
+            raise ValueError(
+                f"metric should be one of {lower_req_metrics | higher_req_metrics}."
+            )
 
         req = "lower" if self.metric in lower_req_metrics else "higher"
 
@@ -108,7 +110,11 @@ class MinMaxMetricThreshold(ModelTest):
                 )
             self.dof_list.append(len(output_sub) - 1)
 
-        result = pd.DataFrame.from_dict(result, orient="index", columns=[self.metric],)
+        result = pd.DataFrame.from_dict(
+            result,
+            orient="index",
+            columns=[self.metric],
+        )
 
         result["passed"] = result.iloc[:, 0].apply(lambda x: x < self.threshold)
         result = result.round(3)
