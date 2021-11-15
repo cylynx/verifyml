@@ -15,7 +15,6 @@ def test_plot_defaults():
 
     assert sig.parameters["alpha"].default == 0.05
     assert sig.parameters["save_plots"].default == True
-    assert False
 
 
 '''
