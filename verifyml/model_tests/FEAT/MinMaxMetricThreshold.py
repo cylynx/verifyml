@@ -57,16 +57,13 @@ class MinMaxMetricThreshold(ModelTest):
     test_desc: str = None
 
     def __post_init__(self):
+        lower_req = {"fpr", "fnr", "mse", "mae"}
+        higher_req = {"tpr", "tnr"}
 
-        lower_req_metrics = {"fpr", "fnr", "mse", "mae"}
-        higher_req_metrics = {"tpr", "tnr"}
+        if self.metric not in lower_req | higher_req:
+            raise ValueError(f"metric should be one of {lower_req | higher_req}.")
 
-        if self.metric not in lower_req_metrics | higher_req_metrics:
-            raise ValueError(
-                f"metric should be one of {lower_req_metrics | higher_req_metrics}."
-            )
-
-        req = "lower" if self.metric in lower_req_metrics else "higher"
+        req = "lower" if self.metric in lower_req else "higher"
 
         default_test_desc = inspect.cleandoc(
             f"""
