@@ -1,6 +1,6 @@
-# Test cases for the DataShift FEAT test
+# Test cases for the MinMaxMetricThreshold FEAT test
 
-from ..DataShift import DataShift
+from ..MinMaxMetricThreshold import MinMaxMetricThreshold
 
 import inspect
 
@@ -11,7 +11,7 @@ test_data = ...
 def test_plot_defaults():
     """Test that the default arguments of the plot() method are as expected."""
 
-    sig = inspect.signature(DataShift.plot)
+    sig = inspect.signature(MinMaxMetricThreshold.plot)
 
     assert sig.parameters["alpha"].default == 0.05
     assert sig.parameters["save_plots"].default == True
@@ -22,7 +22,7 @@ def test_plot_defaults():
 def test_save_plots_true():
     """Test that the plot is saved to the test object when .plot(save_plots=True)."""
     # init test object
-    test_obj = DataShift()
+    test_obj = MinMaxMetricThreshold()
 
     # read test data
     ...
@@ -34,7 +34,7 @@ def test_save_plots_true():
     assert len(test_obj.plots) == 1
 
     # test object should have the specified key, and the value should be a string
-    assert isinstance(test_obj.plots["Probability Distribution of protected attributes"], str)
+    # assert isinstance(test_obj.plots["Feature Importance Plot"], str)
 
     # other assertions
     ...
@@ -44,7 +44,7 @@ def test_save_plots_true():
 def test_save_plots_false():
     """Test that the plot is not saved to the test object when .plot(save_plots=False)."""
 
-    test_obj = DataShift()
+    test_obj = MinMaxMetricThreshold()
     ...  # read test data here
     test_obj.plot(save_plots=False)
 
@@ -58,7 +58,7 @@ def test_save_plots_false():
 # TODO
 def test_run():
     """Test that calling .run() updates the test object's .result and .passed attributes."""
-    test_obj = DataShift()
+    test_obj = MinMaxMetricThreshold()
     ...  # read test data here
     test_obj.run()
 
