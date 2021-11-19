@@ -290,7 +290,7 @@ class ModelParameters(BaseModelCardField):
 
 @dataclasses.dataclass
 class Test(BaseModelCardField):
-    """Information about test that is runned against the model.
+    """Information about test that is run against the model.
 
     Attributes:
       name: The name of the test.
@@ -311,6 +311,10 @@ class Test(BaseModelCardField):
     _proto_type: dataclasses.InitVar[type(model_card_pb2.Test)] = model_card_pb2.Test
 
     def read_model_test(self, model_test) -> None:
+        # fix for https://github.com/cylynx/verifyml/issues/42
+        if model_test.result is None or model_test.passed is None:
+          raise AttributeError('Missing `result` or `passed` attributes - The model test has not been run yet.')
+
         self.name = model_test.test_name
         self.description = model_test.test_desc
         self.threshold = str(getattr(model_test, "threshold", None))
