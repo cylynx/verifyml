@@ -233,11 +233,10 @@ class SubgroupDisparity(ModelTest):
                 f"Classification metrics is not applicable with regression problem. Try metric = 'mse' "
             )
 
+        self.metric_dict, self.size_list = self.get_metric_dict(df_test_with_output)
         if self.method == "ratio":
-            self.metric_dict, self.size_list = self.get_metric_dict(df_test_with_output)
             result = max(self.metric_dict.values()) / min(self.metric_dict.values())
         elif self.method == "diff":
-            self.metric_dict, self.size_list = self.get_metric_dict(df_test_with_output)
             result = max(self.metric_dict.values()) - min(self.metric_dict.values())
         elif self.method == "chi2":
             if self.metric in ["mse", "mae"]:

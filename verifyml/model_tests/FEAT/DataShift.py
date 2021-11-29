@@ -179,11 +179,7 @@ class DataShift(ModelTest):
           alpha: Significance level for confidence interval.
           save_plots: If True, saves the plots to the class instance.
         """
-        fig, axs = plt.subplots(
-            1,
-            len(self.protected_attr),
-            figsize=(18, 6),
-        )
+        fig, axs = plt.subplots(1, len(self.protected_attr), figsize=(18, 6),)
         num = 0
         for pa in self.protected_attr:
             df_plot = self.result[["training_distribution", "eval_distribution"]]
@@ -200,9 +196,11 @@ class DataShift(ModelTest):
                     lambda x: z_value * (x * (1 - x) / self.df_size[1]) ** 0.5
                 )
             )
-
-            df_plot.plot.bar(yerr=[train_ci, eval_ci], rot=0, ax=axs[num], title=pa)
-            num += 1
+            if len(self.protected_attr) > 1:
+                df_plot.plot.bar(yerr=[train_ci, eval_ci], rot=0, ax=axs[num], title=pa)
+                num += 1
+            else:
+                df_plot.plot.bar(yerr=[train_ci, eval_ci], rot=0, ax=axs, title=pa)
 
         title = "Probability Distribution of protected attributes"
         fig.suptitle(title)
