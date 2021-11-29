@@ -4,10 +4,8 @@ from ..Perturbation import Perturbation
 
 import inspect
 
-# TODO: create a simple set of data to be used as a test case
-test_data = ...
 
-
+# Only testing the default plot inputs here since test outputs are determined by random perturbation of feature and require model object input
 def test_plot_defaults():
     """Test that the default arguments of the plot() method are as expected."""
 
@@ -15,57 +13,3 @@ def test_plot_defaults():
 
     assert sig.parameters["alpha"].default == 0.05
     assert sig.parameters["save_plots"].default == True
-
-
-'''
-# TODO (included a suggested approach)
-def test_save_plots_true():
-    """Test that the plot is saved to the test object when .plot(save_plots=True)."""
-    # init test object
-    test_obj = Perturbation()
-
-    # read test data
-    ...
-
-    # plot it
-    test_obj.plot(save_plots=True)
-
-    # test object should be a dict of length 1
-    assert len(test_obj.plots) == 1
-
-    # test object should have the specified key, and the value should be a string
-    # assert isinstance(test_obj.plots["Feature Importance Plot"], str)
-
-    # other assertions
-    ...
-
-
-# TODO (included a suggested approach)
-def test_save_plots_false():
-    """Test that the plot is not saved to the test object when .plot(save_plots=False)."""
-
-    test_obj = Perturbation()
-    ...  # read test data here
-    test_obj.plot(save_plots=False)
-
-    # nothing should be saved
-    assert test_obj.plots is None
-
-    # other assertions
-    ...
-
-
-# TODO
-def test_run():
-    """Test that calling .run() updates the test object's .result and .passed attributes."""
-    test_obj = Perturbation()
-    ...  # read test data here
-    test_obj.run()
-
-    assert test_obj.result == ...
-    assert isinstance(test_obj.passed, bool)
-
-
-# other tests
-...
-'''
