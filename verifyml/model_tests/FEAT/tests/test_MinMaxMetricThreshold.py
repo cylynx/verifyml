@@ -5,7 +5,7 @@ from ..MinMaxMetricThreshold import MinMaxMetricThreshold
 import inspect
 import pandas as pd
 
-# Read test case data
+# Sample test case data
 test_data_classification = pd.DataFrame(
     {
         "gender": ["M", "M", "M", "M", "M", "F", "F", "F", "F", "F"],
@@ -35,114 +35,118 @@ def test_plot_defaults():
 def test_save_plots_true_classification():
     """Test that the plot is saved to the test object when .plot(save_plots=True)."""
     # init test object
-    test_obj = MinMaxMetricThreshold(attr="gender", metric="fpr", threshold=0.025,)
+    minmax_test = MinMaxMetricThreshold(attr="gender", metric="fpr", threshold=0.025)
 
     # run test
-    test_obj.run(test_data_classification)
+    minmax_test.run(test_data_classification)
 
     # plot it
-    test_obj.plot(save_plots=True)
+    minmax_test.plot(save_plots=True)
 
     # test object should be a dict of length 1
-    assert len(test_obj.plots) == 1
+    assert len(minmax_test.plots) == 1
 
     # test object should have the specified key, and the value should be a string
-    assert isinstance(test_obj.plots["ROC Curve of gender groups"], str)
+    assert isinstance(minmax_test.plots["ROC Curve of gender groups"], str)
 
 
 def test_save_plots_true_regression():
     """Test that the plot is saved to the test object when .plot(save_plots=True)."""
     # init test object
-    test_obj = MinMaxMetricThreshold(attr="gender", metric="mse", threshold=0.5,)
+    minmax_test = MinMaxMetricThreshold(attr="gender", metric="mse", threshold=0.5)
 
     # run test
-    test_obj.run(test_data_regression)
+    minmax_test.run(test_data_regression)
 
     # plot it
-    test_obj.plot(save_plots=True)
+    minmax_test.plot(save_plots=True)
 
     # test object should be a dict of length 1
-    assert len(test_obj.plots) == 1
+    assert len(minmax_test.plots) == 1
 
     # test object should have the specified key, and the value should be a string
-    assert isinstance(test_obj.plots["Mean Squared Error across gender subgroups"], str)
+    assert isinstance(
+        minmax_test.plots["Mean Squared Error across gender subgroups"], str
+    )
 
 
 def test_save_plots_false_classification():
     """Test that the plot is not saved to the test object when .plot(save_plots=False)."""
     # init test object
-    test_obj = MinMaxMetricThreshold(attr="gender", metric="fnr", threshold=0.5,)
+    minmax_test = MinMaxMetricThreshold(attr="gender", metric="fnr", threshold=0.5)
 
     # run test
-    test_obj.run(test_data_classification)
+    minmax_test.run(test_data_classification)
 
     # plot it
-    test_obj.plot(save_plots=False)
+    minmax_test.plot(save_plots=False)
 
     # nothing should be saved
-    assert len(test_obj.plots) == 0
+    assert len(minmax_test.plots) == 0
 
 
 def test_save_plots_false_regression():
     """Test that the plot is not saved to the test object when .plot(save_plots=False)."""
     # init test object
-    test_obj = MinMaxMetricThreshold(attr="gender", metric="mae", threshold=0.5,)
+    minmax_test = MinMaxMetricThreshold(attr="gender", metric="mae", threshold=0.5)
 
     # run test
-    test_obj.run(test_data_regression)
+    minmax_test.run(test_data_regression)
 
     # plot it
-    test_obj.plot(save_plots=False)
+    minmax_test.plot(save_plots=False)
 
     # nothing should be saved
-    assert len(test_obj.plots) == 0
+    assert len(minmax_test.plots) == 0
 
 
 def test_run_classification():
     """Test that calling .run() updates the test object's .result and .passed attributes."""
     # init test object
-    test_obj1 = MinMaxMetricThreshold(attr="gender", metric="fpr", threshold=0.5,)
+    minmax_test1 = MinMaxMetricThreshold(attr="gender", metric="fpr", threshold=0.5)
 
-    test_obj2 = MinMaxMetricThreshold(attr="gender", metric="fnr", threshold=0.7,)
+    minmax_test2 = MinMaxMetricThreshold(attr="gender", metric="fnr", threshold=0.7)
 
     # run tests
-    test_obj1.run(test_data_classification)
-    test_obj2.run(test_data_classification)
+    minmax_test1.run(test_data_classification)
+    minmax_test2.run(test_data_classification)
 
     assert (
-        test_obj1.result.loc["gender_F"]["fpr at current probability threshold"]
+        minmax_test1.result.loc["gender_F"]["fpr at current probability threshold"]
         == 0.333
     )  # rounded to 3 d.p
     assert (
-        test_obj1.result.loc["gender_M"]["fpr at current probability threshold"] == 0.5
+        minmax_test1.result.loc["gender_M"]["fpr at current probability threshold"]
+        == 0.5
     )
-    assert test_obj1.passed == False
+    assert minmax_test1.passed == False
 
     assert (
-        test_obj2.result.loc["gender_F"]["fnr at current probability threshold"] == 0.5
+        minmax_test2.result.loc["gender_F"]["fnr at current probability threshold"]
+        == 0.5
     )
     assert (
-        test_obj2.result.loc["gender_M"]["fnr at current probability threshold"]
+        minmax_test2.result.loc["gender_M"]["fnr at current probability threshold"]
         == 0.667
     )  # rounded to 3 d.p
-    assert test_obj2.passed == True
+    assert minmax_test2.passed == True
 
 
 def test_run_regression():
     """Test that calling .run() updates the test object's .result and .passed attributes."""
     # init test object
-    test_obj1 = MinMaxMetricThreshold(attr="gender", metric="mse", threshold=0.51,)
+    minmax_test1 = MinMaxMetricThreshold(attr="gender", metric="mse", threshold=0.51)
 
-    test_obj2 = MinMaxMetricThreshold(attr="gender", metric="mae", threshold=0.4,)
+    minmax_test2 = MinMaxMetricThreshold(attr="gender", metric="mae", threshold=0.4)
 
     # run tests
-    test_obj1.run(test_data_regression)
-    test_obj2.run(test_data_regression)
+    minmax_test1.run(test_data_regression)
+    minmax_test2.run(test_data_regression)
 
-    assert test_obj1.result.loc["gender_F"]["mse"] == 0.02  # rounded to 3 d.p
-    assert test_obj1.result.loc["gender_M"]["mse"] == 0.5
-    assert test_obj1.passed == True
+    assert minmax_test1.result.loc["gender_F"]["mse"] == 0.02  # rounded to 3 d.p
+    assert minmax_test1.result.loc["gender_M"]["mse"] == 0.5
+    assert minmax_test1.passed == True
 
-    assert test_obj2.result.loc["gender_F"]["mae"] == 0.1
-    assert test_obj2.result.loc["gender_M"]["mae"] == 0.5
-    assert test_obj2.passed == False
+    assert minmax_test2.result.loc["gender_F"]["mae"] == 0.1
+    assert minmax_test2.result.loc["gender_M"]["mae"] == 0.5
+    assert minmax_test2.passed == False
