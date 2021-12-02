@@ -28,11 +28,17 @@ def test_save_plots_true():
     """Test that the plot is saved to the test object when .plot(save_plots=True)."""
     # init test object
     disp_test1 = SubgroupDisparity(
-        attr="gender", metric="fpr", method="ratio", threshold=1.5,
+        attr="gender",
+        metric="fpr",
+        method="ratio",
+        threshold=1.5,
     )
 
     disp_test2 = SubgroupDisparity(
-        attr="gender", metric="mse", method="ratio", threshold=1.5,
+        attr="gender",
+        metric="mse",
+        method="ratio",
+        threshold=1.5,
     )
 
     # run test
@@ -60,11 +66,17 @@ def test_save_plots_false():
     """Test that the plot is not saved to the test object when .plot(save_plots=False)."""
     # init test object
     disp_test1 = SubgroupDisparity(
-        attr="gender", metric="fpr", method="ratio", threshold=1.5,
+        attr="gender",
+        metric="fpr",
+        method="ratio",
+        threshold=1.5,
     )
 
     disp_test2 = SubgroupDisparity(
-        attr="gender", metric="mse", method="ratio", threshold=1.5,
+        attr="gender",
+        metric="mse",
+        method="ratio",
+        threshold=1.5,
     )
 
     # run test
@@ -84,19 +96,31 @@ def test_run_ratio():
     """Test that calling .run() updates the test object's .result and .passed attributes."""
     # init test objects
     disp_test1 = SubgroupDisparity(
-        attr="gender", metric="fpr", method="ratio", threshold=1.4,
+        attr="gender",
+        metric="fpr",
+        method="ratio",
+        threshold=1.4,
     )
 
     disp_test2 = SubgroupDisparity(
-        attr="gender", metric="fnr", method="ratio", threshold=1.5,
+        attr="gender",
+        metric="fnr",
+        method="ratio",
+        threshold=1.5,
     )
 
     disp_test3 = SubgroupDisparity(
-        attr="gender", metric="mse", method="ratio", threshold=1.5,
+        attr="gender",
+        metric="mse",
+        method="ratio",
+        threshold=1.5,
     )
 
     disp_test4 = SubgroupDisparity(
-        attr="gender", metric="mae", method="ratio", threshold=1.5,
+        attr="gender",
+        metric="mae",
+        method="ratio",
+        threshold=1.5,
     )
 
     # run tests
@@ -122,19 +146,31 @@ def test_run_difference():
     """Test that calling .run() updates the test object's .result and .passed attributes."""
     # init test objects
     disp_test1 = SubgroupDisparity(
-        attr="gender", metric="fpr", method="diff", threshold=0.2,
+        attr="gender",
+        metric="fpr",
+        method="diff",
+        threshold=0.2,
     )
 
     disp_test2 = SubgroupDisparity(
-        attr="gender", metric="fnr", method="diff", threshold=0.1,
+        attr="gender",
+        metric="fnr",
+        method="diff",
+        threshold=0.1,
     )
 
     disp_test3 = SubgroupDisparity(
-        attr="gender", metric="mse", method="diff", threshold=0.1,
+        attr="gender",
+        metric="mse",
+        method="diff",
+        threshold=0.1,
     )
 
     disp_test4 = SubgroupDisparity(
-        attr="gender", metric="mae", method="diff", threshold=0.1,
+        attr="gender",
+        metric="mae",
+        method="diff",
+        threshold=0.1,
     )
 
     # run tests
@@ -160,11 +196,17 @@ def test_run_chi2():
     """Test that calling .run() updates the test object's .result and .passed attributes."""
     # init test objects
     disp_test1 = SubgroupDisparity(
-        attr="gender", metric="fpr", method="chi2", threshold=0.05,
+        attr="gender",
+        metric="fpr",
+        method="chi2",
+        threshold=0.05,
     )
 
     disp_test2 = SubgroupDisparity(
-        attr="gender", metric="fnr", method="chi2", threshold=1,
+        attr="gender",
+        metric="fnr",
+        method="chi2",
+        threshold=1,
     )
 
     # run tests
