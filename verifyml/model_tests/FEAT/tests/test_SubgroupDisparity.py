@@ -8,9 +8,51 @@ import pandas as pd
 # Sample test case data
 test_data = pd.DataFrame(
     {
-        "gender": ["M", "M", "M", "M", "M", "F", "F", "F", "F", "F"],
-        "truth": [1, 1, 1, 0, 0, 1, 1, 0, 0, 0],
-        "prediction": [1, 0, 0, 1, 0, 1, 0, 1, 0, 0],
+        "gender": [
+            "M",
+            "M",
+            "M",
+            "M",
+            "M",
+            "M",
+            "M",
+            "M",
+            "M",
+            "M",
+            "F",
+            "F",
+            "F",
+            "F",
+            "F",
+            "F",
+            "F",
+            "F",
+            "F",
+            "F",
+        ],
+        "truth": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+        ],
+        "prediction": [1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0],
     }
 )
 
@@ -129,16 +171,16 @@ def test_run_ratio():
     disp_test3.run(test_data)
     disp_test4.run(test_data)
 
-    assert disp_test1.result.iloc[0].gender_fpr_max_ratio == 1.5
+    assert disp_test1.result.iloc[0].gender_fpr_max_ratio == 2
     assert disp_test1.passed == False
 
-    assert disp_test2.result.iloc[0].gender_fnr_max_ratio == 1.333  # rounded to 3 d.p
+    assert disp_test2.result.iloc[0].gender_fnr_max_ratio == 1
     assert disp_test2.passed == True
 
-    assert disp_test3.result.iloc[0].gender_mse_max_ratio == 1.5
+    assert disp_test3.result.iloc[0].gender_mse_max_ratio == 1.4
     assert disp_test3.passed == True
 
-    assert disp_test4.result.iloc[0].gender_mae_max_ratio == 1.5
+    assert disp_test4.result.iloc[0].gender_mae_max_ratio == 1.4
     assert disp_test4.passed == True
 
 
@@ -170,7 +212,7 @@ def test_run_difference():
         attr="gender",
         metric="mae",
         method="diff",
-        threshold=0.1,
+        threshold=0.2,
     )
 
     # run tests
@@ -179,17 +221,17 @@ def test_run_difference():
     disp_test3.run(test_data)
     disp_test4.run(test_data)
 
-    assert disp_test1.result.iloc[0].gender_fpr_max_diff == 0.167  # rounded to 3 d.p
-    assert disp_test1.passed == True
+    assert disp_test1.result.iloc[0].gender_fpr_max_diff == 0.4
+    assert disp_test1.passed == False
 
-    assert disp_test2.result.iloc[0].gender_fnr_max_diff == 0.167  # rounded to 3 d.p
-    assert disp_test2.passed == False
+    assert disp_test2.result.iloc[0].gender_fnr_max_diff == 0
+    assert disp_test2.passed == True
 
     assert disp_test3.result.iloc[0].gender_mse_max_diff == 0.2
     assert disp_test3.passed == False
 
     assert disp_test4.result.iloc[0].gender_mae_max_diff == 0.2
-    assert disp_test4.passed == False
+    assert disp_test4.passed == True
 
 
 def test_run_chi2():
@@ -213,7 +255,7 @@ def test_run_chi2():
     disp_test1.run(test_data)
     disp_test2.run(test_data)
 
-    assert disp_test1.result.iloc[0].p_value == 1
+    assert disp_test1.result.iloc[0].p_value == 0.519
     assert disp_test1.passed == True
 
     assert disp_test2.result.iloc[0].p_value == 1
