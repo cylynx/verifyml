@@ -12,8 +12,12 @@ import numpy as np
 
 # Sample test case datas
 x_train_data = pd.DataFrame(
-    {"gender": ["M", "F", "F", "M"], "income": [100, 200, 150, 400],}
+    {
+        "gender": ["M", "F", "F", "M"],
+        "income": [100, 200, 150, 400],
+    }
 )
+
 y_train_data = [0, 1, 0, 1]
 
 x_test_data = pd.DataFrame(
@@ -49,7 +53,12 @@ def test_plot_defaults():
 def test_save_plots_true():
     """Test that the plot is saved to the test object when .plot(save_plots=True)."""
     # init test object
-    pmt_test = Perturbation(attr="gender", metric="fpr", method="ratio", threshold=1.5,)
+    pmt_test = Perturbation(
+        attr="gender",
+        metric="fpr",
+        method="ratio",
+        threshold=1.5,
+    )
 
     # run test
     pmt_test.run(
@@ -74,7 +83,12 @@ def test_save_plots_true():
 def test_save_plots_false():
     """Test that the plot is not saved to the test object when .plot(save_plots=False)."""
     # init test object
-    pmt_test = Perturbation(attr="gender", metric="fpr", method="ratio", threshold=1.5,)
+    pmt_test = Perturbation(
+        attr="gender",
+        metric="fpr",
+        method="ratio",
+        threshold=1.5,
+    )
 
     # run test
     pmt_test.run(
@@ -95,19 +109,31 @@ def test_run_ratio():
     """Test that calling .run() updates the test object's .result and .passed attributes."""
     # init test object
     pmt_test1 = Perturbation(
-        attr="gender", metric="fpr", method="ratio", threshold=1.5,
+        attr="gender",
+        metric="fpr",
+        method="ratio",
+        threshold=1.5,
     )
 
     pmt_test2 = Perturbation(
-        attr="gender", metric="fnr", method="ratio", threshold=1.5,
+        attr="gender",
+        metric="fnr",
+        method="ratio",
+        threshold=1.5,
     )
 
     pmt_test3 = Perturbation(
-        attr="gender", metric="mse", method="ratio", threshold=1.5,
+        attr="gender",
+        metric="mse",
+        method="ratio",
+        threshold=1.5,
     )
 
     pmt_test4 = Perturbation(
-        attr="gender", metric="mae", method="ratio", threshold=0.9,
+        attr="gender",
+        metric="mae",
+        method="ratio",
+        threshold=0.9,
     )
 
     # run test
@@ -163,16 +189,32 @@ def test_run_diff():
     """Test that calling .run() updates the test object's .result and .passed attributes."""
     # init test object
     pmt_test1 = Perturbation(
-        attr="gender", metric="fpr", method="diff", threshold=0.35,
+        attr="gender",
+        metric="fpr",
+        method="diff",
+        threshold=0.35,
     )
 
     pmt_test2 = Perturbation(
-        attr="gender", metric="fnr", method="diff", threshold=0.35,
+        attr="gender",
+        metric="fnr",
+        method="diff",
+        threshold=0.35,
     )
 
-    pmt_test3 = Perturbation(attr="gender", metric="mse", method="diff", threshold=0.5,)
+    pmt_test3 = Perturbation(
+        attr="gender",
+        metric="mse",
+        method="diff",
+        threshold=0.5,
+    )
 
-    pmt_test4 = Perturbation(attr="gender", metric="mae", method="diff", threshold=-1,)
+    pmt_test4 = Perturbation(
+        attr="gender",
+        metric="mae",
+        method="diff",
+        threshold=-1,
+    )
 
     # run test
     np.random.seed(1235)
