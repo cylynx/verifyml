@@ -16,4 +16,4 @@ jobs:
       - name: Generate VerifyML Report
         uses: cylynx/verifyml-reports@v1
         with:
-          data-path: "/examples/model_card_output/data/breast_cancer_diagnostic_model_card.proto"
+          data-path: "/examples/model_card_output/data/loan_approval_example.proto"
