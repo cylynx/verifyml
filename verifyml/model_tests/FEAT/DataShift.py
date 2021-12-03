@@ -200,9 +200,11 @@ class DataShift(ModelTest):
                     lambda x: z_value * (x * (1 - x) / self.df_size[1]) ** 0.5
                 )
             )
-
-            df_plot.plot.bar(yerr=[train_ci, eval_ci], rot=0, ax=axs[num], title=pa)
-            num += 1
+            if len(self.protected_attr) > 1:
+                df_plot.plot.bar(yerr=[train_ci, eval_ci], rot=0, ax=axs[num], title=pa)
+                num += 1
+            else:
+                df_plot.plot.bar(yerr=[train_ci, eval_ci], rot=0, ax=axs, title=pa)
 
         title = "Probability Distribution of protected attributes"
         fig.suptitle(title)

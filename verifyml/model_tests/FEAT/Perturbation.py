@@ -19,7 +19,6 @@ import inspect
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import numpy as np
 from sklearn.metrics import confusion_matrix, mean_squared_error, mean_absolute_error
 from sklearn.base import is_classifier
 from scipy.stats import norm, chi2
