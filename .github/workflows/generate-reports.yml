@@ -1,0 +1,17 @@
+name: Generate VerifyML Report
+
+on:
+  pull_request:
+
+jobs:
+  comment-results:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to Current Branch
+        uses: actions/checkout@v2
+
+      - name: Generate VerifyML Report
+        uses: cylynx@verifyml-report@v1
+        with:
+          data-path: "/examples/model_card_ouput/data/breast_cancer_diagnostic_model_card.proto"
