@@ -1,6 +1,9 @@
 name: Generate VerifyML Report
 
-on: [push]
+on:
+  pull_request:
+    branches:
+      - "*"
 
 jobs:
   report-generation:
@@ -11,6 +14,6 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Generate VerifyML Report
-        uses: cylynx/verifyml-reports@v1.0.5
+        uses: cylynx/verifyml-reports@v1.0.6
         with:
           data-path: "/examples/model_card_output/data/breast_cancer_diagnostic_model_card.proto"
