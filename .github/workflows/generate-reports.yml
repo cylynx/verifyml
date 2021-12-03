@@ -1,7 +1,6 @@
 name: Generate VerifyML Report
 
-on:
-  pull_request:
+on: [push]
 
 jobs:
   comment-results:
