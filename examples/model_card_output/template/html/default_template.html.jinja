@@ -87,13 +87,13 @@
   {% if test.description %}
   <div>
     <b> Description: </b>
-    {{ test.description }} 
+    {{ test.description }}
   </div>
   {% endif %}
   {% if test.threshold %}
   <div>
     <b> Threshold: </b>
-    {{ test.threshold }} 
+    {{ test.threshold }}
   </div>
   {% endif %}
   {% if test.result %}
@@ -103,12 +103,12 @@
     {% if '\n' in test.result and ',' in test.result %}
       {{ render_results_table(test.result) }}
     {% else %}
-      {{ test.result }} 
+      {{ test.result }}
     {% endif %}
   </div>
   {% endif %}
-  {% if test.passed == true %} 
-    <div><b style="color:green;"> Passed</b></div> 
+  {% if test.passed == true %}
+    <div><b style="color:green;"> Passed</b></div>
     {% else %}
     <div><b style="color:red;"> Failed</b></div>
   {% endif %}
@@ -123,13 +123,13 @@
   {% if report.segment %}
   <div>
     <b> Segment: </b>
-    {{ report.segment }} 
+    {{ report.segment }}
   </div>
   {% endif %}
   {% if report.description %}
   <div>
     <b> Description: </b>
-    {{ report.description }} 
+    {{ report.description }}
   </div>
   {% endif %}
   {% if report.graphics.collection %}
@@ -205,7 +205,7 @@
       {% if graphics.description %}
         <div class="center"><i>{{ graphics.description }}</i></div>
       {% endif %}
-      {{ render_graphics(graphics.collection) }}    
+      {{ render_graphics(graphics.collection) }}
     </div>
   </div>
 {% endmacro %}
@@ -218,7 +218,7 @@
   }
   .col {
     flex: 1;
-    align-items: center; 
+    align-items: center;
     justify-content: center;
   }
   .card {

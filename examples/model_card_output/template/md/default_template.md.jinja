@@ -1,6 +1,6 @@
 {% macro render_if_exist(name, value) %}
   {% if value %}
-{{name}}: {{value}} 
+{{name}}: {{value}}
 {% endif %}{% endmacro %}
 {% macro render_considerations(list) %}{% if list %}{% for item in list %}
 * {{ item.description }}{% endfor %}{% endif %}
@@ -64,7 +64,7 @@
 __Description:__ {{ test.description }}
   {% endif %}
   {% if test.threshold %}
-__Threshold:__ {{ test.threshold }} 
+__Threshold:__ {{ test.threshold }}
   {% endif %}
   {% if test.result %}
 __Result:__
@@ -72,10 +72,10 @@ __Result:__
     {% if '\n' in test.result and ',' in test.result %}
       {{ render_results_table(test.result) }}
     {% else %}
-      {{ test.result }} 
+      {{ test.result }}
     {% endif %}
   {% endif %}
-  {% if test.passed == true %} 
+  {% if test.passed == true %}
 <b style="color:green;"> Passed</b>
   {% else %}
 <b style="color:red;"> Failed</b>
@@ -88,10 +88,10 @@ __Result:__
 {% macro render_report(report) %}
 ### {{ report.type }} {% if report.value %}- {{ report.value }}{% endif %}{% if report.slice %}({{ report.slice }}){% endif %}
   {% if report.segment %}
-__Segment:__ {{ report.segment }} 
+__Segment:__ {{ report.segment }}
   {% endif %}
   {% if report.description %}
-__Description:__ {{ report.description }} 
+__Description:__ {{ report.description }}
   {% endif %}
   {% if report.graphics.collection %}
     {{ render_metrics_graphics(report.graphics) }}
@@ -153,7 +153,7 @@ __Description:__ {{ report.description }}
   {% if graphics.description %}
 _{{ graphics.description }}_
   {% endif %}
-    {{ render_graphics(graphics.collection) }}    
+    {{ render_graphics(graphics.collection) }}
 {% endmacro %}
 
 # Model Card for {{ model_details.name }}
@@ -224,10 +224,10 @@ _{{ graphics.description }}_
 {% if considerations.fairness_assessment %}
 ### Fairness Considerations
 {% for fairness_assessment in considerations.fairness_assessment %}
-* __Group at risk:__ {{ fairness_assessment.group_at_risk }}  
-__Benefits:__ {{ fairness_assessment.benefits }}  
-__Harms:__ {{ fairness_assessment.harms }}  
-__Mitigation Strategy:__ {{ fairness_assessment.mitigation_strategy }}  
+* __Group at risk:__ {{ fairness_assessment.group_at_risk }}
+__Benefits:__ {{ fairness_assessment.benefits }}
+__Harms:__ {{ fairness_assessment.harms }}
+__Mitigation Strategy:__ {{ fairness_assessment.mitigation_strategy }}
 {% endfor %}
 {% endif %}
 {% endif %}
