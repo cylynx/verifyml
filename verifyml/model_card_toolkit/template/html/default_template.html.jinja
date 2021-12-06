@@ -30,7 +30,7 @@
         <div class="col card">
           {% if dataset.name %}<h3>{{ dataset.name }}</h3>{% endif %}
             {% if dataset.description %}<p>{{ dataset.description }}</p>{% endif %}
-            {% if dataset.sensitive %}
+            {% if dataset.sensitive.sensitive_data %}
               <h4>Sensitive data</h4>
               <ul>
               {% for sensitive_data in dataset.sensitive.sensitive_data %}
