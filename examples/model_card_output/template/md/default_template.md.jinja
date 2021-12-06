@@ -1,246 +1,246 @@
-{% macro render_if_exist(name, value) %}
-  {% if value %}
-{{name}}: {{value}} 
-{% endif %}{% endmacro %}
-{% macro render_considerations(list) %}{% if list %}{% for item in list %}
-* {{ item.description }}{% endfor %}{% endif %}
-{% endmacro %}
-{% macro render_uri_list(list) %}
-  {% if list %}
-  {% for item in list %}
-* [{{ item }}]({{ item }})
-  {% endfor %}
-  {% endif %}
-{% endmacro %}
-{% macro render_all_datasets(datasets) %}
-## Datasets
-  {% for dataset in datasets %}
-    {% if dataset.name %}
-### {{ dataset.name }}
-    {% endif %}
-    {% if dataset.description %}
-{{ dataset.description }}
-    {% endif %}
-    {% if dataset.sensitive %}
-#### Sensitive data
-    {% for sensitive_data in dataset.sensitive.sensitive_data %}
-* {{ sensitive_data }}
-    {% endfor %}
-    {% if dataset.sensitive.sensitive_data_used %}
-#### Sensitive data used in model
-    {% for sensitive_data_used in dataset.sensitive.sensitive_data_used %}
-* {{ sensitive_data_used }}
-    {% endfor %}
-    {% endif %}
-    {% if dataset.sensitive.justification %}
-#### Justification
-{{ dataset.sensitive.justification }}
-    {% endif %}
-    {% endif %}
-    {% if dataset.link %}
-[{{ dataset.link }}]({{ dataset.link }})
-    {% endif %}
-    {% if dataset.graphics and dataset.graphics.collection %}
-      {{ render_graphics(dataset.graphics.collection) }}
-    {% endif %}
-    {% endfor %}
-{% endmacro %}
-{% macro render_graphics(graphics) %}
-  {% if graphics.description %}{{ graphics.description }}{% endif %}
-  {% for graph in graphics %}
-<img src="data:image/jpeg;base64,{{ graph.image }}">
-  {% endfor %}
-{% endmacro %}
-{% macro render_license(license) %}
-* {% if license.identifier %}{{ license.identifier }}{% endif %}{% if license.custom_text %}{{ license.custom_text }}{% endif %}
-{% endmacro %}
-{% macro metric_name(metric) %}{{ metric.type }}{% if metric.threshold %}@{{ metric.threshold }}{% endif %}{% if metric.slice %}, {{ metric.slice }}{% endif %}{% endmacro %}
-{% macro metric_value(metric) %}{{ metric.value }}{% if metric.confidence_interval %} ({{ metric.confidence_interval.lower_bound }}, {{ metric.confidence_interval.upper_bound }}){% endif %}{% endmacro %}
-{% macro render_test(test) %}
-  {% if test.name %}
-#### {{ test.name  }}
-  {% endif %}
-  {% if test.description %}
-__Description:__ {{ test.description }}
-  {% endif %}
-  {% if test.threshold %}
-__Threshold:__ {{ test.threshold }} 
-  {% endif %}
-  {% if test.result %}
-__Result:__
-    {# looks like a csv file #}
-    {% if '\n' in test.result and ',' in test.result %}
-      {{ render_results_table(test.result) }}
-    {% else %}
-      {{ test.result }} 
-    {% endif %}
-  {% endif %}
-  {% if test.passed == true %} 
-<b style="color:green;"> Passed</b>
-  {% else %}
-<b style="color:red;"> Failed</b>
-  {% endif %}
-  {% if test.graphics.collection %}
-    {{ render_metrics_graphics(test.graphics) }}
-  {% endif %}
-{% endmacro %}
-
-{% macro render_report(report) %}
-### {{ report.type }} {% if report.value %}- {{ report.value }}{% endif %}{% if report.slice %}({{ report.slice }}){% endif %}
-  {% if report.segment %}
-__Segment:__ {{ report.segment }} 
-  {% endif %}
-  {% if report.description %}
-__Description:__ {{ report.description }} 
-  {% endif %}
-  {% if report.graphics.collection %}
-    {{ render_metrics_graphics(report.graphics) }}
-  {% endif %}
-  {% if report.tests %}
-    {% for test in report.tests %}
-      {{ render_test(test)}}
-    {% endfor %}
-  {% endif %}
-{% endmacro %}
-
-{% macro render_quantitative_analysis(quantitative_analysis) %}
-## Quantitative Analysis
-  {% if quantitative_analysis.performance_metrics %}
-    {% for metric in quantitative_analysis.performance_metrics %}
-      {{ render_report(metric)}}
-    {% endfor %}
-  {% endif %}
-  {% if quantitative_analysis.graphics.collection %}
-    {{ render_metrics_graphics(quantitative_analysis.graphics) }}
-  {% endif %}
-{% endmacro %}
-
-{% macro render_explainability_analysis(explainability_analysis) %}
-## Explainability Analysis
-  {% if explainability_analysis.explainability_reports %}
-    {% for report in explainability_analysis.explainability_reports %}
-      {{ render_report(report)}}
-    {% endfor %}
-  {% endif %}
-{% endmacro %}
-
-{% macro render_fairness_analysis(fairness_analysis) %}
-## Fairness Analysis
-  {% if fairness_analysis.fairness_reports %}
-    {% for report in fairness_analysis.fairness_reports %}
-      {{ render_report(report)}}
-    {% endfor %}
-  {% endif %}
-{% endmacro %}
-
-{# This is space sensitive! #}
-{% macro render_results_table(results) %}
-<table>{% set results_list = results.split('\n') %}{% for row in results_list %}{% if (row is defined) and row %}
-<tr>{% set items = row.split(',') %}{% for item in items %}
-<td>{{ item }}</td>{% endfor %}
-</tr>{% endif %}{% endfor %}
-</table>
-{% endmacro %}
-
-{% macro render_metrics_table(metrics) %}## Metrics
-
-|Name|Value|
------|------{% for metric in metrics %}
-|{{ metric_name(metric) }}|{{ metric_value(metric) }}|{% endfor %}
-{% endmacro %}
-
-{% macro render_metrics_graphics(graphics) %}
-  {% if graphics.description %}
-_{{ graphics.description }}_
-  {% endif %}
-    {{ render_graphics(graphics.collection) }}    
-{% endmacro %}
-
-# Model Card for {{ model_details.name }}
-
-## Model Details{% if model_details.overview %}
-
-### Overview
-{{ model_details.overview }} {% endif %}{% if model_details.version %}
-
-### Version{{ render_if_exist('name', model_details.version.name) }}{{ render_if_exist('date', model_details.version.date) }}{{ render_if_exist('diff', model_details.version.diff) }}
-{% endif %}{% if model_details.owners %}
-### Owners
-{% for owner in model_details.owners %}
-* {{ owner.name }}{% if owner.role %}(owner.role){% endif %}{% if owner.contact %}, {{ owner.contact }} {% endif %}
-{% endfor %}
-{% endif %}{% if model_details.licenses %}
-### Licenses
-{% for license in model_details.licenses %}{{ render_license(license) }}{% endfor %}
-{% endif %}{% if model_details.references %}
-### References
-{% for reference in model_details.references %}
-* [{{ reference.reference }}]({{ reference.reference }}){% endfor %}
-{% endif %}{% if model_details.citations %}
-### Citations
-{% for citation in model_details.citations %}
-* {{ citation.citation }}{% endfor %}
-{% endif %}{% if model_details.regulatory_requirements %}
-### Regulatory requirements
-{{  model_details.regulatory_requirements }}
-{% endif %}
-{% if model_parameters.model_architecture or model_parameters.input_format or model_parameters.output_format %}
-## Model Parameters
-{% if model_parameters.model_architecture %}
-### Model Architecture
-
-{{ model_parameters.model_architecture }}{% endif %}
-{% if model_parameters.input_format %}
-### Input Format
-
-{{ model_parameters.input_format }}{% endif %}
-{% if model_parameters.output_format %}
-### Output Format
-
-{{ model_parameters.output_format }}{% endif %}
-{% endif %}
-{% if considerations.users or considerations.use_cases or considerations.limitations or considerations.tradeoffs or considerations.ethical_considerations or considerations.fairness_assessment %}## Considerations
-{% if considerations.users %}
-### Intended Users {{ render_considerations(considerations.users) }}{% endif %}
-{% if considerations.use_cases %}
-### Use Cases
-{{ render_considerations(considerations.use_cases) }}
-{% endif %}
-{% if considerations.limitations %}
-### Limitations
-{{ render_considerations(considerations.limitations) }}
-{% endif %}
-{% if considerations.tradeoffs %}
-### Tradeoffs
-{{ render_considerations(considerations.tradeoffs) }}
-{% endif %}
-{% if considerations.ethical_considerations %}
-### Ethical Considerations
-{% for risk in considerations.ethical_considerations %}
-* __Risk:__ {{ risk.name }}
-  * __Mitigation Strategy:__ {{ risk.mitigation_strategy }}
-{% endfor %}
-{% endif %}
-{% if considerations.fairness_assessment %}
-### Fairness Considerations
-{% for fairness_assessment in considerations.fairness_assessment %}
-* __Group at risk:__ {{ fairness_assessment.group_at_risk }}  
-__Benefits:__ {{ fairness_assessment.benefits }}  
-__Harms:__ {{ fairness_assessment.harms }}  
-__Mitigation Strategy:__ {{ fairness_assessment.mitigation_strategy }}  
-{% endfor %}
-{% endif %}
-{% endif %}
-
-{% if model_parameters.data %}
-{{ render_all_datasets(model_parameters.data) }}
-{% endif %}
-{% if quantitative_analysis.performance_metrics or quantitative_analysis.graphics.collection %}
-{{ render_quantitative_analysis(quantitative_analysis) }}
-{% endif %}
-{% if explainability_analysis.explainability_reports %}
-{{ render_explainability_analysis(explainability_analysis) }}
-{% endif %}
-{% if fairness_analysis.fairness_reports %}
-{{ render_fairness_analysis(fairness_analysis) }}
-{% endif %}
+{% macro render_if_exist(name, value) %}
+  {% if value %}
+{{name}}: {{value}}
+{% endif %}{% endmacro %}
+{% macro render_considerations(list) %}{% if list %}{% for item in list %}
+* {{ item.description }}{% endfor %}{% endif %}
+{% endmacro %}
+{% macro render_uri_list(list) %}
+  {% if list %}
+  {% for item in list %}
+* [{{ item }}]({{ item }})
+  {% endfor %}
+  {% endif %}
+{% endmacro %}
+{% macro render_all_datasets(datasets) %}
+## Datasets
+  {% for dataset in datasets %}
+    {% if dataset.name %}
+### {{ dataset.name }}
+    {% endif %}
+    {% if dataset.description %}
+{{ dataset.description }}
+    {% endif %}
+    {% if dataset.sensitive %}
+#### Sensitive data
+    {% for sensitive_data in dataset.sensitive.sensitive_data %}
+* {{ sensitive_data }}
+    {% endfor %}
+    {% if dataset.sensitive.sensitive_data_used %}
+#### Sensitive data used in model
+    {% for sensitive_data_used in dataset.sensitive.sensitive_data_used %}
+* {{ sensitive_data_used }}
+    {% endfor %}
+    {% endif %}
+    {% if dataset.sensitive.justification %}
+#### Justification
+{{ dataset.sensitive.justification }}
+    {% endif %}
+    {% endif %}
+    {% if dataset.link %}
+[{{ dataset.link }}]({{ dataset.link }})
+    {% endif %}
+    {% if dataset.graphics and dataset.graphics.collection %}
+      {{ render_graphics(dataset.graphics.collection) }}
+    {% endif %}
+    {% endfor %}
+{% endmacro %}
+{% macro render_graphics(graphics) %}
+  {% if graphics.description %}{{ graphics.description }}{% endif %}
+  {% for graph in graphics %}
+<img src="data:image/jpeg;base64,{{ graph.image }}">
+  {% endfor %}
+{% endmacro %}
+{% macro render_license(license) %}
+* {% if license.identifier %}{{ license.identifier }}{% endif %}{% if license.custom_text %}{{ license.custom_text }}{% endif %}
+{% endmacro %}
+{% macro metric_name(metric) %}{{ metric.type }}{% if metric.threshold %}@{{ metric.threshold }}{% endif %}{% if metric.slice %}, {{ metric.slice }}{% endif %}{% endmacro %}
+{% macro metric_value(metric) %}{{ metric.value }}{% if metric.confidence_interval %} ({{ metric.confidence_interval.lower_bound }}, {{ metric.confidence_interval.upper_bound }}){% endif %}{% endmacro %}
+{% macro render_test(test) %}
+  {% if test.name %}
+#### {{ test.name  }}
+  {% endif %}
+  {% if test.description %}
+__Description:__ {{ test.description }}
+  {% endif %}
+  {% if test.threshold %}
+__Threshold:__ {{ test.threshold }}
+  {% endif %}
+  {% if test.result %}
+__Result:__
+    {# looks like a csv file #}
+    {% if '\n' in test.result and ',' in test.result %}
+      {{ render_results_table(test.result) }}
+    {% else %}
+      {{ test.result }}
+    {% endif %}
+  {% endif %}
+  {% if test.passed == true %}
+<b style="color:green;"> Passed</b>
+  {% else %}
+<b style="color:red;"> Failed</b>
+  {% endif %}
+  {% if test.graphics.collection %}
+    {{ render_metrics_graphics(test.graphics) }}
+  {% endif %}
+{% endmacro %}
+
+{% macro render_report(report) %}
+### {{ report.type }} {% if report.value %}- {{ report.value }}{% endif %}{% if report.slice %}({{ report.slice }}){% endif %}
+  {% if report.segment %}
+__Segment:__ {{ report.segment }}
+  {% endif %}
+  {% if report.description %}
+__Description:__ {{ report.description }}
+  {% endif %}
+  {% if report.graphics.collection %}
+    {{ render_metrics_graphics(report.graphics) }}
+  {% endif %}
+  {% if report.tests %}
+    {% for test in report.tests %}
+      {{ render_test(test)}}
+    {% endfor %}
+  {% endif %}
+{% endmacro %}
+
+{% macro render_quantitative_analysis(quantitative_analysis) %}
+## Quantitative Analysis
+  {% if quantitative_analysis.performance_metrics %}
+    {% for metric in quantitative_analysis.performance_metrics %}
+      {{ render_report(metric)}}
+    {% endfor %}
+  {% endif %}
+  {% if quantitative_analysis.graphics.collection %}
+    {{ render_metrics_graphics(quantitative_analysis.graphics) }}
+  {% endif %}
+{% endmacro %}
+
+{% macro render_explainability_analysis(explainability_analysis) %}
+## Explainability Analysis
+  {% if explainability_analysis.explainability_reports %}
+    {% for report in explainability_analysis.explainability_reports %}
+      {{ render_report(report)}}
+    {% endfor %}
+  {% endif %}
+{% endmacro %}
+
+{% macro render_fairness_analysis(fairness_analysis) %}
+## Fairness Analysis
+  {% if fairness_analysis.fairness_reports %}
+    {% for report in fairness_analysis.fairness_reports %}
+      {{ render_report(report)}}
+    {% endfor %}
+  {% endif %}
+{% endmacro %}
+
+{# This is space sensitive! #}
+{% macro render_results_table(results) %}
+<table>{% set results_list = results.split('\n') %}{% for row in results_list %}{% if (row is defined) and row %}
+<tr>{% set items = row.split(',') %}{% for item in items %}
+<td>{{ item }}</td>{% endfor %}
+</tr>{% endif %}{% endfor %}
+</table>
+{% endmacro %}
+
+{% macro render_metrics_table(metrics) %}## Metrics
+
+|Name|Value|
+-----|------{% for metric in metrics %}
+|{{ metric_name(metric) }}|{{ metric_value(metric) }}|{% endfor %}
+{% endmacro %}
+
+{% macro render_metrics_graphics(graphics) %}
+  {% if graphics.description %}
+_{{ graphics.description }}_
+  {% endif %}
+    {{ render_graphics(graphics.collection) }}
+{% endmacro %}
+
+# Model Card for {{ model_details.name }}
+
+## Model Details{% if model_details.overview %}
+
+### Overview
+{{ model_details.overview }} {% endif %}{% if model_details.version %}
+
+### Version{{ render_if_exist('name', model_details.version.name) }}{{ render_if_exist('date', model_details.version.date) }}{{ render_if_exist('diff', model_details.version.diff) }}
+{% endif %}{% if model_details.owners %}
+### Owners
+{% for owner in model_details.owners %}
+* {{ owner.name }}{% if owner.role %}(owner.role){% endif %}{% if owner.contact %}, {{ owner.contact }} {% endif %}
+{% endfor %}
+{% endif %}{% if model_details.licenses %}
+### Licenses
+{% for license in model_details.licenses %}{{ render_license(license) }}{% endfor %}
+{% endif %}{% if model_details.references %}
+### References
+{% for reference in model_details.references %}
+* [{{ reference.reference }}]({{ reference.reference }}){% endfor %}
+{% endif %}{% if model_details.citations %}
+### Citations
+{% for citation in model_details.citations %}
+* {{ citation.citation }}{% endfor %}
+{% endif %}{% if model_details.regulatory_requirements %}
+### Regulatory requirements
+{{  model_details.regulatory_requirements }}
+{% endif %}
+{% if model_parameters.model_architecture or model_parameters.input_format or model_parameters.output_format %}
+## Model Parameters
+{% if model_parameters.model_architecture %}
+### Model Architecture
+
+{{ model_parameters.model_architecture }}{% endif %}
+{% if model_parameters.input_format %}
+### Input Format
+
+{{ model_parameters.input_format }}{% endif %}
+{% if model_parameters.output_format %}
+### Output Format
+
+{{ model_parameters.output_format }}{% endif %}
+{% endif %}
+{% if considerations.users or considerations.use_cases or considerations.limitations or considerations.tradeoffs or considerations.ethical_considerations or considerations.fairness_assessment %}## Considerations
+{% if considerations.users %}
+### Intended Users {{ render_considerations(considerations.users) }}{% endif %}
+{% if considerations.use_cases %}
+### Use Cases
+{{ render_considerations(considerations.use_cases) }}
+{% endif %}
+{% if considerations.limitations %}
+### Limitations
+{{ render_considerations(considerations.limitations) }}
+{% endif %}
+{% if considerations.tradeoffs %}
+### Tradeoffs
+{{ render_considerations(considerations.tradeoffs) }}
+{% endif %}
+{% if considerations.ethical_considerations %}
+### Ethical Considerations
+{% for risk in considerations.ethical_considerations %}
+* __Risk:__ {{ risk.name }}
+  * __Mitigation Strategy:__ {{ risk.mitigation_strategy }}
+{% endfor %}
+{% endif %}
+{% if considerations.fairness_assessment %}
+### Fairness Considerations
+{% for fairness_assessment in considerations.fairness_assessment %}
+* __Group at risk:__ {{ fairness_assessment.group_at_risk }}
+__Benefits:__ {{ fairness_assessment.benefits }}
+__Harms:__ {{ fairness_assessment.harms }}
+__Mitigation Strategy:__ {{ fairness_assessment.mitigation_strategy }}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+{% if model_parameters.data %}
+{{ render_all_datasets(model_parameters.data) }}
+{% endif %}
+{% if quantitative_analysis.performance_metrics or quantitative_analysis.graphics.collection %}
+{{ render_quantitative_analysis(quantitative_analysis) }}
+{% endif %}
+{% if explainability_analysis.explainability_reports %}
+{{ render_explainability_analysis(explainability_analysis) }}
+{% endif %}
+{% if fairness_analysis.fairness_reports %}
+{{ render_fairness_analysis(fairness_analysis) }}
+{% endif %}
