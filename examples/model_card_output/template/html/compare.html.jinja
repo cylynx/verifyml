@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 {% macro render_header(card_a_name, card_b_name) %}
  <div style="width: 100%; overflow: hidden;">
-     <div style="width: 50%; float: left;">
+     <div style="width: 50%; float: left;"> 
         <h1>{{ card_a_name }}</h2>
     </div>
-     <div style="margin-left: 50%;">
+     <div style="margin-left: 50%;"> 
         <h1>{{ card_b_name }}</h2>
     </div>
 </div>
@@ -15,7 +15,7 @@
       {% if graphics.description %}
         <div class="center"><i>{{ graphics.description }}</i></div>
       {% endif %}
-      {{ render_graphics(graphics.collection) }}
+      {{ render_graphics(graphics.collection) }}    
     </div>
   </div>
 {% endmacro %}
@@ -35,19 +35,19 @@
   {% if report.slice %}
   <div>
     <b> Slice: </b>
-    {{ report.slice }}
+    {{ report.slice }} 
   </div>
   {% endif %}
   {% if report.segment %}
   <div>
     <b> Segment: </b>
-    {{ report.segment }}
+    {{ report.segment }} 
   </div>
   {% endif %}
   {% if report.description %}
   <div>
     <b> Description: </b>
-    {{ report.description }}
+    {{ report.description }} 
   </div>
   {% endif %}
   {% if report.graphics.collection %}
@@ -77,13 +77,13 @@
   {% if test.description %}
   <div>
     <b> Description: </b>
-    {{ test.description }}
+    {{ test.description }} 
   </div>
   {% endif %}
   {% if test.threshold %}
   <div>
     <b> Threshold: </b>
-    {{ test.threshold }}
+    {{ test.threshold }} 
   </div>
   {% endif %}
   {% if test.result %}
@@ -93,12 +93,12 @@
     {% if '\n' in test.result and ',' in test.result %}
       {{ render_results_table(test.result) }}
     {% else %}
-      {{ test.result }}
+      {{ test.result }} 
     {% endif %}
   </div>
   {% endif %}
-  {% if test.passed == true %}
-    <div><b style="color:green;"> Passed</b></div>
+  {% if test.passed == true %} 
+    <div><b style="color:green;"> Passed</b></div> 
     {% else %}
     <div><b style="color:red;"> Failed</b></div>
   {% endif %}
@@ -132,7 +132,7 @@
   }
   .col {
     flex: 1;
-    align-items: center;
+    align-items: center; 
     justify-content: center;
   }
   .card {
