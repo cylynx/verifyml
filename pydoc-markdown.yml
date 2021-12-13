@@ -13,6 +13,9 @@ renderer:
           source: verifyml/model_tests/README.md
         - title: Credit Card Fraud Example Notebook
           source: examples/credit_card_fraud_example.ipynb
+    - title: Automated Checks with Github Actions
+      name: Automated Checks with Github Actions
+      source: github-actions.md
     - title: Contributing
       name: contributing
       source: CONTRIBUTING.md
