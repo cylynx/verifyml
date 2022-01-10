@@ -19,7 +19,7 @@
         "key": "question_waO1Wy",
         "label": "Overview",
         "type": "TEXTAREA",
-        "value": "The government want to create an automated transcription tool used in trials for evidence purposes. The tool should be able to capture the different spoken accents and transcribe into text accurately so as not to bias against the defendant."
+        "value": "Using an automated transcription tool, the government want to transcribe audio files recorded in trials for evidential purposes. The tool should be able to capture the various spoken accents and transcribe into text accurately so as not to bias against the defendant. The tool chosen here will be Google's Speech to Text Model evaluated on a set of audio files by National Speech Corpus."
       },
       {
         "key": "question_3X5jBY",
@@ -31,7 +31,7 @@
         "key": "question_w8N9pP",
         "label": "Intended Use Cases",
         "type": "TEXTAREA",
-        "value": "Automate transcriptions and reduce human error in making court decisions"
+        "value": "Automate transcriptions and reduce human error and manpower in making court decisions"
       },
       {
         "key": "question_m6DYq5",
@@ -126,13 +126,13 @@
         "key": "question_w5XNqE",
         "label": "Protected attributes in production",
         "type": "TEXTAREA",
-        "value": "gender, race"
+        "value": "N.A. (Protected attributes are not trained in the speech to text model)" 
       },
       {
         "key": "question_3Eqpo2",
         "label": "Justification of use of protected attributes",
         "type": "TEXTAREA",
-        "value": "Potential improvement in model performance with protected attributes used as features in model"
+        "value": "N.A."
       },
       {
         "key": "question_wdb72K",
