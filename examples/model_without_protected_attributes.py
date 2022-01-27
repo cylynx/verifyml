@@ -160,7 +160,7 @@ pb = tally_form_to_mc("sample-form-response.json")
 
 # Initialize the mct and scaffold using the existing protobuf, for model 1
 mct2 = mctlib.ModelCardToolkit(
-    output_dir="model_card_output", file_name="credit_card_fraud_example"
+    output_dir="model_card_output", file_name="credit_card_fraud_example2"
 )
 mc2 = mct2.scaffold_assets(proto=pb)
 mc2.model_details.name = (
