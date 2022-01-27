@@ -123,7 +123,7 @@ class RegulatoryRequirement(BaseModelCardField):
 
     _proto_type: dataclasses.InitVar[
         type(model_card_pb2.RegulatoryRequirement)
-    ] = model_card_pb2.Reference
+    ] = model_card_pb2.RegulatoryRequirement
 
 
 @dataclasses.dataclass
