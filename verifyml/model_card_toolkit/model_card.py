@@ -112,6 +112,21 @@ class Reference(BaseModelCardField):
 
 
 @dataclasses.dataclass
+class RegulatoryRequirement(BaseModelCardField):
+    """Regulatory requirements that the model should comply to
+
+    Attributes:
+      regulation: Name of the regulation.
+    """
+
+    regulation: Optional[str] = None
+
+    _proto_type: dataclasses.InitVar[
+        type(model_card_pb2.RegulatoryRequirement)
+    ] = model_card_pb2.Reference
+
+
+@dataclasses.dataclass
 class Citation(BaseModelCardField):
     """A citation for a model.
 
@@ -146,6 +161,7 @@ class ModelDetails(BaseModelCardField):
         may be useful to your audience.
       citations: How should the model be cited? If the model is based on published
         academic research, cite the research.
+      path: The path where the model is stored.
       regulatory_requirements: Provide any regulatory requirements that the model should comply to.
     """
 
@@ -157,7 +173,10 @@ class ModelDetails(BaseModelCardField):
     licenses: List[License] = dataclasses.field(default_factory=list)
     references: List[Reference] = dataclasses.field(default_factory=list)
     citations: List[Citation] = dataclasses.field(default_factory=list)
-    regulatory_requirements: Optional[str] = None
+    path: Optional[str] = None
+    regulatory_requirements: List[RegulatoryRequirement] = dataclasses.field(
+        default_factory=list
+    )
 
     _proto_type: dataclasses.InitVar[
         type(model_card_pb2.ModelDetails)
@@ -268,6 +287,22 @@ class Dataset(BaseModelCardField):
 
 
 @dataclasses.dataclass
+class KeyVal(BaseModelCardField):
+    """A generic key-value pair.
+    Attributes:
+      key: The key of the key-value pair.
+      value: The value of the key-value pair.
+    """
+
+    key: Optional[str] = None
+    value: Optional[str] = None
+
+    _proto_type: dataclasses.InitVar[
+        type(model_card_pb2.KeyVal)
+    ] = model_card_pb2.KeyVal
+
+
+@dataclasses.dataclass
 class ModelParameters(BaseModelCardField):
     """Parameters for construction of the model.
 
@@ -275,13 +310,19 @@ class ModelParameters(BaseModelCardField):
       model_architecture: specifies the architecture of your model.
       data: specifies the datasets used to train and evaluate your model.
       input_format: describes the data format for inputs to your model.
+      input_format_map: describes the data format for inputs to your model, in
+        key-value format.
       output_format: describes the data format for outputs from your model.
+      output_format_map: describes the data format for outputs to your model, in
+        key-value format.
     """
 
     model_architecture: Optional[str] = None
     data: List[Dataset] = dataclasses.field(default_factory=list)
     input_format: Optional[str] = None
+    input_format_map: List[KeyVal] = dataclasses.field(default_factory=list)
     output_format: Optional[str] = None
+    output_format_map: List[KeyVal] = dataclasses.field(default_factory=list)
 
     _proto_type: dataclasses.InitVar[
         type(model_card_pb2.ModelParameters)
@@ -313,7 +354,9 @@ class Test(BaseModelCardField):
     def read_model_test(self, model_test) -> None:
         # fix for https://github.com/cylynx/verifyml/issues/42
         if model_test.result is None or model_test.passed is None:
-          raise AttributeError('Missing `result` or `passed` attributes - The model test has not been run yet.')
+            raise AttributeError(
+                "Missing `result` or `passed` attributes - The model test has not been run yet."
+            )
 
         self.name = model_test.test_name
         self.description = model_test.test_desc
