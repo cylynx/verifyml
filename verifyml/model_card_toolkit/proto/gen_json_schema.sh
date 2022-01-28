@@ -19,7 +19,7 @@
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 parent_dir="$(dirname "$parent_path")"
 
-VERSION=v0.0.3
+VERSION=v0.0.4
 OUT_PATH=$parent_dir/schema/$VERSION
 
 mkdir -p $OUT_PATH

@@ -61,12 +61,12 @@ message Citation {
 }
 
 message RegulatoryRequirement {
-  // Name of the regulations
+  // Name of the regulation
   optional string regulation = 1;
 }
 
 // This section provides a general, high-level description of the model.
-// The next tag number is 10.
+// The next tag number is 11.
 message ModelDetails {
   // The name of the model.
   optional string name = 1;
@@ -92,8 +92,11 @@ message ModelDetails {
   // How should the model be cited?
   repeated Citation citations = 8;
 
+  // Where is this model stored?
+  optional string path = 9;
+
   // Provide any regulatory requirements that the model should comply to.
-  optional string regulatory_requirements = 9; 
+  repeated RegulatoryRequirement regulatory_requirements = 10; 
 }
 
 // A named inline plot.
@@ -155,8 +158,15 @@ message Dataset {
   optional string description = 5;
 }
 
+// A generic key-value pair.
+message KeyVal {
+  optional string key = 1;
+  optional string value = 2;
+}
+
+
 // Parameters for construction of the model.
-// The next tag number is 5.
+// The next tag number is 7.
 message ModelParameters {
   // Specifies the architecture of your model.
   optional string model_architecture = 1;
@@ -166,9 +176,11 @@ message ModelParameters {
 
   // Describes the data format for inputs to your model.
   optional string input_format = 3;
+  repeated KeyVal input_format_map = 5;
 
   // Describes the data format for outputs from your model.
   optional string output_format = 4;
+  repeated KeyVal output_format_map = 6;
 }
 
 // Information about test that is runned against the model.

@@ -296,8 +296,10 @@
                 <li>{{ citation.citation }}</li>
               {% endfor %}
               </ul>{% endif %}
-          {% if model_details.regulatory_requirements %}<h3>Regulatory requirements</h3>
-              {{  model_details.regulatory_requirements }}{% endif %}
+          {% if model_details.regulatory_requirements %}
+            <h3>Regulatory requirements</h3>
+              <ul>{% for regulation in model_details.regulatory_requirements %}<li>{{ regulation.regulation }}</li>{% endfor %}
+              </ul>{% endif %}
         </div>
       {% if model_parameters.model_architecture or model_parameters.input_format or model_parameters.output_format %}
         <div class="col card">
