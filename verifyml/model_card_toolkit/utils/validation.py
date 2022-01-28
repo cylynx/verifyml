@@ -25,13 +25,7 @@ import jsonschema
 import semantic_version
 
 _SCHEMA_FILE_NAME = "model_card.schema.json"
-_SCHEMA_VERSIONS = frozenset(
-    (
-        "0.0.1",
-        "0.0.2",
-        "0.0.3",
-    )
-)
+_SCHEMA_VERSIONS = frozenset(("0.0.1", "0.0.2", "0.0.3", "0.0.4"))
 _LATEST_SCHEMA_VERSION = max(_SCHEMA_VERSIONS, key=semantic_version.Version)
 
 
@@ -42,7 +36,7 @@ def validate_json_schema(
 
     If schema_version is not provided, it will use the latest schema version.
     See
-    https://github.com/tensorflow/model-card-toolkit/tree/master/model_card_toolkit/schema/.
+    https://github.com/cylynx/verifyml/tree/main/verifyml/model_card_toolkit/schema/.
 
     Args:
       json_dict: A dictionary following the schema for a model card field.
