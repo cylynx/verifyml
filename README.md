@@ -8,7 +8,7 @@ VerifyML is an opinionated, open-source toolkit and workflow to help companies i
 
 ## Components
 
-![](https://github.com/cylynx/verifyml/raw/main/verifyml-dataflow.png)
+![VerifyML Dataflow](https://github.com/cylynx/verifyml/raw/main/verifyml-dataflow.png)
 
 At the core of the VerifyML workflow is a model card that captures 6 aspects of a model:
 
@@ -21,7 +21,7 @@ At the core of the VerifyML workflow is a model card that captures 6 aspects of 
 
 It is adapted from Google's Model Card Toolkit and expanded to include broader considerations such as fairness and explainability.
 
-A web form - see [example form](https://tally.so/r/mR4Nlw), helps gather input and align stakeholders across product, data science, compliance.
+A [model card editor](https://report.verifyml.com), provides a web-based interface to gather input and align stakeholders across product, data science, compliance.
 
 Our Python toolkit supports data science workflows, and allows a custom model to be built and logged within the model card framework. The package also contains perfomance and fairness tests for model diagnostics, fairness and reliability checks.
 
@@ -35,7 +35,11 @@ The Model Card Toolkit is hosted on [PyPI](https://pypi.org/project/verifyml/), 
 
 ### Generate a model card
 
-You can bootstrap a model card with our [tally web form](https://tally.so/r/mR4Nlw) or generate it with the python toolkit:
+![VerifyML Model Card Editor](https://github.com/cylynx/verifyml/raw/main/model-card-editor.png)
+
+The [VerifyML card creator](https://report.verifyml.com/create) provides an easy way for teams to create and edit model cards in a WYSIWYG editor. Use it to bootstrap your model card or edit text records through a web browser. It is a client side application and no data gets stored on a server.
+
+Alternatively, generate a model card with the python toolkit:
 
 ```py
 import verifyml.model_card_toolkit as mctlib

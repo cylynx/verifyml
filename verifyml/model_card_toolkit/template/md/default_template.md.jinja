@@ -182,7 +182,8 @@ _{{ graphics.description }}_
 * {{ citation.citation }}{% endfor %}
 {% endif %}{% if model_details.regulatory_requirements %}
 ### Regulatory requirements
-{{  model_details.regulatory_requirements }}
+{% for regulation in model_details.regulatory_requirements %}
+* {{ regulation.regulation }}{% endfor %}
 {% endif %}
 {% if model_parameters.model_architecture or model_parameters.input_format or model_parameters.output_format %}
 ## Model Parameters

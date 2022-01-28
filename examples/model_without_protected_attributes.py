@@ -18,7 +18,6 @@ from sklearn.pipeline import Pipeline
 sys.path.append("..")
 import verifyml.model_card_toolkit as mctlib
 from verifyml.model_card_toolkit import model_card_pb2, ModelCard
-from verifyml.model_card_toolkit.utils.tally_form import tally_form_to_mc
 from verifyml.model_tests.utils import plot_to_str
 from verifyml.model_tests.FEAT import (
     SubgroupDisparity,
@@ -153,16 +152,11 @@ imp_test = FeatureImportance(attrs=["gender", "age"], threshold=10)
 imp_test.run(df_importance)
 imp_test.plot(df_importance, show_n=10)  # Show top 10 most important features
 
-
-## Bootstrap model card from tally form and scaffold assets
-# Convert form response to model card protobuf
-pb = tally_form_to_mc("sample-form-response.json")
-
 # Initialize the mct and scaffold using the existing protobuf, for model 1
 mct2 = mctlib.ModelCardToolkit(
-    output_dir="model_card_output", file_name="credit_card_fraud_example"
+    output_dir="model_card_output", file_name="credit_card_fraud_example2"
 )
-mc2 = mct2.scaffold_assets(proto=pb)
+mc2 = mct2.scaffold_assets(path="initial_model_card.proto")
 mc2.model_details.name = (
     "Credit Card Fraud Model, without protected attributes as model features"
 )
