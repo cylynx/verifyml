@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import json
+from absl import logging
 from .. import model_card_toolkit as mct
 from .. import model_card
 from typing import List, Union
@@ -55,6 +56,10 @@ def tally_form_to_mc(form_path: str):
     Returns:
       A ModelCard data object seralized to string.
     """
+    logging.warning(
+        "tally_form_to_mc() will be deprecated in the next release. "
+        "Use VerifyML model card editor instead: https://report.verifyml.com/create"
+    )
 
     with open(form_path, "r") as myfile:
         data = myfile.read()
@@ -82,12 +87,13 @@ def tally_form_to_mc(form_path: str):
         ),
         model_card.Owner(name=get_answer(questions, "Reviewer(s)"), role="Reviewer(s)"),
     ]
-    mc.model_details.regulatory_requirements = " ".join(
-        get_answer(
+    mc.model_details.regulatory_requirements = [
+        model_card.RegulatoryRequirement(regulation=x)
+        for x in get_answer(
             questions,
             "Please select any regulatory guidelines which the model should be in compliance with",
         )
-    )
+    ]
 
     # Parse data
     mc.model_parameters.data = [

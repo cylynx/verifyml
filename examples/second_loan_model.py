@@ -16,7 +16,6 @@ from sklearn.pipeline import Pipeline
 
 import verifyml.model_card_toolkit as mctlib
 from verifyml.model_card_toolkit import model_card_pb2, ModelCard
-from verifyml.model_card_toolkit.utils.tally_form import tally_form_to_mc
 from verifyml.model_tests.utils import plot_to_str
 from verifyml.model_tests.FEAT import (
     SubgroupDisparity,
@@ -157,18 +156,11 @@ imp_test = FeatureImportance(attrs=["Gender", "Married"], threshold=5)
 imp_test.run(df_importance)
 imp_test.plot(df_importance, show_n=10)  # Show top 10 most important features
 
-
-## Bootstrap model card from tally form and scaffold assets
-# We can add the quantitative analysis, explainability analysis and fairness analysis sections to a bootstrap model card for convenience. In this example, we use an existing model card which we created from the tally form response. This is meant only as an example - the dataset and risk evaluation in the model card is a fictional use case.
-
-# Convert form response to model card protobuf
-pb = tally_form_to_mc("sample-form-response-loan-approval.json")
-
 # Initialize the mct and scaffold using the existing protobuf
 mct2 = mctlib.ModelCardToolkit(
     output_dir="model_card_output", file_name="loan_approval_example"
 )
-mc2 = mct2.scaffold_assets(proto=pb)
+mc2 = mct2.scaffold_assets(path="initial_loan_approval_mc.proto")
 mc2.model_details.name = "Loan Approval Model, outcome probability threshold = 0.45"
 
 # ## Convert test objects to a model-card-compatible format
