@@ -105,7 +105,7 @@ message Graphic {
   // The name of the graphic.
   optional string name = 1;
 
-  // The image, encoded as a base64 string.
+  // The image, encoded as a data URI or if base64 string, the image is assumed to be png.
   optional string image = 2;
 }
 
