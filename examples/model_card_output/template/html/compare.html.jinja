@@ -24,7 +24,11 @@
   {% for graph in graphics %}
   <div class="img-container">
     <div class="img-item">
-      <img src='data:image/jpeg;base64,{{ graph.image }}' alt='{{ graph.name }}' />
+    {% if 'data' in graph.image %}
+      <img src='{{ graph.image }}' alt='{{ graph.name }}' />
+    {% else %}
+       <img src='data:image/png;base64,{{ graph.image }}' alt='{{ graph.name }}' />
+    {% endif %}
     </div>
   </div>
   {% endfor %}

@@ -18,7 +18,9 @@ import base64
 
 
 def plot_to_str():
-    # Utility function that will export a plot to a base-64 encoded string.
+    # Utility function that will export a plot to a base-64 png encoded data URI scheme.
     img = BytesIO()
     plt.savefig(img, format="png", bbox_inches="tight")
-    return base64.encodebytes(img.getvalue()).decode("utf-8")
+    return (
+        f'data:image/jpeg;base64,{base64.encodebytes(img.getvalue()).decode("utf-8")}'
+    )

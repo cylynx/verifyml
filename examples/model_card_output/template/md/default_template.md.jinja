@@ -48,7 +48,11 @@
 {% macro render_graphics(graphics) %}
   {% if graphics.description %}{{ graphics.description }}{% endif %}
   {% for graph in graphics %}
+  {% if 'data' in graph.image %}
+<img src='{{ graph.image }}'/>
+    {% else %}
 <img src="data:image/jpeg;base64,{{ graph.image }}">
+    {% endif %}
   {% endfor %}
 {% endmacro %}
 {% macro render_license(license) %}
